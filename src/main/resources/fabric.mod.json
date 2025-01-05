@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "id": "chaotic_minigames",
+  "version": "${version}",
+  "name": "ChaoticMinigames",
+  "description": "",
+  "authors": [],
+  "contact": {
+    "repo": "https://github.com/marco/ChaoticMinigames"
+  },
+  "license": "MIT",
+  "icon": "assets/chaotic_minigames/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "client": [
+      "com.chaotic_loom.chaotic_minigames.client.ChaoticMinigamesClient"
+    ],
+    "main": [
+      "com.chaotic_loom.chaotic_minigames.ChaoticMinigames"
+    ]
+  },
+  "mixins": [
+    "chaotic_minigames.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=${loader_version}",
+    "fabric": "*",
+    "minecraft": "${minecraft_version}"
+  }
+}
