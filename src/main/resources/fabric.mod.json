@@ -13,10 +13,13 @@
   "environment": "*",
   "entrypoints": {
     "client": [
-      "com.chaotic_loom.chaotic_minigames.client.ChaoticMinigamesClient"
+      "com.chaotic_loom.chaotic_minigames.entrypoints.Client"
     ],
     "main": [
-      "com.chaotic_loom.chaotic_minigames.ChaoticMinigames"
+      "com.chaotic_loom.chaotic_minigames.entrypoints.Common"
+    ],
+    "server": [
+      "com.chaotic_loom.chaotic_minigames.entrypoints.DedicatedServer"
     ]
   },
   "mixins": [
@@ -26,5 +29,11 @@
     "fabricloader": ">=${loader_version}",
     "fabric": "*",
     "minecraft": "${minecraft_version}"
-  }
+  },
+  "breaks": {
+    "iris": "*",
+    "essential": "*",
+    "fancymenu": "*"
+  },
+  "accessWidener": "mod.accesswidener"
 }

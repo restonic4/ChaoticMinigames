@@ -1,0 +1,7 @@
+accessWidener	v2	named
+
+accessible field net/minecraft/client/gui/screens/Screen title Lnet/minecraft/network/chat/Component;
+accessible method net/minecraft/client/gui/screens/Screen addRenderableWidget (Lnet/minecraft/client/gui/components/events/GuiEventListener;)Lnet/minecraft/client/gui/components/events/GuiEventListener;
+accessible method net/minecraft/client/gui/screens/TitleScreen getMultiplayerDisabledReason ()Lnet/minecraft/network/chat/Component;
+accessible field net/minecraft/client/gui/screens/Screen minecraft Lnet/minecraft/client/Minecraft;
+accessible method net/minecraft/client/gui/screens/TitleScreen realmsButtonClicked ()V

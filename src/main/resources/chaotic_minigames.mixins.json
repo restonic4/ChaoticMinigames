@@ -6,6 +6,11 @@
   "mixins": [
   ],
   "client": [
+    "client.AccessibilityOnboardingScreenMixin",
+    "client.MusicManagerMixin",
+    "client.SoundEngineMixin",
+    "client.SoundManagerMixin",
+    "client.TitleScreenMixin"
   ],
   "injectors": {
     "defaultRequire": 1
