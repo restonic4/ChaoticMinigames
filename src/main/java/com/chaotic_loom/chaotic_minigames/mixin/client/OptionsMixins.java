@@ -35,7 +35,7 @@ public abstract class OptionsMixins {
 
         switch (soundSource) {
             case MUSIC:
-                defaultValue = 0.15;
+                defaultValue = 0.10;
                 tooltip = Tooltip.create(Component.translatable("gui.chaotic_minigames.options.music_slider.tooltip"));
                 break;
             case RECORDS, WEATHER, AMBIENT:
