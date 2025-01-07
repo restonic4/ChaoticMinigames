@@ -7,10 +7,11 @@
   ],
   "client": [
     "client.AccessibilityOnboardingScreenMixin",
-    "client.MusicManagerMixin",
-    "client.SoundEngineMixin",
-    "client.SoundManagerMixin",
-    "client.TitleScreenMixin"
+    "client.OptionsMixins",
+    "client.TitleScreenMixin",
+    "client.music.MusicManagerMixin",
+    "client.music.SoundEngineMixin",
+    "client.music.SoundManagerMixin"
   ],
   "injectors": {
     "defaultRequire": 1

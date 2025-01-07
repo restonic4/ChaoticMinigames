@@ -1,5 +1,6 @@
 {
   "gui.chaotic_minigames.onboarding_screen.title": "Welcome to Chaotic Minigames!",
   "gui.chaotic_minigames.title_screen.play": "Play!",
-  "gui.chaotic_minigames.title_screen.play.tooltip": "Join the server and start playing the minigames!"
+  "gui.chaotic_minigames.title_screen.play.tooltip": "Join the server and start playing the minigames!",
+  "gui.chaotic_minigames.options.music_slider.tooltip": "The music system has been completely reprogrammed! I recommend keeping it enabled for a better experience!"
 }

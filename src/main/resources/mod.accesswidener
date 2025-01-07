@@ -5,3 +5,4 @@ accessible method net/minecraft/client/gui/screens/Screen addRenderableWidget (L
 accessible method net/minecraft/client/gui/screens/TitleScreen getMultiplayerDisabledReason ()Lnet/minecraft/network/chat/Component;
 accessible field net/minecraft/client/gui/screens/Screen minecraft Lnet/minecraft/client/Minecraft;
 accessible method net/minecraft/client/gui/screens/TitleScreen realmsButtonClicked ()V
+accessible field net/minecraft/client/Options soundSourceVolumes Ljava/util/Map;

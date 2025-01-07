@@ -1,0 +1,10 @@
+{
+  "music_main_menu_1": {
+    "sounds": [
+      {
+        "name": "chaotic_minigames:music_main_menu_1",
+        "stream": false
+      }
+    ]
+  }
+}

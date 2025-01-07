@@ -2,6 +2,7 @@ package com.chaotic_loom.chaotic_minigames.entrypoints;
 
 import com.chaotic_loom.chaotic_minigames.core.MusicManager;
 import com.chaotic_loom.chaotic_minigames.core.registries.RegistriesManager;
+import com.chaotic_loom.chaotic_minigames.core.registries.common.SoundRegistry;
 import com.chaotic_loom.chaotic_minigames.entrypoints.constants.CMSharedConstants;
 import com.chaotic_loom.chaotic_minigames.networking.PacketManager;
 import com.chaotic_loom.under_control.api.incompatibilities.IncompatibilitiesAPI;
@@ -27,19 +28,7 @@ public class Client implements ClientModInitializer {
                     Thread.sleep(6000);
                 } catch (Exception ignored) {}
 
-                MusicManager.playMusic(SoundEvents.MUSIC_DISC_OTHERSIDE, 4, EasingSystem.EasingType.LINEAR);
-
-                try {
-                    Thread.sleep(6000);
-                } catch (Exception ignored) {}
-
-                MusicManager.playMusic(SoundEvents.MUSIC_DISC_CAT, 2, EasingSystem.EasingType.LINEAR);
-
-                try {
-                    Thread.sleep(6000);
-                } catch (Exception ignored) {}
-
-                MusicManager.playMusic(SoundEvents.MUSIC_DISC_CAT, 6, EasingSystem.EasingType.LINEAR);
+                MusicManager.playMusic(SoundRegistry.MUSIC_MAIN_MENU_1, 4000, EasingSystem.EasingType.LINEAR);
             }).start();
         });
     }
