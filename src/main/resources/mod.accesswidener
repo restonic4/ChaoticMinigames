@@ -12,3 +12,13 @@ accessible field net/minecraft/client/sounds/SoundEngine instanceToChannel Ljava
 accessible field net/minecraft/client/sounds/ChannelAccess$ChannelHandle channel Lcom/mojang/blaze3d/audio/Channel;
 accessible field com/mojang/blaze3d/audio/Channel source I
 accessible field net/minecraft/client/sounds/ChannelAccess channels Ljava/util/Set;
+accessible field net/minecraft/client/multiplayer/ClientPacketListener GENERIC_DISCONNECT_MESSAGE Lnet/minecraft/network/chat/Component;
+accessible field net/minecraft/client/gui/screens/multiplayer/WarningScreen stopShowing Lnet/minecraft/client/gui/components/Checkbox;
+accessible field net/minecraft/client/gui/screens/multiplayer/SafetyScreen previous Lnet/minecraft/client/gui/screens/Screen;
+accessible method net/minecraft/client/gui/screens/multiplayer/SafetyScreen initButtons (I)V
+accessible field net/minecraft/client/gui/screens/Screen renderables Ljava/util/List;
+accessible field net/minecraft/client/multiplayer/ServerList serverList Ljava/util/List;
+accessible field net/minecraft/client/multiplayer/ServerList hiddenServerList Ljava/util/List;
+accessible method net/minecraft/client/gui/screens/Screen createTabEvent ()Lnet/minecraft/client/gui/navigation/FocusNavigationEvent$TabNavigation;
+accessible method net/minecraft/client/gui/screens/Screen createArrowEvent (Lnet/minecraft/client/gui/navigation/ScreenDirection;)Lnet/minecraft/client/gui/navigation/FocusNavigationEvent$ArrowNavigation;
+accessible method net/minecraft/client/gui/screens/Screen clearFocus ()V

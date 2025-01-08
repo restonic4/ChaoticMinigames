@@ -1,6 +1,8 @@
 package com.chaotic_loom.chaotic_minigames.mixin.client;
 
 import com.chaotic_loom.chaotic_minigames.core.MusicManager;
+import com.chaotic_loom.chaotic_minigames.core.ServerManager;
+import com.chaotic_loom.chaotic_minigames.core.client.gui.ServerListScreen;
 import com.chaotic_loom.chaotic_minigames.entrypoints.constants.CMSharedConstants;
 import com.chaotic_loom.under_control.util.EasingSystem;
 import com.mojang.realmsclient.gui.screens.RealmsNotificationsScreen;
@@ -31,10 +33,7 @@ public class TitleScreenMixin {
                 Button.builder(
                         Component.translatable("gui.chaotic_minigames.title_screen.play"),
                         button -> {
-                            ServerData serverData = new ServerData("", CMSharedConstants.SERVER_FULL_IP, false);
-                            ServerAddress serverAddress = ServerAddress.parseString(CMSharedConstants.SERVER_FULL_IP);
-
-                            ConnectScreen.startConnecting(new JoinMultiplayerScreen(new TitleScreen()), self.minecraft, serverAddress, serverData, true);
+                            ServerManager.matchServer();
                         }
                 )
                 .bounds(self.width / 2 - 100, i, 200, 20)
@@ -47,6 +46,6 @@ public class TitleScreenMixin {
 
     @Inject(method = "render", at = @At("TAIL"))
     public void render(GuiGraphics guiGraphics, int i, int j, float f, CallbackInfo ci) {
-        guiGraphics.drawString(Minecraft.getInstance().font, "V:" + MusicManager.getCurrentVolume(), 0, 0, 0);
+        //guiGraphics.drawString(Minecraft.getInstance().font, "V:" + MusicManager.getCurrentVolume(), 0, 0, 0);
     }
 }

@@ -2,5 +2,8 @@
   "gui.chaotic_minigames.onboarding_screen.title": "¡Bienvenid@ a Chaotic Minigames!",
   "gui.chaotic_minigames.title_screen.play": "¡Jugar!",
   "gui.chaotic_minigames.title_screen.play.tooltip": "¡Unete añ servidor y juega los distintos minijuegos!",
-  "gui.chaotic_minigames.options.music_slider.tooltip": "¡El sistema de musica ha sido reprogramado por completo! ¡Te recomiendo activarla para una mejor experiencia!"
+  "gui.chaotic_minigames.options.music_slider.tooltip": "¡El sistema de musica ha sido reprogramado por completo! ¡Te recomiendo activarla para una mejor experiencia!",
+  "options.fov.real": "Fov perfecto: 90",
+  "soundCategory.sound_effects": "Efectos de sonido",
+  "gui.chaotic_minigames.options.sound_effects_slider.tooltip": "Afecta a los sonidos custom."
 }
