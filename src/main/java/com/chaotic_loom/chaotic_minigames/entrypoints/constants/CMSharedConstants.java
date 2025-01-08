@@ -13,6 +13,12 @@ public class CMSharedConstants {
 
     public static final List<ServerData> SERVERS = new ArrayList<>();
 
+    public static final int STRUCTURE_BLOCK_MAX_SIZE = 160;
+
+    public static final int BEFORE_VOTE_TIME = 10;
+    public static final int VOTE_TIME = 10;
+    public static final int AFTER_VOTE_TIME = 10;
+
     static {
         SERVERS.add(new ServerData(
                 "Test server 1",

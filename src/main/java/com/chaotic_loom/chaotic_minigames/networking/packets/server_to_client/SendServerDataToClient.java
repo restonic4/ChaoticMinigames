@@ -20,7 +20,6 @@ import net.minecraft.server.level.ServerPlayer;
 public class SendServerDataToClient {
     public static void receive(Minecraft minecraft, ClientPacketListener clientPacketListener, FriendlyByteBuf friendlyByteBuf, PacketSender packetSender) {
         KnownServerDataOnClient.serverType = ServerStatus.Type.valueOf(friendlyByteBuf.readUtf());
-        KnownServerDataOnClient.partyState = PartyStatus.State.valueOf(friendlyByteBuf.readUtf());
     }
 
     public static void sendToClient(ServerPlayer serverPlayer) {
@@ -28,7 +27,6 @@ public class SendServerDataToClient {
         FriendlyByteBuf friendlyByteBuf = PacketByteBufs.create();
 
         friendlyByteBuf.writeUtf(gameManager.getServerStatus().getType().name());
-        friendlyByteBuf.writeUtf(gameManager.getPartyStatus().getState().name());
 
         ServerPlayNetworking.send(serverPlayer, getId(), friendlyByteBuf);
     }

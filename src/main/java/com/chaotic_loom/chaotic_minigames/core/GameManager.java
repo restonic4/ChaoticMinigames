@@ -6,21 +6,24 @@ import com.chaotic_loom.chaotic_minigames.core.registries.server.ServerConfigReg
 import com.chaotic_loom.chaotic_minigames.entrypoints.constants.CMSharedConstants;
 import com.chaotic_loom.under_control.api.config.ConfigAPI;
 import com.chaotic_loom.under_control.config.ConfigProvider;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.protocol.game.ClientboundSetActionBarTextPacket;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ServerPlayer;
 
 public class GameManager {
     private static GameManager instance;
+    private static PartyManager partyManager;
 
     private final MinecraftServer server;
 
     private final ServerStatus serverStatus;
-    private final PartyStatus partyStatus;
+
 
     private GameManager(MinecraftServer server) {
         this.server = server;
 
         this.serverStatus = new ServerStatus();
-        this.partyStatus = new PartyStatus();
     }
 
     public static GameManager getInstance() {
@@ -35,13 +38,31 @@ public class GameManager {
 
         String configuredServerType = configProvider.get("server_type", String.class);
         newGameManager.getServerStatus().setType(ServerStatus.Type.valueOf(configuredServerType));
+
+        if (newGameManager.getServerStatus().getType() == ServerStatus.Type.PARTY) {
+            partyManager = new PartyManager();
+
+            new Thread(() -> partyManager.onStart()).start();
+        }
+    }
+
+    public void sendSubtitleToPlayers(Component component) {
+        ClientboundSetActionBarTextPacket actionBarPacket = new ClientboundSetActionBarTextPacket(component);
+
+        for (ServerPlayer serverPlayer : GameManager.getInstance().getServer().getPlayerList().getPlayers()) {
+            serverPlayer.connection.send(actionBarPacket);
+        }
     }
 
     public ServerStatus getServerStatus() {
         return serverStatus;
     }
 
-    public PartyStatus getPartyStatus() {
-        return partyStatus;
+    public PartyManager getPartyManager() {
+        return partyManager;
+    }
+
+    public MinecraftServer getServer() {
+        return this.server;
     }
 }

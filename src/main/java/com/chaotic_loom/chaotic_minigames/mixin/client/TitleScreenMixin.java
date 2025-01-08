@@ -25,7 +25,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(TitleScreen.class)
 public class TitleScreenMixin {
-    @Inject(method = "createNormalMenuOptions", at = @At("HEAD"), cancellable = true)
+    /*@Inject(method = "createNormalMenuOptions", at = @At("HEAD"), cancellable = true)
     private void createNormalMenuOptions(int i, int j, CallbackInfo ci) {
         TitleScreen self = (TitleScreen) (Object) this;
 
@@ -42,7 +42,7 @@ public class TitleScreenMixin {
         );
 
         ci.cancel();
-    }
+    }*/
 
     @Inject(method = "render", at = @At("TAIL"))
     public void render(GuiGraphics guiGraphics, int i, int j, float f, CallbackInfo ci) {

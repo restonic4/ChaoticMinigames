@@ -4,15 +4,19 @@
   "package": "com.chaotic_loom.chaotic_minigames.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
-    "common.SoundSourceMixin"
+    "common.PlaceCommandMixin",
+    "common.SoundSourceMixin",
+    "common.StructureBlockEntityMixin"
   ],
   "client": [
     "client.AccessibilityOnboardingScreenMixin",
     "client.ClientPacketListenerMixin",
+    "client.GuiMixin",
     "client.OptionsMixins",
     "client.PauseScreenMixin",
     "client.QuickPlayMixin",
     "client.SafetyScreenMixin",
+    "client.StructureBlockRendererMixin",
     "client.TitleScreenMixin",
     "client.music.MusicManagerMixin",
     "client.music.SoundEngineMixin",
