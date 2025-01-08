@@ -25,11 +25,5 @@ public class CMSharedConstants {
                 "restonic4-tests.exaroton.me:40617",
                 false
         ));
-
-        SERVERS.add(new ServerData(
-                "Test server 2",
-                "restonic4-small-test.exaroton.me:55463",
-                false
-        ));
     }
 }

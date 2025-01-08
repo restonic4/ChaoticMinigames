@@ -10,8 +10,12 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundSetActionBarTextPacket;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class GameManager {
+    public static final Logger LOGGER = LogManager.getLogger();
+
     private static GameManager instance;
     private static PartyManager partyManager;
 
