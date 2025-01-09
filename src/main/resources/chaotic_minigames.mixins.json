@@ -11,6 +11,7 @@
   "client": [
     "client.AccessibilityOnboardingScreenMixin",
     "client.ClientPacketListenerMixin",
+    "client.LevelRendererMixin",
     "client.OptionsMixins",
     "client.PauseScreenMixin",
     "client.QuickPlayMixin",

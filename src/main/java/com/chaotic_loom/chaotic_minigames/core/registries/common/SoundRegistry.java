@@ -8,9 +8,11 @@ import net.minecraft.sounds.SoundEvent;
 
 public class SoundRegistry {
     public static SoundEvent MUSIC_MAIN_MENU_1;
+    public static SoundEvent CHOP_CHOP;
 
     public static void register() {
         MUSIC_MAIN_MENU_1 = registerSoundEvent(new ResourceLocation(CMSharedConstants.ID, "music_main_menu_1"));
+        CHOP_CHOP = registerSoundEvent(new ResourceLocation(CMSharedConstants.ID, "chop_chop"));
     }
 
     public static SoundEvent registerSoundEvent(ResourceLocation location) {

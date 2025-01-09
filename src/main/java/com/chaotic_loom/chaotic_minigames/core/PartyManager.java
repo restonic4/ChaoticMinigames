@@ -101,6 +101,8 @@ public class PartyManager {
     private void onAfterPlaying() {
         System.out.println("After playing");
 
+        PlayMusic.sendToAll(getServerLevel().getServer(), SoundRegistry.MUSIC_MAIN_MENU_1, 2000, EasingSystem.EasingType.LINEAR);
+
         unLoadMap(serverLevel);
         currentMapData = null;
         currentMinigame = null;
@@ -211,6 +213,11 @@ public class PartyManager {
         return text;
     }
 
+    public void disqualifyPlayer(ServerPlayer serverPlayer) {
+        this.inGamePlayers.remove(serverPlayer);
+        serverPlayer.kill();
+    }
+
     public PartyStatus getPartyStatus() {
         return partyStatus;
     }
@@ -221,5 +228,9 @@ public class PartyManager {
 
     public ServerLevel getServerLevel() {
         return serverLevel;
+    }
+
+    public List<ServerPlayer> getInGamePlayers() {
+        return this.inGamePlayers;
     }
 }
