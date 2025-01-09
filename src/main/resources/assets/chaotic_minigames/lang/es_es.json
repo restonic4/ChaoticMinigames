@@ -5,5 +5,8 @@
   "gui.chaotic_minigames.options.music_slider.tooltip": "¡El sistema de musica ha sido reprogramado por completo! ¡Te recomiendo activarla para una mejor experiencia!",
   "options.fov.real": "Fov perfecto: 90",
   "soundCategory.sound_effects": "Efectos de sonido",
-  "gui.chaotic_minigames.options.sound_effects_slider.tooltip": "Afecta a los sonidos custom."
+  "gui.chaotic_minigames.options.sound_effects_slider.tooltip": "Afecta a los sonidos custom.",
+  "minigame.chaotic_minigames.bullet_chaos.name": "Balas caoticas",
+  "minigame.chaotic_minigames.bullet_chaos.description": "¡Sobrevive a las balas!",
+  "minigame.chaotic_minigames.bullet_chaos.summary": "Apareceran balas y deberas esquivarlas para sobrevivir."
 }

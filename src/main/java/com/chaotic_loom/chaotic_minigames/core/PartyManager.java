@@ -1,7 +1,10 @@
 package com.chaotic_loom.chaotic_minigames.core;
 
+import com.chaotic_loom.chaotic_minigames.core.data.MapData;
 import com.chaotic_loom.chaotic_minigames.core.data.PartyStatus;
+import com.chaotic_loom.chaotic_minigames.core.minigames.GenericMinigame;
 import com.chaotic_loom.chaotic_minigames.core.registries.common.SoundRegistry;
+import com.chaotic_loom.chaotic_minigames.core.registries.server.MinigameRegistry;
 import com.chaotic_loom.chaotic_minigames.entrypoints.constants.CMSharedConstants;
 import com.chaotic_loom.chaotic_minigames.networking.packets.server_to_client.PlayMusic;
 import com.chaotic_loom.under_control.util.EasingSystem;
@@ -10,6 +13,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
@@ -22,12 +26,17 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemp
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplateManager;
 import net.minecraft.world.phys.AABB;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class PartyManager {
     private final GameManager gameManager;
     private final PartyStatus partyStatus;
     private final ServerLevel serverLevel = GameManager.getInstance().getServer().getLevel(Level.OVERWORLD);
+    private GenericMinigame currentMinigame;
+    private MapData currentMapData;
+    private List<ServerPlayer> inGamePlayers = new ArrayList<>();
 
     public PartyManager() {
         this.gameManager = GameManager.getInstance();
@@ -52,37 +61,57 @@ public class PartyManager {
     }
 
     private void onBeforeVote() {
-        partyStatus.setState(PartyStatus.State.BEFORE_VOTING_INTERMISSION);
+        System.out.println("Before vote");
 
-        PlayMusic.sendToAll(serverLevel.getServer(), SoundRegistry.MUSIC_MAIN_MENU_1, 2000, EasingSystem.EasingType.LINEAR);
+        partyStatus.setState(PartyStatus.State.BEFORE_VOTING_INTERMISSION);
 
         startCountDown();
     }
 
     private void onVote() {
+        System.out.println("Vote");
+
         partyStatus.setState(PartyStatus.State.VOTING);
 
         startCountDown();
     }
 
     private void onAfterVote() {
+        System.out.println("After vote");
+
         partyStatus.setState(PartyStatus.State.AFTER_VOTING_INTERMISSION);
 
-        loadMap(serverLevel, "test");
+        currentMinigame = MinigameRegistry.MINIGAMES.get(0);
+        currentMapData = currentMinigame.getSettings().getMaps().getRandom();
+
+        loadMap(serverLevel, currentMapData.getStrucutreId());
 
         startCountDown();
     }
 
     private void onPlaying() {
+        System.out.println("Playing");
+
         partyStatus.setState(PartyStatus.State.PLAYING);
 
-        PlayMusic.sendToAll(serverLevel.getServer(), SoundEvents.MUSIC_DISC_PIGSTEP, 2000, EasingSystem.EasingType.LINEAR);
-
-        startCountDown();
+        inGamePlayers.addAll(serverLevel.getServer().getPlayerList().getPlayers());
+        currentMinigame.onStart(this);
     }
 
     private void onAfterPlaying() {
+        System.out.println("After playing");
+
         unLoadMap(serverLevel);
+        currentMapData = null;
+        currentMinigame = null;
+        inGamePlayers.clear();
+    }
+
+    public void teleportRandomly() {
+        for (ServerPlayer serverPlayer : inGamePlayers) {
+            BlockPos spawnPos = currentMapData.getSpawns().getRandom().getBlockPos();
+            serverPlayer.teleportTo(spawnPos.getX(), spawnPos.getY(), spawnPos.getZ());
+        }
     }
 
     private void loadMap(ServerLevel serverLevel, String structureName) {
@@ -135,9 +164,23 @@ public class PartyManager {
     }
 
     public void startCountDown() {
-        ThreadUtils.runCountDown(getCountDownTime(partyStatus.getState()), (timeLeft) -> {
+        startCountDown(getCountDownTime(partyStatus.getState()), null);
+    }
+
+    public void startCountDown(int seconds, Runnable runnable) {
+        ThreadUtils.runCountDown(seconds, runnable, (timeLeft) -> {
             gameManager.sendSubtitleToPlayers(Component.literal(getCountDownText(timeLeft)));
         });
+    }
+
+    public void runAsync(Runnable runnable) {
+        new Thread(runnable).start();
+    }
+
+    public void executeForAllInGame(Consumer<ServerPlayer> consumer) {
+        for (ServerPlayer serverPlayer : inGamePlayers) {
+            consumer.accept(serverPlayer);
+        }
     }
 
     public int getCountDownTime(PartyStatus.State state) {
@@ -170,5 +213,13 @@ public class PartyManager {
 
     public PartyStatus getPartyStatus() {
         return partyStatus;
+    }
+
+    public MapData getCurrentMapData() {
+        return currentMapData;
+    }
+
+    public ServerLevel getServerLevel() {
+        return serverLevel;
     }
 }

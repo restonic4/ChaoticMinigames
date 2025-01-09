@@ -1,9 +1,14 @@
 package com.chaotic_loom.chaotic_minigames.entrypoints;
 
+import com.chaotic_loom.chaotic_minigames.annotations.Minigame;
 import com.chaotic_loom.chaotic_minigames.core.GameManager;
+import com.chaotic_loom.chaotic_minigames.core.minigames.GenericMinigame;
 import com.chaotic_loom.chaotic_minigames.core.registries.RegistriesManager;
 import net.fabricmc.api.DedicatedServerModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
+import org.reflections.Reflections;
+
+import java.util.Set;
 
 public class DedicatedServer implements DedicatedServerModInitializer {
     @Override

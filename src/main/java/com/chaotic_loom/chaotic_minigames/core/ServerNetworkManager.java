@@ -10,13 +10,9 @@ import net.minecraft.client.gui.screens.TitleScreen;
 import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.client.multiplayer.resolver.ServerAddress;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
-import java.util.function.Consumer;
 
-public class ServerManager {
+public class ServerNetworkManager {
     public static void matchServer() {
         AtomicReference<ServerData> serverData = new AtomicReference<>();
 

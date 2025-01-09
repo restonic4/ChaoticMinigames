@@ -5,5 +5,8 @@
   "gui.chaotic_minigames.options.music_slider.tooltip": "The music system has been completely reprogrammed! I recommend keeping it enabled for a better experience!",
   "options.fov.real": "Perfect fov: 90",
   "soundCategory.sound_effects": "Sound effects",
-  "gui.chaotic_minigames.options.sound_effects_slider.tooltip": "Affects the custom sound effects."
+  "gui.chaotic_minigames.options.sound_effects_slider.tooltip": "Affects the custom sound effects.",
+  "minigame.chaotic_minigames.bullet_chaos.name": "Bullet chaos",
+  "minigame.chaotic_minigames.bullet_chaos.description": "Survive the bullets!",
+  "minigame.chaotic_minigames.bullet_chaos.summary": "Bullets will appear, and you must dodge them to survive."
 }
