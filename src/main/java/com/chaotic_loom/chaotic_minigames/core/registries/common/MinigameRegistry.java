@@ -1,13 +1,16 @@
-package com.chaotic_loom.chaotic_minigames.core.registries.server;
+package com.chaotic_loom.chaotic_minigames.core.registries.common;
 
 import com.chaotic_loom.chaotic_minigames.annotations.Minigame;
 import com.chaotic_loom.chaotic_minigames.core.minigames.GenericMinigame;
+import com.chaotic_loom.under_control.core.annotations.ExecutionSide;
+import com.chaotic_loom.under_control.core.annotations.Registration;
 import org.reflections.Reflections;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+@Registration(side = ExecutionSide.COMMON)
 public class MinigameRegistry {
     public static List<GenericMinigame> MINIGAMES = new ArrayList<>();
 

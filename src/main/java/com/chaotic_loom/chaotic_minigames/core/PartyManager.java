@@ -4,17 +4,16 @@ import com.chaotic_loom.chaotic_minigames.core.data.MapData;
 import com.chaotic_loom.chaotic_minigames.core.data.PartyStatus;
 import com.chaotic_loom.chaotic_minigames.core.minigames.GenericMinigame;
 import com.chaotic_loom.chaotic_minigames.core.registries.common.SoundRegistry;
-import com.chaotic_loom.chaotic_minigames.core.registries.server.MinigameRegistry;
+import com.chaotic_loom.chaotic_minigames.core.registries.common.MinigameRegistry;
 import com.chaotic_loom.chaotic_minigames.entrypoints.constants.CMSharedConstants;
 import com.chaotic_loom.chaotic_minigames.networking.packets.server_to_client.PlayMusic;
 import com.chaotic_loom.under_control.util.EasingSystem;
-import com.chaotic_loom.under_control.util.ThreadUtils;
+import com.chaotic_loom.under_control.util.ThreadHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -37,6 +36,8 @@ public class PartyManager {
     private GenericMinigame currentMinigame;
     private MapData currentMapData;
     private List<ServerPlayer> inGamePlayers = new ArrayList<>();
+
+    private boolean hasMapBeenLoaded = false;
 
     public PartyManager() {
         this.gameManager = GameManager.getInstance();
@@ -87,6 +88,11 @@ public class PartyManager {
         loadMap(serverLevel, currentMapData.getStrucutreId());
 
         startCountDown();
+
+        while (!hasMapBeenLoaded) {
+            gameManager.sendSubtitleToPlayers(Component.literal("Waiting for map..."));
+            ThreadHelper.sleep(1000);
+        }
     }
 
     private void onPlaying() {
@@ -117,6 +123,8 @@ public class PartyManager {
     }
 
     private void loadMap(ServerLevel serverLevel, String structureName) {
+        hasMapBeenLoaded = false;
+
         serverLevel.getServer().execute(() -> {
             StructureTemplateManager structureManager = serverLevel.getStructureManager();
 
@@ -138,6 +146,8 @@ public class PartyManager {
             structure.placeInWorld(serverLevel, position, position, placementData, serverLevel.getRandom(), 2);
 
             GameManager.LOGGER.info("Structure {} placed on {}", structureName, position);
+
+            hasMapBeenLoaded = true;
         });
     }
 
@@ -170,7 +180,7 @@ public class PartyManager {
     }
 
     public void startCountDown(int seconds, Runnable runnable) {
-        ThreadUtils.runCountDown(seconds, runnable, (timeLeft) -> {
+        ThreadHelper.runCountDown(seconds, runnable, (timeLeft) -> {
             gameManager.sendSubtitleToPlayers(Component.literal(getCountDownText(timeLeft)));
         });
     }
@@ -220,6 +230,18 @@ public class PartyManager {
 
     public PartyStatus getPartyStatus() {
         return partyStatus;
+    }
+
+    public GenericMinigame getCurrentMinigame() {
+        return currentMinigame;
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T extends GenericMinigame> T getCurrentMinigame(Class<T> minigameClass) {
+        if (minigameClass.isInstance(currentMinigame)) {
+            return (T) currentMinigame;
+        }
+        throw new ClassCastException("Current minigame is not of type " + minigameClass.getName());
     }
 
     public MapData getCurrentMapData() {

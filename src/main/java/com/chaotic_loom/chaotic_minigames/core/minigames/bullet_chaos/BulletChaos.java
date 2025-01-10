@@ -1,25 +1,24 @@
-package com.chaotic_loom.chaotic_minigames.core.minigames;
+package com.chaotic_loom.chaotic_minigames.core.minigames.bullet_chaos;
 
-import com.chaotic_loom.chaotic_minigames.Util;
 import com.chaotic_loom.chaotic_minigames.annotations.Minigame;
 import com.chaotic_loom.chaotic_minigames.core.PartyManager;
 import com.chaotic_loom.chaotic_minigames.core.data.MapData;
 import com.chaotic_loom.chaotic_minigames.core.data.MapList;
 import com.chaotic_loom.chaotic_minigames.core.data.MapSpawn;
 import com.chaotic_loom.chaotic_minigames.core.data.MinigameSettings;
-import com.chaotic_loom.chaotic_minigames.core.data.minigames.bullet_chaos.ClientBullet;
-import com.chaotic_loom.chaotic_minigames.core.data.minigames.bullet_chaos.ServerBullet;
+import com.chaotic_loom.chaotic_minigames.core.minigames.GenericMinigame;
+import com.chaotic_loom.chaotic_minigames.core.minigames.bullet_chaos.bullet.BulletManager;
+import com.chaotic_loom.chaotic_minigames.core.minigames.bullet_chaos.bullet.BulletRenderer;
+import com.chaotic_loom.chaotic_minigames.core.minigames.bullet_chaos.bullet.ServerBullet;
+import com.chaotic_loom.chaotic_minigames.core.minigames.bullet_chaos.packets.SpawnBullet;
 import com.chaotic_loom.chaotic_minigames.core.registries.common.SoundRegistry;
 import com.chaotic_loom.chaotic_minigames.networking.packets.server_to_client.PlayMusic;
-import com.chaotic_loom.chaotic_minigames.networking.packets.server_to_client.SpawnBullet;
+import com.chaotic_loom.under_control.core.annotations.ExecutionSide;
 import com.chaotic_loom.under_control.util.EasingSystem;
-import com.chaotic_loom.under_control.util.ThreadUtils;
+
+import com.chaotic_loom.under_control.util.MathHelper;
+import com.chaotic_loom.under_control.util.ThreadHelper;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.animal.Chicken;
-import org.apache.commons.lang3.RandomUtils;
 import org.joml.Vector3f;
 
 import java.util.ArrayList;
@@ -28,7 +27,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 @Minigame
 public class BulletChaos extends GenericMinigame {
-    private static final List<ServerBullet> serverBullets = new ArrayList<>();
+    private final BulletManager<BulletRenderer> clientBulletManager;
+    private final BulletManager<ServerBullet> serverBulletBulletManager;
 
     public BulletChaos() {
         super(new MinigameSettings(
@@ -36,7 +36,7 @@ public class BulletChaos extends GenericMinigame {
                 1,
                 GENERIC_MAX_PLAYERS,
                 createMaps(
-                        new CustomMap(
+                        new BulletChaosMapData(
                                 "bullet_chaos_old_tower",
                                 createSpawns(
                                         new MapSpawn(new BlockPos(25, 41, 17)),
@@ -48,6 +48,9 @@ public class BulletChaos extends GenericMinigame {
                         ).setCenter(new BlockPos(17, 43, 17))
                 )
         ));
+
+        this.clientBulletManager = new BulletManager<>();
+        this.serverBulletBulletManager = new BulletManager<>();
     }
 
     @Override
@@ -94,14 +97,14 @@ public class BulletChaos extends GenericMinigame {
             int bulletsPerTick = (int) (minBulletsPerTick + ((maxBulletsPerTick - minBulletsPerTick) / (double) totalDuration) * elapsedTime);
             bulletsPerTick = Math.min(bulletsPerTick, maxBulletsPerTick);
 
-            ThreadUtils.sleep(spawnDelay);
+            ThreadHelper.sleep(spawnDelay);
 
             for (int i = 0; i < bulletsPerTick; i++) {
                 spawnBullet(partyManager, reachTime, radius);
             }
         }
 
-        ThreadUtils.sleep(5000);
+        ThreadHelper.sleep(5000);
 
         partyManager.executeForAllInGame(this::awardPlayer);
     }
@@ -109,8 +112,8 @@ public class BulletChaos extends GenericMinigame {
     private void spawnBullet(PartyManager partyManager, int reachTime, float sphereRadius) {
         float radius = 100;
 
-        BlockPos center = ((CustomMap) partyManager.getCurrentMapData()).getCenter();
-        Vector3f randomPoint = Util.getRandomPointOnCircle(center.getCenter().toVector3f(), radius);
+        BlockPos center = ((BulletChaosMapData) partyManager.getCurrentMapData()).getCenter();
+        Vector3f randomPoint = MathHelper.getRandomPointOnCircle(center.getCenter().toVector3f(), radius);
 
         System.out.println("Spawning bullet at " + randomPoint);
 
@@ -129,43 +132,18 @@ public class BulletChaos extends GenericMinigame {
         long currentTime = System.currentTimeMillis();
 
         SpawnBullet.sendToAll(partyManager.getServerLevel().getServer(), offsetStartPoint, offsetEndPoint, currentTime, currentTime + reachTime, sphereRadius);
-        addBullet(new ServerBullet(sphereRadius, currentTime, currentTime + reachTime, offsetStartPoint, offsetEndPoint));
+        serverBulletBulletManager.addBullet(new ServerBullet(sphereRadius, currentTime, currentTime + reachTime, offsetStartPoint, offsetEndPoint));
     }
 
-    public static class CustomMap extends MapData {
-        private BlockPos center;
-
-        public CustomMap(String structureId, MapList<MapSpawn> spawns) {
-            super(structureId, spawns);
-        }
-
-        public BlockPos getCenter() {
-            return center;
-        }
-
-        public CustomMap setCenter(BlockPos center) {
-            this.center = center;
-            return this;
+    public void tick(ExecutionSide executionSide) {
+        if (executionSide == ExecutionSide.CLIENT) {
+            clientBulletManager.tick();
+        } else if (executionSide == ExecutionSide.SERVER) {
+            serverBulletBulletManager.tick();
         }
     }
 
-    public static void tick() {
-        for (ServerBullet clientBullet : serverBullets) {
-            clientBullet.tick();
-        }
-
-        for (int i = serverBullets.size() - 1; i >= 0; i--) {
-            ServerBullet clientBullet = serverBullets.get(i);
-
-            if (clientBullet.isFinished()) {
-                serverBullets.remove(i);
-            } else {
-                clientBullet.tick();
-            }
-        }
-    }
-
-    public static void addBullet(ServerBullet clientBullet) {
-        serverBullets.add(clientBullet);
+    public BulletManager<BulletRenderer> getClientBulletManager() {
+        return clientBulletManager;
     }
 }

@@ -5,6 +5,7 @@ import com.chaotic_loom.chaotic_minigames.core.data.MapData;
 import com.chaotic_loom.chaotic_minigames.core.data.MapList;
 import com.chaotic_loom.chaotic_minigames.core.data.MapSpawn;
 import com.chaotic_loom.chaotic_minigames.core.data.MinigameSettings;
+import com.chaotic_loom.under_control.core.annotations.ExecutionSide;
 import net.minecraft.server.level.ServerPlayer;
 
 public abstract class GenericMinigame {
@@ -25,6 +26,8 @@ public abstract class GenericMinigame {
     }
 
     public abstract void onStart(PartyManager partyManager);
+
+    public abstract void tick(ExecutionSide executionSide);
 
     public void awardPlayer(ServerPlayer serverPlayer) {
         System.out.println("Awarding " + serverPlayer.getName());

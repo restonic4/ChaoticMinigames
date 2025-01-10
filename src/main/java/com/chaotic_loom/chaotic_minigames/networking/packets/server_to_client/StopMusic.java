@@ -1,7 +1,10 @@
 package com.chaotic_loom.chaotic_minigames.networking.packets.server_to_client;
 
 import com.chaotic_loom.chaotic_minigames.core.MusicManager;
+import com.chaotic_loom.chaotic_minigames.entrypoints.constants.CMSharedConstants;
 import com.chaotic_loom.under_control.UnderControl;
+import com.chaotic_loom.under_control.core.annotations.Packet;
+import com.chaotic_loom.under_control.core.annotations.PacketDirection;
 import com.chaotic_loom.under_control.util.EasingSystem;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
@@ -15,7 +18,12 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 
+@Packet(direction = PacketDirection.SERVER_TO_CLIENT)
 public class StopMusic {
+    public static ResourceLocation getId() {
+        return new ResourceLocation(CMSharedConstants.ID, "stop_music");
+    }
+
     public static void receive(Minecraft minecraft, ClientPacketListener clientPacketListener, FriendlyByteBuf friendlyByteBuf, PacketSender packetSender) {
         long fadeDuration = friendlyByteBuf.readLong();
         EasingSystem.EasingType easingType = EasingSystem.EasingType.valueOf(friendlyByteBuf.readUtf());
@@ -41,9 +49,5 @@ public class StopMusic {
         for (ServerPlayer serverPlayer : server.getPlayerList().getPlayers()) {
             ServerPlayNetworking.send(serverPlayer, getId(), friendlyByteBuf);
         }
-    }
-
-    public static ResourceLocation getId() {
-        return new ResourceLocation(UnderControl.MOD_ID, "stop_music");
     }
 }

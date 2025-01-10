@@ -1,6 +1,8 @@
 package com.chaotic_loom.chaotic_minigames.mixin.client;
 
-import com.chaotic_loom.chaotic_minigames.core.client.ClientBulletManager;
+import com.chaotic_loom.chaotic_minigames.core.minigames.GenericMinigame;
+import com.chaotic_loom.chaotic_minigames.core.registries.common.MinigameRegistry;
+import com.chaotic_loom.under_control.core.annotations.ExecutionSide;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Camera;
 import net.minecraft.client.renderer.GameRenderer;
@@ -16,6 +18,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class LevelRendererMixin {
     @Inject(method = "renderLevel", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/FogRenderer;setupNoFog()V", shift = At.Shift.AFTER))
     public void renderLevel(PoseStack poseStack, float f, long l, boolean bl, Camera camera, GameRenderer gameRenderer, LightTexture lightTexture, Matrix4f matrix4f, CallbackInfo ci) {
-        ClientBulletManager.tick();
+        for (GenericMinigame genericMinigame : MinigameRegistry.MINIGAMES) {
+            genericMinigame.tick(ExecutionSide.CLIENT);
+        }
     }
 }

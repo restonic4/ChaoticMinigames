@@ -4,6 +4,7 @@ import com.chaotic_loom.chaotic_minigames.core.client.gui.ServerListScreen;
 import com.chaotic_loom.chaotic_minigames.entrypoints.constants.CMSharedConstants;
 import com.chaotic_loom.under_control.api.server.ServerAPI;
 import com.chaotic_loom.under_control.util.JavaHelper;
+import com.chaotic_loom.under_control.util.data_holders.ServerInfo;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.ConnectScreen;
 import net.minecraft.client.gui.screens.TitleScreen;
@@ -17,7 +18,7 @@ public class ServerNetworkManager {
         AtomicReference<ServerData> serverData = new AtomicReference<>();
 
         JavaHelper.processRandomly(CMSharedConstants.SERVERS, (foundServerData) -> {
-            com.chaotic_loom.under_control.util.ServerData response = ServerAPI.getServerData(foundServerData.ip);
+            ServerInfo response = ServerAPI.getServerData(foundServerData.ip);
 
             if (response.getPlayers().getOnline() < response.getPlayers().getMax()) {
                 serverData.set(new ServerData(foundServerData.name, foundServerData.ip, foundServerData.isLan()));

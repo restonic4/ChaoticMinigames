@@ -3,8 +3,11 @@ package com.chaotic_loom.chaotic_minigames.networking.packets.server_to_client;
 import com.chaotic_loom.chaotic_minigames.core.GameManager;
 import com.chaotic_loom.chaotic_minigames.core.MusicManager;
 import com.chaotic_loom.chaotic_minigames.core.data.ServerStatus;
+import com.chaotic_loom.chaotic_minigames.entrypoints.constants.CMSharedConstants;
 import com.chaotic_loom.chaotic_minigames.entrypoints.constants.KnownServerDataOnClient;
 import com.chaotic_loom.under_control.UnderControl;
+import com.chaotic_loom.under_control.core.annotations.Packet;
+import com.chaotic_loom.under_control.core.annotations.PacketDirection;
 import com.chaotic_loom.under_control.util.EasingSystem;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
@@ -18,7 +21,12 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 
+@Packet(direction = PacketDirection.SERVER_TO_CLIENT)
 public class PlayMusic {
+    public static ResourceLocation getId() {
+        return new ResourceLocation(CMSharedConstants.ID, "play_music");
+    }
+
     public static void receive(Minecraft minecraft, ClientPacketListener clientPacketListener, FriendlyByteBuf friendlyByteBuf, PacketSender packetSender) {
         SoundEvent soundEvent = BuiltInRegistries.SOUND_EVENT.get(new ResourceLocation(friendlyByteBuf.readUtf()));
         long fadeDuration = friendlyByteBuf.readLong();
@@ -47,9 +55,5 @@ public class PlayMusic {
         for (ServerPlayer serverPlayer : server.getPlayerList().getPlayers()) {
             ServerPlayNetworking.send(serverPlayer, getId(), friendlyByteBuf);
         }
-    }
-
-    public static ResourceLocation getId() {
-        return new ResourceLocation(UnderControl.MOD_ID, "play_music");
     }
 }
