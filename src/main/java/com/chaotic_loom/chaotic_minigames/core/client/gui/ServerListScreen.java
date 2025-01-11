@@ -1,5 +1,6 @@
 package com.chaotic_loom.chaotic_minigames.core.client.gui;
 
+import com.chaotic_loom.chaotic_minigames.entrypoints.constants.CMClientConstants;
 import com.chaotic_loom.chaotic_minigames.entrypoints.constants.CMSharedConstants;
 import com.mojang.logging.LogUtils;
 import net.minecraft.client.gui.ComponentPath;
@@ -38,7 +39,6 @@ public class ServerListScreen extends JoinMultiplayerScreen {
     private static final Logger LOGGER = LogUtils.getLogger();
     private final ServerStatusPinger pinger = new ServerStatusPinger();
     private final Screen lastScreen;
-    protected ServerSelectionList serverSelectionList;
     private ServerList servers;
     private Button selectButton;
     @Nullable
@@ -92,7 +92,7 @@ public class ServerListScreen extends JoinMultiplayerScreen {
         this.servers.serverList.clear();
         this.servers.hiddenServerList.clear();
 
-        this.servers.serverList.addAll(CMSharedConstants.SERVERS);
+        this.servers.serverList.addAll(CMClientConstants.SERVERS);
     }
 
     @Override

@@ -8,5 +8,10 @@
   "gui.chaotic_minigames.options.sound_effects_slider.tooltip": "Afecta a los sonidos custom.",
   "minigame.chaotic_minigames.bullet_chaos.name": "Balas caoticas",
   "minigame.chaotic_minigames.bullet_chaos.description": "¡Sobrevive a las balas!",
-  "minigame.chaotic_minigames.bullet_chaos.summary": "Apareceran balas y deberas esquivarlas para sobrevivir."
+  "minigame.chaotic_minigames.bullet_chaos.summary": "Apareceran balas y deberas esquivarlas para sobrevivir.",
+  "message.chaotic_minigames.winners": "Ganadores: ",
+  "message.chaotic_minigames.how_to_vote": "¡Pulsa E para votar!",
+  "gui.chaotic_minigames.voting_screen.title": "¡Vota el siguiente minijuego!",
+  "gui.chaotic_minigames.vote": "¡Votar!",
+  "message.chaotic_minigames.not_enough_players": "¡No hay suficientes jugadores!"
 }

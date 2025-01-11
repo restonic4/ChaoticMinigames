@@ -1,6 +1,7 @@
 package com.chaotic_loom.chaotic_minigames.core.minigames.bullet_chaos.packets;
 
 import com.chaotic_loom.chaotic_minigames.core.GameManager;
+import com.chaotic_loom.chaotic_minigames.core.minigames.GenericMinigame;
 import com.chaotic_loom.chaotic_minigames.core.minigames.bullet_chaos.BulletChaos;
 import com.chaotic_loom.chaotic_minigames.core.minigames.bullet_chaos.bullet.BulletRenderer;
 import com.chaotic_loom.chaotic_minigames.entrypoints.constants.CMSharedConstants;
@@ -42,7 +43,7 @@ public class SpawnBullet {
             sphere.setRadius(radius);
             sphere.setColor(new Color(0xFF0000));
 
-            GameManager.getInstance().getPartyManager().getCurrentMinigame(BulletChaos.class).getClientBulletManager().addBullet(
+            GenericMinigame.getInstance(BulletChaos.class).getClientBulletManager().addBullet(
                     new BulletRenderer(sphere, spawnPoint, endPoint, spawnTime, deSpawnTime)
             );
         });

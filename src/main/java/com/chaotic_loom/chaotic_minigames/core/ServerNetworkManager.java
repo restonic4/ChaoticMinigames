@@ -1,6 +1,7 @@
 package com.chaotic_loom.chaotic_minigames.core;
 
 import com.chaotic_loom.chaotic_minigames.core.client.gui.ServerListScreen;
+import com.chaotic_loom.chaotic_minigames.entrypoints.constants.CMClientConstants;
 import com.chaotic_loom.chaotic_minigames.entrypoints.constants.CMSharedConstants;
 import com.chaotic_loom.under_control.api.server.ServerAPI;
 import com.chaotic_loom.under_control.util.JavaHelper;
@@ -17,15 +18,19 @@ public class ServerNetworkManager {
     public static void matchServer() {
         AtomicReference<ServerData> serverData = new AtomicReference<>();
 
-        JavaHelper.processRandomly(CMSharedConstants.SERVERS, (foundServerData) -> {
+        JavaHelper.processRandomly(CMClientConstants.SERVERS, (foundServerData) -> {
             ServerInfo response = ServerAPI.getServerData(foundServerData.ip);
 
-            if (response.getPlayers().getOnline() < response.getPlayers().getMax()) {
+            ServerInfo.Players players = response.getPlayers();
+
+            if (players != null && players.getOnline() < players.getMax()) {
                 serverData.set(new ServerData(foundServerData.name, foundServerData.ip, foundServerData.isLan()));
             }
         });
 
-        ServerAddress serverAddress = ServerAddress.parseString(serverData.get().ip);
-        ConnectScreen.startConnecting(new ServerListScreen(new TitleScreen()), Minecraft.getInstance(), serverAddress, serverData.get(), true);
+        if (serverData.get() != null) {
+            ServerAddress serverAddress = ServerAddress.parseString(serverData.get().ip);
+            ConnectScreen.startConnecting(new ServerListScreen(new TitleScreen()), Minecraft.getInstance(), serverAddress, serverData.get(), true);
+        }
     }
 }

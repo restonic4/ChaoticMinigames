@@ -22,3 +22,8 @@ accessible field net/minecraft/client/multiplayer/ServerList hiddenServerList Lj
 accessible method net/minecraft/client/gui/screens/Screen createTabEvent ()Lnet/minecraft/client/gui/navigation/FocusNavigationEvent$TabNavigation;
 accessible method net/minecraft/client/gui/screens/Screen createArrowEvent (Lnet/minecraft/client/gui/navigation/ScreenDirection;)Lnet/minecraft/client/gui/navigation/FocusNavigationEvent$ArrowNavigation;
 accessible method net/minecraft/client/gui/screens/Screen clearFocus ()V
+accessible method net/minecraft/world/entity/projectile/AbstractArrow setFlag (IZ)V
+accessible field net/minecraft/world/entity/projectile/AbstractArrow FLAG_NOPHYSICS I
+accessible method net/minecraft/client/renderer/GameRenderer getFov (Lnet/minecraft/client/Camera;FZ)D
+accessible method net/minecraft/client/renderer/GameRenderer bobHurt (Lcom/mojang/blaze3d/vertex/PoseStack;F)V
+accessible method net/minecraft/client/renderer/GameRenderer bobView (Lcom/mojang/blaze3d/vertex/PoseStack;F)V

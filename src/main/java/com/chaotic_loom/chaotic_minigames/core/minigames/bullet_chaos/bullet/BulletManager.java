@@ -14,6 +14,7 @@ public class BulletManager<T extends Bullet> {
         for (int i = bullets.size() - 1; i >= 0; i--) {
             T bullet = bullets.get(i);
             bullet.tick();
+
             if (bullet.isFinished()) {
                 bullets.remove(i);
             }

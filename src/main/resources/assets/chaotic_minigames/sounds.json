@@ -14,5 +14,21 @@
         "stream": false
       }
     ]
+  },
+  "agile_accelerando": {
+    "sounds": [
+      {
+        "name": "chaotic_minigames:agile_accelerando",
+        "stream": false
+      }
+    ]
+  },
+  "breakneck_boogie": {
+    "sounds": [
+      {
+        "name": "chaotic_minigames:breakneck_boogie",
+        "stream": false
+      }
+    ]
   }
 }

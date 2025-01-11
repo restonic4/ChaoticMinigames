@@ -1,6 +1,7 @@
 package com.chaotic_loom.chaotic_minigames.core.data;
 
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 
 import java.util.List;
 
@@ -16,15 +17,19 @@ public class MinigameSettings {
         this.maps = maps;
     }
 
-    public Component getName() {
+    public String getId() {
+        return id;
+    }
+
+    public MutableComponent getName() {
         return Component.translatable("minigame.chaotic_minigames." + this.id + ".name");
     }
 
-    public Component getDescription() {
+    public MutableComponent getDescription() {
         return Component.translatable("minigame.chaotic_minigames." + this.id + ".description");
     }
 
-    public Component getSummary() {
+    public MutableComponent getSummary() {
         return Component.translatable("minigame.chaotic_minigames." + this.id + ".summary");
     }
 

@@ -1,6 +1,8 @@
 package com.chaotic_loom.chaotic_minigames.networking.packets.server_to_client;
 
 import com.chaotic_loom.chaotic_minigames.core.GameManager;
+import com.chaotic_loom.chaotic_minigames.core.PartyManager;
+import com.chaotic_loom.chaotic_minigames.core.client.gui.VotingScreen;
 import com.chaotic_loom.chaotic_minigames.core.data.PartyStatus;
 import com.chaotic_loom.chaotic_minigames.core.data.ServerStatus;
 import com.chaotic_loom.chaotic_minigames.entrypoints.constants.CMSharedConstants;
@@ -28,13 +30,31 @@ public class SendServerDataToClient {
 
     public static void receive(Minecraft minecraft, ClientPacketListener clientPacketListener, FriendlyByteBuf friendlyByteBuf, PacketSender packetSender) {
         KnownServerDataOnClient.serverType = ServerStatus.Type.valueOf(friendlyByteBuf.readUtf());
+
+        if (KnownServerDataOnClient.serverType == ServerStatus.Type.PARTY) {
+            KnownServerDataOnClient.partyState = PartyStatus.State.valueOf(friendlyByteBuf.readUtf());
+
+            if (KnownServerDataOnClient.partyState != PartyStatus.State.VOTING && minecraft.screen instanceof VotingScreen) {
+                minecraft.execute(() -> {
+                    minecraft.setScreen(null);
+                });
+            }
+        }
+
+        System.out.println(KnownServerDataOnClient.serverType + " -> " + KnownServerDataOnClient.partyState);
     }
 
     public static void sendToClient(ServerPlayer serverPlayer) {
         GameManager gameManager = GameManager.getInstance();
+        PartyManager partyManager = gameManager.getPartyManager();
+
         FriendlyByteBuf friendlyByteBuf = PacketByteBufs.create();
 
         friendlyByteBuf.writeUtf(gameManager.getServerStatus().getType().name());
+
+        if (partyManager != null) {
+            friendlyByteBuf.writeUtf(partyManager.getPartyStatus().getState().name());
+        }
 
         ServerPlayNetworking.send(serverPlayer, getId(), friendlyByteBuf);
     }

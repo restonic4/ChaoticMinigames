@@ -1,11 +1,9 @@
 package com.chaotic_loom.chaotic_minigames.core.minigames.bullet_chaos;
 
 import com.chaotic_loom.chaotic_minigames.annotations.Minigame;
+import com.chaotic_loom.chaotic_minigames.core.GameManager;
 import com.chaotic_loom.chaotic_minigames.core.PartyManager;
-import com.chaotic_loom.chaotic_minigames.core.data.MapData;
-import com.chaotic_loom.chaotic_minigames.core.data.MapList;
-import com.chaotic_loom.chaotic_minigames.core.data.MapSpawn;
-import com.chaotic_loom.chaotic_minigames.core.data.MinigameSettings;
+import com.chaotic_loom.chaotic_minigames.core.data.*;
 import com.chaotic_loom.chaotic_minigames.core.minigames.GenericMinigame;
 import com.chaotic_loom.chaotic_minigames.core.minigames.bullet_chaos.bullet.BulletManager;
 import com.chaotic_loom.chaotic_minigames.core.minigames.bullet_chaos.bullet.BulletRenderer;
@@ -19,6 +17,7 @@ import com.chaotic_loom.under_control.util.EasingSystem;
 import com.chaotic_loom.under_control.util.MathHelper;
 import com.chaotic_loom.under_control.util.ThreadHelper;
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerPlayer;
 import org.joml.Vector3f;
 
 import java.util.ArrayList;
@@ -29,6 +28,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class BulletChaos extends GenericMinigame {
     private final BulletManager<BulletRenderer> clientBulletManager;
     private final BulletManager<ServerBullet> serverBulletBulletManager;
+    private final Playlist music;
 
     public BulletChaos() {
         super(new MinigameSettings(
@@ -46,18 +46,29 @@ public class BulletChaos extends GenericMinigame {
                                         new MapSpawn(new BlockPos(17, 41, 17))
                                 )
                         ).setCenter(new BlockPos(17, 43, 17))
+                         .setTime(1000)
+                         .setRain(false)
                 )
         ));
 
         this.clientBulletManager = new BulletManager<>();
         this.serverBulletBulletManager = new BulletManager<>();
+
+        this.music = new Playlist();
+
+        this.music.addMusic(SoundRegistry.CHOP_CHOP);
+        this.music.addMusic(SoundRegistry.AGILE_ACCELERANDO);
+        this.music.addMusic(SoundRegistry.BREAKNECK_BOOGIE);
     }
 
     @Override
     public void onStart(PartyManager partyManager) {
         partyManager.teleportRandomly();
+        partyManager.loadMapWeather();
 
-        PlayMusic.sendToAll(partyManager.getServerLevel().getServer(), SoundRegistry.CHOP_CHOP, 2000, EasingSystem.EasingType.LINEAR);
+        startTickingOnServer();
+
+        music.playRandom();
 
         AtomicBoolean runningCountDown = new AtomicBoolean(true);
 
@@ -74,7 +85,7 @@ public class BulletChaos extends GenericMinigame {
         int minBulletsPerTick = 2;
         int maxBulletsPerTick = 4;
 
-        partyManager.runAsync(() -> {
+        ThreadHelper.runAsync(() -> {
             partyManager.startCountDown(totalDuration / 1000, () -> {
                 runningCountDown.set(false);
             });
@@ -104,9 +115,38 @@ public class BulletChaos extends GenericMinigame {
             }
         }
 
-        ThreadHelper.sleep(5000);
+        ThreadHelper.sleep(8000);
+
+        stopTickingOnServer();
 
         partyManager.executeForAllInGame(this::awardPlayer);
+        announceWinners();
+    }
+
+    public void tick(ExecutionSide executionSide) {
+        if (executionSide == ExecutionSide.CLIENT) {
+            clientBulletManager.tick();
+        } else if (executionSide == ExecutionSide.SERVER) {
+            serverBulletBulletManager.tick();
+
+            List<ServerPlayer> players = GameManager.getInstance().getPartyManager().getInGamePlayers();
+            for (int i = players.size() - 1; i >= 0; i--) {
+                ServerPlayer serverPlayer = players.get(i);
+
+                BlockPos center = GameManager.getInstance().getPartyManager().getCurrentMapData(BulletChaosMapData.class).getCenter();
+
+                float xDistance = (float) serverPlayer.position().x - center.getX();
+                float yDistance = (float) serverPlayer.position().y - center.getY();
+                float zDistance = (float) serverPlayer.position().z - center.getZ();
+
+                float distanceSquared = xDistance * xDistance + yDistance * yDistance + zDistance * zDistance;
+                float requiredDistance = 20;
+
+                if (distanceSquared > requiredDistance * requiredDistance) {
+                    GameManager.getInstance().getPartyManager().disqualifyPlayer(serverPlayer);
+                }
+            }
+        }
     }
 
     private void spawnBullet(PartyManager partyManager, int reachTime, float sphereRadius) {
@@ -114,8 +154,6 @@ public class BulletChaos extends GenericMinigame {
 
         BlockPos center = ((BulletChaosMapData) partyManager.getCurrentMapData()).getCenter();
         Vector3f randomPoint = MathHelper.getRandomPointOnCircle(center.getCenter().toVector3f(), radius);
-
-        System.out.println("Spawning bullet at " + randomPoint);
 
         Vector3f direction = new Vector3f(center.getX() - randomPoint.x, center.getY() - randomPoint.y, center.getZ() - randomPoint.z);
         direction.normalize();
@@ -133,14 +171,6 @@ public class BulletChaos extends GenericMinigame {
 
         SpawnBullet.sendToAll(partyManager.getServerLevel().getServer(), offsetStartPoint, offsetEndPoint, currentTime, currentTime + reachTime, sphereRadius);
         serverBulletBulletManager.addBullet(new ServerBullet(sphereRadius, currentTime, currentTime + reachTime, offsetStartPoint, offsetEndPoint));
-    }
-
-    public void tick(ExecutionSide executionSide) {
-        if (executionSide == ExecutionSide.CLIENT) {
-            clientBulletManager.tick();
-        } else if (executionSide == ExecutionSide.SERVER) {
-            serverBulletBulletManager.tick();
-        }
     }
 
     public BulletManager<BulletRenderer> getClientBulletManager() {

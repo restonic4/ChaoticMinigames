@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-@Registration(side = ExecutionSide.COMMON)
+@Registration(side = ExecutionSide.COMMON, priority = -1)
 public class MinigameRegistry {
     public static List<GenericMinigame> MINIGAMES = new ArrayList<>();
 

@@ -5,6 +5,7 @@
   "compatibilityLevel": "JAVA_17",
   "mixins": [
     "common.PlaceCommandMixin",
+    "common.PlayerListMixin",
     "common.SoundSourceMixin",
     "common.StructureBlockEntityMixin"
   ],
@@ -12,6 +13,7 @@
     "client.AccessibilityOnboardingScreenMixin",
     "client.ClientPacketListenerMixin",
     "client.LevelRendererMixin",
+    "client.MinecraftMixin",
     "client.OptionsMixins",
     "client.PauseScreenMixin",
     "client.QuickPlayMixin",
