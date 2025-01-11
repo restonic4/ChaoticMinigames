@@ -59,6 +59,13 @@ public class BulletChaos extends GenericMinigame {
         this.music.addMusic(SoundRegistry.CHOP_CHOP);
         this.music.addMusic(SoundRegistry.AGILE_ACCELERANDO);
         this.music.addMusic(SoundRegistry.BREAKNECK_BOOGIE);
+        this.music.addMusic(SoundRegistry.DASHING_ON_THE_DOUBLE);
+        this.music.addMusic(SoundRegistry.DOUBLE_TIME);
+        this.music.addMusic(SoundRegistry.LICKETY_SPLIT);
+        this.music.addMusic(SoundRegistry.NIMBLY_DOES_IT);
+        this.music.addMusic(SoundRegistry.PRONTO);
+        this.music.addMusic(SoundRegistry.SWIFT_DESCENT);
+        this.music.addMusic(SoundRegistry.TIME_IS_OF_THE_ESSENCE);
     }
 
     @Override

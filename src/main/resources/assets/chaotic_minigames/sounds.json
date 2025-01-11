@@ -30,5 +30,61 @@
         "stream": false
       }
     ]
+  },
+  "time_is_of_the_essence": {
+    "sounds": [
+      {
+        "name": "chaotic_minigames:time_is_of_the_essence",
+        "stream": false
+      }
+    ]
+  },
+  "swift_descent": {
+    "sounds": [
+      {
+        "name": "chaotic_minigames:swift_descent",
+        "stream": false
+      }
+    ]
+  },
+  "pronto": {
+    "sounds": [
+      {
+        "name": "chaotic_minigames:pronto",
+        "stream": false
+      }
+    ]
+  },
+  "nimbly_does_it": {
+    "sounds": [
+      {
+        "name": "chaotic_minigames:nimbly_does_it",
+        "stream": false
+      }
+    ]
+  },
+  "lickety_split": {
+    "sounds": [
+      {
+        "name": "chaotic_minigames:lickety_split",
+        "stream": false
+      }
+    ]
+  },
+  "double_time": {
+    "sounds": [
+      {
+        "name": "chaotic_minigames:double_time",
+        "stream": false
+      }
+    ]
+  },
+  "dashing_on_the_double": {
+    "sounds": [
+      {
+        "name": "chaotic_minigames:dashing_on_the_double",
+        "stream": false
+      }
+    ]
   }
 }
