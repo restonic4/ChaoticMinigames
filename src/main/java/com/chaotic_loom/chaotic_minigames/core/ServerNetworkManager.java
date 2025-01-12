@@ -21,6 +21,10 @@ public class ServerNetworkManager {
         JavaHelper.processRandomly(CMClientConstants.SERVERS, (foundServerData) -> {
             ServerInfo response = ServerAPI.getServerData(foundServerData.ip);
 
+            if (response == null) {
+                return;
+            }
+
             ServerInfo.Players players = response.getPlayers();
 
             if (players != null && players.getOnline() < players.getMax()) {

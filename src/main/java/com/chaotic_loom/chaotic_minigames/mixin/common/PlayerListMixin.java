@@ -29,7 +29,9 @@ import java.util.Random;
 public class PlayerListMixin {
     @Inject(method = "placeNewPlayer", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerLevel;getGameRules()Lnet/minecraft/world/level/GameRules;"))
     public void placeNewPlayer(Connection connection, ServerPlayer serverPlayer, CallbackInfo ci) {
-        GameManager.getInstance().spawnPlayer(serverPlayer, true);
+        if (GameManager.getInstance() != null) {
+            GameManager.getInstance().spawnPlayer(serverPlayer, true);
+        }
     }
 
     @Redirect(method = "respawn", at = @At(value = "INVOKE", target = "Ljava/util/Optional;isPresent()Z", ordinal = 1))
@@ -44,7 +46,9 @@ public class PlayerListMixin {
 
     @WrapOperation(method = "respawn", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerPlayer;setMainArm(Lnet/minecraft/world/entity/HumanoidArm;)V"))
     public void respawn(ServerPlayer instance, HumanoidArm humanoidArm, Operation<Void> original) {
-        GameManager.getInstance().spawnPlayer(instance, false);
+        if (GameManager.getInstance() != null) {
+            GameManager.getInstance().spawnPlayer(instance, false);
+        }
 
         original.call(instance, humanoidArm);
     }

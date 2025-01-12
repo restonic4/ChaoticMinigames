@@ -8,10 +8,18 @@ import java.util.List;
 public class CMClientConstants {
     public static final List<ServerData> SERVERS = new ArrayList<>();
 
+    public static final boolean RENDER_HITBOX = false;
+
     static {
-        SERVERS.add(new ServerData(
+        /*SERVERS.add(new ServerData(
                 "Test server 1",
                 "127.0.0.1:25565",
+                false
+        ));*/
+
+        SERVERS.add(new ServerData(
+                "Test server 1",
+                "restonic4-tests.exaroton.me:40617",
                 false
         ));
     }

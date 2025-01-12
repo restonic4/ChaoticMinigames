@@ -10,9 +10,7 @@ import com.chaotic_loom.chaotic_minigames.core.minigames.bullet_chaos.bullet.Bul
 import com.chaotic_loom.chaotic_minigames.core.minigames.bullet_chaos.bullet.ServerBullet;
 import com.chaotic_loom.chaotic_minigames.core.minigames.bullet_chaos.packets.SpawnBullet;
 import com.chaotic_loom.chaotic_minigames.core.registries.common.SoundRegistry;
-import com.chaotic_loom.chaotic_minigames.networking.packets.server_to_client.PlayMusic;
 import com.chaotic_loom.under_control.core.annotations.ExecutionSide;
-import com.chaotic_loom.under_control.util.EasingSystem;
 
 import com.chaotic_loom.under_control.util.MathHelper;
 import com.chaotic_loom.under_control.util.ThreadHelper;
@@ -20,7 +18,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
 import org.joml.Vector3f;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -154,6 +151,20 @@ public class BulletChaos extends GenericMinigame {
                 }
             }
         }
+    }
+
+    @Override
+    public void serverCleanup() {
+        serverBulletBulletManager.markFinish();
+
+        super.serverCleanup();
+    }
+
+    @Override
+    public void clientCleanup() {
+        clientBulletManager.markFinish();
+
+        super.clientCleanup();
     }
 
     private void spawnBullet(PartyManager partyManager, int reachTime, float sphereRadius) {

@@ -11,6 +11,7 @@ import net.minecraft.sounds.SoundEvent;
 @Registration(side = ExecutionSide.COMMON)
 public class SoundRegistry {
     public static SoundEvent MUSIC_MAIN_MENU_1;
+    public static SoundEvent ROLLERDISCO_RUMBLE;
     public static SoundEvent CHOP_CHOP;
     public static SoundEvent AGILE_ACCELERANDO;
     public static SoundEvent BREAKNECK_BOOGIE;
@@ -24,6 +25,7 @@ public class SoundRegistry {
 
     public static void register() {
         MUSIC_MAIN_MENU_1 = registerSoundEvent(new ResourceLocation(CMSharedConstants.ID, "music_main_menu_1"));
+        ROLLERDISCO_RUMBLE = registerSoundEvent(new ResourceLocation(CMSharedConstants.ID, "rollerdisco_rumble"));
         CHOP_CHOP = registerSoundEvent(new ResourceLocation(CMSharedConstants.ID, "chop_chop"));
         AGILE_ACCELERANDO = registerSoundEvent(new ResourceLocation(CMSharedConstants.ID, "agile_accelerando"));
         BREAKNECK_BOOGIE = registerSoundEvent(new ResourceLocation(CMSharedConstants.ID, "breakneck_boogie"));

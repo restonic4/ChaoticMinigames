@@ -20,4 +20,10 @@ public class BulletManager<T extends Bullet> {
             }
         }
     }
+
+    public void markFinish() {
+        for (T bullet : bullets) {
+            bullet.finished = true;
+        }
+    }
 }

@@ -15,7 +15,7 @@ import net.minecraft.server.level.ServerPlayer;
 import java.util.List;
 
 public abstract class GenericMinigame {
-    public static int GENERIC_MAX_PLAYERS = 30;
+    public static int GENERIC_MAX_PLAYERS = 20;
 
     private final MinigameSettings minigameSettings;
     private boolean canTickOnServer = false;
@@ -35,6 +35,14 @@ public abstract class GenericMinigame {
     public abstract void onStart(PartyManager partyManager);
 
     public abstract void tick(ExecutionSide executionSide);
+
+    public void serverCleanup() {
+        tick(ExecutionSide.SERVER);
+    }
+
+    public void clientCleanup() {
+        tick(ExecutionSide.CLIENT);
+    }
 
     public void startTickingOnServer() {
         this.canTickOnServer = true;

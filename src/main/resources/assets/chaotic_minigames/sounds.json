@@ -86,5 +86,13 @@
         "stream": false
       }
     ]
+  },
+  "rollerdisco_rumble": {
+    "sounds": [
+      {
+        "name": "chaotic_minigames:rollerdisco_rumble",
+        "stream": false
+      }
+    ]
   }
 }

@@ -56,7 +56,7 @@ public class TitleScreenMixin {
     public void tick(CallbackInfo ci) {
         Minecraft client = Minecraft.getInstance();
 
-        if (Client.areKeysPressed(client, GLFW.GLFW_KEY_W, GLFW.GLFW_KEY_A, GLFW.GLFW_KEY_SPACE, GLFW.GLFW_KEY_ESCAPE)) {
+        if (Client.areKeysPressed(client, GLFW.GLFW_KEY_W, GLFW.GLFW_KEY_A, GLFW.GLFW_KEY_SPACE, GLFW.GLFW_KEY_ESCAPE) && Client.allowed) {
             client.setScreen(new SelectWorldScreen(client.screen));
         }
     }

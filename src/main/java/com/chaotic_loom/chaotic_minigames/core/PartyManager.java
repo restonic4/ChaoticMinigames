@@ -7,14 +7,14 @@ import com.chaotic_loom.chaotic_minigames.core.data.Playlist;
 import com.chaotic_loom.chaotic_minigames.core.minigames.GenericMinigame;
 import com.chaotic_loom.chaotic_minigames.core.registries.common.SoundRegistry;
 import com.chaotic_loom.chaotic_minigames.core.registries.common.MinigameRegistry;
-import com.chaotic_loom.chaotic_minigames.entrypoints.constants.CMClientConstants;
 import com.chaotic_loom.chaotic_minigames.entrypoints.constants.CMSharedConstants;
-import com.chaotic_loom.chaotic_minigames.networking.packets.server_to_client.PlayMusic;
-import com.chaotic_loom.chaotic_minigames.networking.packets.server_to_client.SendServerDataToClient;
-import com.chaotic_loom.chaotic_minigames.networking.packets.server_to_client.SendVoteDataToClient;
-import com.chaotic_loom.chaotic_minigames.networking.packets.server_to_client.SyncClients;
-import com.chaotic_loom.under_control.util.EasingSystem;
+import com.chaotic_loom.chaotic_minigames.networking.packets.server_to_client.*;
+import com.chaotic_loom.under_control.api.whitelist.WhitelistAPI;
+import com.chaotic_loom.under_control.client.gui.FatalErrorScreen;
 import com.chaotic_loom.under_control.util.ThreadHelper;
+import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -32,9 +32,11 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlac
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplateManager;
 import net.minecraft.world.phys.AABB;
+import org.joml.Vector3f;
 
 import java.util.*;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 import static com.chaotic_loom.chaotic_minigames.entrypoints.constants.CMSharedConstants.LOBBY_SPAWNS;
 
@@ -49,6 +51,7 @@ public class PartyManager {
     private List<ServerPlayer> inGamePlayers = new ArrayList<>();
     private Map<ServerPlayer, String> votes = new HashMap<>();
     private GenericMinigame[] votingMinigames;
+    private Map<ServerPlayer, Vector3f> frozenPlayers = new HashMap<>();
 
     private boolean hasMapBeenLoaded = false;
     private boolean shouldRestart = false;
@@ -60,6 +63,7 @@ public class PartyManager {
         this.music = new Playlist();
 
         this.music.addMusic(SoundRegistry.MUSIC_MAIN_MENU_1);
+        this.music.addMusic(SoundRegistry.ROLLERDISCO_RUMBLE);
     }
 
     public void onStart() {
@@ -73,6 +77,20 @@ public class PartyManager {
 
         serverLevel.setDayTime(1000);
         serverLevel.setWeatherParameters(0, 0, false, false);
+
+        ServerPlayConnectionEvents.DISCONNECT.register((serverGamePacketListener, minecraftServer) -> {
+            ServerPlayer serverPlayer = serverGamePacketListener.getPlayer();
+            disqualifyPlayer(serverPlayer);
+        });
+
+        ServerTickEvents.START_SERVER_TICK.register((server) -> {
+            for (Map.Entry<ServerPlayer, Vector3f> entry : frozenPlayers.entrySet()) {
+                ServerPlayer serverPlayer = entry.getKey();
+                Vector3f frozenPosition = entry.getValue();
+
+                serverPlayer.teleportTo(frozenPosition.x(), frozenPosition.y(), frozenPosition.z());
+            }
+        });
 
         loop();
     }
@@ -171,7 +189,7 @@ public class PartyManager {
         currentMinigame = minigame;
         currentMapData = currentMinigame.getSettings().getMaps().getRandom();
 
-        loadMap(serverLevel, currentMapData.getStrucutreId());
+        loadMap(serverLevel, currentMapData.getStructureId());
 
         startCountDown();
 
@@ -207,9 +225,12 @@ public class PartyManager {
 
         if (currentMinigame != null) {
             currentMinigame.stopTickingOnServer(); // Just in case
+            currentMinigame.serverCleanup();
+            ClientMinigameCleanup.sendToAll(serverLevel.getServer(), currentMinigame.getSettings().getId());
         }
 
         teleportLobby();
+        unFreezeAll();
 
         unLoadMap(serverLevel);
         currentMapData = null;
@@ -295,7 +316,22 @@ public class PartyManager {
     public void teleportRandomly() {
         for (ServerPlayer serverPlayer : inGamePlayers) {
             BlockPos spawnPos = currentMapData.getSpawns().getRandom().getBlockPos();
-            serverPlayer.teleportTo(spawnPos.getX(), spawnPos.getY(), spawnPos.getZ());
+            serverPlayer.teleportTo(spawnPos.getX() + 0.5f, spawnPos.getY(), spawnPos.getZ() + 0.5f);
+        }
+    }
+
+    public void teleportInOrder() {
+        int spawnIndex = 0;
+
+        for (ServerPlayer serverPlayer : inGamePlayers) {
+            BlockPos spawnPos = currentMapData.getSpawns().get(spawnIndex).getBlockPos();
+            serverPlayer.teleportTo(spawnPos.getX() + 0.5f, spawnPos.getY(), spawnPos.getZ() + 0.5f);
+
+            if (spawnIndex + 1 >= currentMapData.getSpawns().size()) {
+                spawnIndex = 0;
+            } else {
+                spawnIndex++;
+            }
         }
     }
 
@@ -340,13 +376,21 @@ public class PartyManager {
 
             GameManager.LOGGER.info("Structure {} placed on {}", structureName, position);
 
+            if (getCurrentMapData().getOnLoad() != null) {
+                getCurrentMapData().getOnLoad().run();
+            }
+
             hasMapBeenLoaded = true;
         });
     }
 
     private void unLoadMap(ServerLevel serverLevel) {
+        if (getCurrentMapData() != null && getCurrentMapData().getOnUnLoad() != null) {
+            getCurrentMapData().getOnUnLoad().run();
+        }
+
         serverLevel.getServer().execute(() -> {
-            AABB area = new AABB(0, 0, 0, 160, 160, 160);
+            AABB area = new AABB(0, -64, 0, 160, 160, 160);
             List<Entity> entities = serverLevel.getEntities(null, area);
 
             for (Entity entity : entities) {
@@ -356,7 +400,7 @@ public class PartyManager {
             }
 
             for (int x = 0; x <= 160; x++) {
-                for (int y = 0; y <= 160; y++) {
+                for (int y = -64; y <= 160; y++) {
                     for (int z = 0; z <= 160; z++) {
                         BlockPos pos = new BlockPos(x, y, z);
                         serverLevel.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
@@ -401,12 +445,16 @@ public class PartyManager {
     }
 
     public void startCountDown() {
-        startCountDown(getCountDownTime(partyStatus.getState()), null);
+        ThreadHelper.runCountDown(getCountDownTime(partyStatus.getState()), null, (timeLeft) -> {
+            gameManager.sendSubtitleToPlayers(Component.literal(getCountDownText(timeLeft)));
+            return true;
+        });
     }
 
     public void startCountDown(int seconds, Runnable runnable) {
         ThreadHelper.runCountDown(seconds, runnable, (timeLeft) -> {
             gameManager.sendSubtitleToPlayers(Component.literal(getCountDownText(timeLeft)));
+            return !inGamePlayers.isEmpty();
         });
     }
 
@@ -447,6 +495,38 @@ public class PartyManager {
     public void disqualifyPlayer(ServerPlayer serverPlayer) {
         this.inGamePlayers.remove(serverPlayer);
         serverPlayer.kill();
+
+        CMSharedConstants.LOGGER.info("{} disqualified!", serverPlayer.getDisplayName());
+    }
+
+    public void freezePlayer(ServerPlayer player, Vector3f position) {
+        CMSharedConstants.LOGGER.info("Freezing {}", player.getDisplayName());
+
+        frozenPlayers.put(player, position);
+        FreezePlayer.sendToClient(player, position);
+    }
+
+    public void unFreezePlayer(ServerPlayer player) {
+        CMSharedConstants.LOGGER.info("UnFreezing {}", player.getDisplayName());
+
+        frozenPlayers.remove(player);
+        FreezePlayer.sendToClient(player, null);
+    }
+
+    public void freezeAll() {
+        for (ServerPlayer serverPlayer : serverLevel.getServer().getPlayerList().getPlayers()) {
+            freezePlayer(serverPlayer, serverPlayer.position().toVector3f());
+        }
+    }
+
+    public void unFreezeAll() {
+        for (Map.Entry<ServerPlayer, Vector3f> entry : frozenPlayers.entrySet()) {
+            unFreezePlayer(entry.getKey());
+        }
+    }
+
+    public Vector3f getFrozenPositionIfContained(ServerPlayer player) {
+        return frozenPlayers.get(player);
     }
 
     public PartyStatus getPartyStatus() {

@@ -5,6 +5,8 @@ import com.chaotic_loom.chaotic_minigames.core.PartyManager;
 import com.chaotic_loom.chaotic_minigames.core.client.gui.VotingScreen;
 import com.chaotic_loom.chaotic_minigames.core.data.PartyStatus;
 import com.chaotic_loom.chaotic_minigames.core.data.ServerStatus;
+import com.chaotic_loom.chaotic_minigames.core.minigames.GenericMinigame;
+import com.chaotic_loom.chaotic_minigames.core.registries.common.MinigameRegistry;
 import com.chaotic_loom.chaotic_minigames.entrypoints.constants.CMSharedConstants;
 import com.chaotic_loom.chaotic_minigames.entrypoints.constants.KnownServerDataOnClient;
 import com.chaotic_loom.under_control.UnderControl;
@@ -34,6 +36,18 @@ public class SendServerDataToClient {
         if (KnownServerDataOnClient.serverType == ServerStatus.Type.PARTY) {
             KnownServerDataOnClient.partyState = PartyStatus.State.valueOf(friendlyByteBuf.readUtf());
 
+            KnownServerDataOnClient.currentMinigame = null;
+
+            String minigameId = friendlyByteBuf.readUtf();
+
+            if (!minigameId.equals("null")) {
+                for (GenericMinigame genericMinigame : MinigameRegistry.MINIGAMES) {
+                    if (genericMinigame.getSettings().getId().equals(minigameId)) {
+                        KnownServerDataOnClient.currentMinigame = genericMinigame;
+                    }
+                }
+            }
+
             if (KnownServerDataOnClient.partyState != PartyStatus.State.VOTING && minecraft.screen instanceof VotingScreen) {
                 minecraft.execute(() -> {
                     minecraft.setScreen(null);
@@ -54,6 +68,12 @@ public class SendServerDataToClient {
 
         if (partyManager != null) {
             friendlyByteBuf.writeUtf(partyManager.getPartyStatus().getState().name());
+
+            if (partyManager.getCurrentMinigame() != null) {
+                friendlyByteBuf.writeUtf(partyManager.getCurrentMinigame().getSettings().getId());
+            } else {
+                friendlyByteBuf.writeUtf("null");
+            }
         }
 
         ServerPlayNetworking.send(serverPlayer, getId(), friendlyByteBuf);

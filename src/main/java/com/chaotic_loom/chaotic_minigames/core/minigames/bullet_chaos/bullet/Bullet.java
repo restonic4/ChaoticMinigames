@@ -19,7 +19,7 @@ public abstract class Bullet {
         return finished;
     }
 
-    protected void calculatePosition(long currentTime, Vector3f result) {
+    protected void calculatePosition(Vector3f result) {
         float xProgress = EasingSystem.getEasedValue(spawnedTime, endTime, spawnPoint.x, endPoint.x, EasingSystem.EasingType.LINEAR);
         float yProgress = EasingSystem.getEasedValue(spawnedTime, endTime, spawnPoint.y, endPoint.y, EasingSystem.EasingType.LINEAR);
         float zProgress = EasingSystem.getEasedValue(spawnedTime, endTime, spawnPoint.z, endPoint.z, EasingSystem.EasingType.LINEAR);
@@ -36,7 +36,7 @@ public abstract class Bullet {
             return;
         }
 
-        calculatePosition(currentTime, cachePosition);
+        calculatePosition(cachePosition);
     }
 
     public Vector3f getPosition() {
