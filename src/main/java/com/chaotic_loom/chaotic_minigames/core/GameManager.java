@@ -31,6 +31,7 @@ public class GameManager {
 
     private final ServerStatus serverStatus;
 
+    private SynchronizationHelper synchronizationHelper;
 
     private GameManager(MinecraftServer server) {
         this.server = server;
@@ -42,23 +43,19 @@ public class GameManager {
         return GameManager.instance;
     }
 
-    public static void onStart(MinecraftServer server) {
-        throw  new RuntimeException("[Thread-9/ERROR]: Uncaught exception in thread \"Thread-9\"\n" +
-                "java.util.ConcurrentModificationException: null\n" +
-                "at java.util.HashMap$HashIterator.nextNode(HashMap.java:1597) ~[?:?]\n" +
-                "at java.util.HashMap$EntryIterator.next(HashMap.java:1630) ~[?:?]\n" +
-                "at java.util.HashMap$EntryIterator.next(HashMap.java:1628) ~[?:?]\n" +
-                "at com.chaotic_loom.chaotic_minigames.core.PartyManager.unFreezeAll(PartyManager.java:523) ~[ChaoticMinigames-1.0.jar:?]\n" +
-                "at com.chaotic_loom.chaotic_minigames.core.minigames.sweeper.Sweeper.onStart(Sweeper.java:118) ~[ChaoticMinigames-1.0.jar:?]\n" +
-                "at com.chaotic_loom.chaotic_minigames.core.PartyManager.onPlaying(PartyManager.java:220) ~[ChaoticMinigames-1.0.jar:?]\n" +
-                "at com.chaotic_loom.chaotic_minigames.core.PartyManager.loop(PartyManager.java:117) ~[ChaoticMinigames-1.0.jar:?]\n" +
-                "at com.chaotic_loom.chaotic_minigames.core.PartyManager.loop(PartyManager.java:127) ~[ChaoticMinigames-1.0.jar:?]\n" +
-                "at com.chaotic_loom.chaotic_minigames.core.PartyManager.onStart(PartyManager.java:95) ~[ChaoticMinigames-1.0.jar:?]\n" +
-                "at com.chaotic_loom.chaotic_minigames.core.GameManager.lambda$onStart$0(GameManager.java:57) ~[ChaoticMinigames-1.0.jar:?]\n" +
-                "at java.lang.Thread.run(Thread.java:840) ~[?:?]");
+    public static GameManager getInstanceOrCreate() {
+        if (GameManager.instance == null) {
+            GameManager.instance = new GameManager(null);
+        }
 
+        return GameManager.instance;
+    }
+
+    public static void onStart(MinecraftServer server) {
         GameManager newGameManager = new GameManager(server);
         GameManager.instance = newGameManager;
+
+        newGameManager.synchronizationHelper = new SynchronizationHelper(6);
 
         ConfigProvider configProvider = ServerConfigRegistry.registerProvider(server);
 
@@ -122,5 +119,13 @@ public class GameManager {
 
     public MinecraftServer getServer() {
         return this.server;
+    }
+
+    public SynchronizationHelper getSynchronizationHelper() {
+        return this.synchronizationHelper;
+    }
+
+    public void setSynchronizationHelper(SynchronizationHelper synchronizationHelper) {
+        this.synchronizationHelper = synchronizationHelper;
     }
 }

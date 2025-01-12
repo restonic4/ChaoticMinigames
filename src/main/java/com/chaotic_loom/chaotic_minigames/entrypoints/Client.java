@@ -1,5 +1,6 @@
 package com.chaotic_loom.chaotic_minigames.entrypoints;
 
+import com.chaotic_loom.chaotic_minigames.core.GameManager;
 import com.chaotic_loom.chaotic_minigames.core.MusicManager;
 import com.chaotic_loom.chaotic_minigames.core.registries.common.SoundRegistry;
 import com.chaotic_loom.chaotic_minigames.entrypoints.constants.CMSharedConstants;
@@ -27,8 +28,6 @@ import java.util.List;
 import java.util.Map;
 
 public class Client implements ClientModInitializer {
-    public static final SynchronizationHelper synchronizationHelper = new SynchronizationHelper(6);
-
     public static boolean allowed = true;
 
     @Override
@@ -37,16 +36,18 @@ public class Client implements ClientModInitializer {
         IncompatibilitiesAPI.registerIncompatibleMod(CMSharedConstants.ID, "iris");
         IncompatibilitiesAPI.registerIncompatibleMod(CMSharedConstants.ID, "fancymenu");
 
+        GameManager.getInstanceOrCreate().setSynchronizationHelper(new SynchronizationHelper(6));
+
         ClientLifeExtraEvents.CLIENT_STARTED_DELAYED.register((minecraft) -> {
             MusicManager.playMusic(SoundRegistry.MUSIC_MAIN_MENU_1, 4000, EasingSystem.EasingType.LINEAR);
         });
 
         ClientPlayConnectionEvents.JOIN.register((clientPacketListener, packetSender ,minecraft) -> {
-            synchronizationHelper.askForSynchronization();
+            GameManager.getInstance().getSynchronizationHelper().askForSynchronization();
         });
 
         ClientPlayConnectionEvents.DISCONNECT.register((clientPacketListener, minecraft) -> {
-            synchronizationHelper.clearOffsets();
+            GameManager.getInstance().getSynchronizationHelper().clearOffsets();
         });
     }
 

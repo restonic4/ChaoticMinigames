@@ -1,5 +1,6 @@
 package com.chaotic_loom.chaotic_minigames.networking.packets.server_to_client;
 
+import com.chaotic_loom.chaotic_minigames.core.GameManager;
 import com.chaotic_loom.chaotic_minigames.core.MusicManager;
 import com.chaotic_loom.chaotic_minigames.entrypoints.Client;
 import com.chaotic_loom.chaotic_minigames.entrypoints.constants.CMSharedConstants;
@@ -25,7 +26,7 @@ public class SyncClients {
     }
 
     public static void receive(Minecraft minecraft, ClientPacketListener clientPacketListener, FriendlyByteBuf friendlyByteBuf, PacketSender packetSender) {
-        Client.synchronizationHelper.askForSynchronization();
+        GameManager.getInstance().getSynchronizationHelper().askForSynchronization();
     }
 
     public static void sendToClient(ServerPlayer serverPlayer) {

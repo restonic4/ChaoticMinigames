@@ -1,5 +1,6 @@
 package com.chaotic_loom.chaotic_minigames.core.minigames.bullet_chaos.bullet;
 
+import com.chaotic_loom.chaotic_minigames.core.GameManager;
 import com.chaotic_loom.under_control.util.EasingSystem;
 import org.joml.Vector3f;
 
@@ -20,9 +21,11 @@ public abstract class Bullet {
     }
 
     protected void calculatePosition(Vector3f result) {
-        float xProgress = EasingSystem.getEasedValue(spawnedTime, endTime, spawnPoint.x, endPoint.x, EasingSystem.EasingType.LINEAR);
-        float yProgress = EasingSystem.getEasedValue(spawnedTime, endTime, spawnPoint.y, endPoint.y, EasingSystem.EasingType.LINEAR);
-        float zProgress = EasingSystem.getEasedValue(spawnedTime, endTime, spawnPoint.z, endPoint.z, EasingSystem.EasingType.LINEAR);
+        long currentTime = GameManager.getInstance().getSynchronizationHelper().getCurrentTime();
+
+        float xProgress = EasingSystem.getEasedValue(currentTime, spawnedTime, endTime, spawnPoint.x, endPoint.x, EasingSystem.EasingType.LINEAR);
+        float yProgress = EasingSystem.getEasedValue(currentTime, spawnedTime, endTime, spawnPoint.y, endPoint.y, EasingSystem.EasingType.LINEAR);
+        float zProgress = EasingSystem.getEasedValue(currentTime, spawnedTime, endTime, spawnPoint.z, endPoint.z, EasingSystem.EasingType.LINEAR);
 
         result.set(xProgress, yProgress, zProgress);
     }

@@ -520,8 +520,8 @@ public class PartyManager {
     }
 
     public void unFreezeAll() {
-        for (Map.Entry<ServerPlayer, Vector3f> entry : frozenPlayers.entrySet()) {
-            unFreezePlayer(entry.getKey());
+        for (ServerPlayer serverPlayer : serverLevel.getServer().getPlayerList().getPlayers()) {
+            unFreezePlayer(serverPlayer);
         }
     }
 

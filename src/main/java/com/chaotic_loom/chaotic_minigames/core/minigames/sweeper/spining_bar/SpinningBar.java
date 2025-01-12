@@ -1,5 +1,6 @@
 package com.chaotic_loom.chaotic_minigames.core.minigames.sweeper.spining_bar;
 
+import com.chaotic_loom.chaotic_minigames.core.GameManager;
 import com.chaotic_loom.under_control.util.EasingSystem;
 import net.minecraft.world.entity.player.Player;
 import org.joml.Vector3f;
@@ -25,7 +26,9 @@ public abstract class SpinningBar {
     }
 
     protected float calculatePosition(Vector3f result1, Vector3f result2) {
-        float progress = EasingSystem.getEasedValue(startTime, endTime, 0, 1, EasingSystem.EasingType.QUAD_IN);
+        long currentTime = GameManager.getInstance().getSynchronizationHelper().getCurrentTime();
+
+        float progress = EasingSystem.getEasedValue(currentTime, startTime, endTime, 0, 1, EasingSystem.EasingType.QUAD_IN);
 
         hitbox_radius = 0.25f + 2.5f * progress;
 
