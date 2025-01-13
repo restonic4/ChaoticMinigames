@@ -123,6 +123,8 @@ public class Sweeper extends GenericMinigame {
 
         spinningBar.markFinish();
 
+        ThreadHelper.sleep(2000);
+
         partyManager.executeForAllInGame(this::awardPlayer);
         announceWinners();
     }

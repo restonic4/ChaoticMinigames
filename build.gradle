@@ -27,8 +27,8 @@ dependencies {
     // Fabric API. This is technically optional, but you probably want it anyway.
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
-    //modImplementation "maven.modrinth:under-control:${under_control_version}"
-    modImplementation files('libs/UnderControl-1.14.jar')
+    modImplementation "maven.modrinth:under-control:${under_control_version}"
+    //modImplementation files('libs/UnderControl-1.14.jar')
 
     implementation(include('org.reflections:reflections:0.10.2'))
     implementation(include('org.javassist:javassist:3.29.0-GA'))

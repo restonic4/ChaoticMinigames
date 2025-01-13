@@ -12,6 +12,7 @@
   "client": [
     "client.AccessibilityOnboardingScreenMixin",
     "client.ClientPacketListenerMixin",
+    "client.GuiMixin",
     "client.LevelRendererMixin",
     "client.MinecraftMixin",
     "client.OptionsMixins",

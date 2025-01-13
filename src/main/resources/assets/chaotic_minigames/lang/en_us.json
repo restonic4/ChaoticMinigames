@@ -3,15 +3,23 @@
   "gui.chaotic_minigames.title_screen.play": "Play!",
   "gui.chaotic_minigames.title_screen.play.tooltip": "Join the server and start playing the minigames!",
   "gui.chaotic_minigames.options.music_slider.tooltip": "The music system has been completely reprogrammed! I recommend keeping it enabled for a better experience!",
-  "options.fov.real": "Perfect fov: 90",
-  "soundCategory.sound_effects": "Sound effects",
-  "gui.chaotic_minigames.options.sound_effects_slider.tooltip": "Affects the custom sound effects.",
-  "minigame.chaotic_minigames.bullet_chaos.name": "Bullet chaos",
-  "minigame.chaotic_minigames.bullet_chaos.description": "Survive the bullets!",
-  "minigame.chaotic_minigames.bullet_chaos.summary": "Bullets will appear, and you must dodge them to survive.",
-  "message.chaotic_minigames.winners": "Winners: ",
-  "message.chaotic_minigames.how_to_vote": "Press E to vote!",
   "gui.chaotic_minigames.voting_screen.title": "Vote the next minigame!",
   "gui.chaotic_minigames.vote": "Vote!",
-  "message.chaotic_minigames.not_enough_players": "Not enough players found to play!"
+  "gui.chaotic_minigames.options.sound_effects_slider.tooltip": "Affects the custom sound effects.",
+
+  "message.chaotic_minigames.winners": "Winners: ",
+  "message.chaotic_minigames.how_to_vote": "Press E to vote!",
+  "message.chaotic_minigames.not_enough_players": "Not enough players found to play!",
+
+  "options.fov.real": "Perfect fov: 90",
+
+  "soundCategory.sound_effects": "Sound effects",
+
+  "minigame.chaotic_minigames.bullet_chaos.name": "Bullet chaos",
+  "minigame.chaotic_minigames.bullet_chaos.summary": "Survive the bullets!",
+  "minigame.chaotic_minigames.bullet_chaos.description": "Bullets will appear, and you must dodge them to survive.",
+
+  "minigame.chaotic_minigames.sweeper.name": "Sweeper",
+  "minigame.chaotic_minigames.sweeper.summary": "Survive the sweeper!",
+  "minigame.chaotic_minigames.sweeper.description": "Avoid a spinning stick by jumping to survive."
 }

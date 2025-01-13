@@ -11,6 +11,7 @@ import com.chaotic_loom.chaotic_minigames.entrypoints.constants.CMSharedConstant
 import com.chaotic_loom.chaotic_minigames.networking.packets.server_to_client.*;
 import com.chaotic_loom.under_control.api.whitelist.WhitelistAPI;
 import com.chaotic_loom.under_control.client.gui.FatalErrorScreen;
+import com.chaotic_loom.under_control.util.MathHelper;
 import com.chaotic_loom.under_control.util.ThreadHelper;
 import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
@@ -99,6 +100,14 @@ public class PartyManager {
         shouldRestart = false;
 
         onAfterPlaying(); // Unload weird things if the server crashed
+
+        int timePassedWithoutPlayers = 0;
+        while (serverLevel.getServer().getPlayerList().getPlayerCount() <= 0) {
+            ThreadHelper.sleep(1000);
+            timePassedWithoutPlayers++;
+        }
+
+        CMSharedConstants.LOGGER.info("Time passed without players: " + MathHelper.formatTime(timePassedWithoutPlayers));
 
         while (!shouldRestart) {
             if (!shouldRestart) {
