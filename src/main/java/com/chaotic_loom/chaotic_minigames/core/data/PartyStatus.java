@@ -16,6 +16,6 @@ public class PartyStatus extends GenericStatus{
     }
 
     public enum State {
-        BEFORE_VOTING_INTERMISSION, VOTING, AFTER_VOTING_INTERMISSION, PLAYING
+        BEFORE_VOTING_INTERMISSION, VOTING, AFTER_VOTING_INTERMISSION, PLAYING, IDLE
     }
 }

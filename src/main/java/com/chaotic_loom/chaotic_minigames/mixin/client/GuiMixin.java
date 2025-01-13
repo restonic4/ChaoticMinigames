@@ -17,7 +17,15 @@ public class GuiMixin {
         Gui self = (Gui) (Object) this;
         Minecraft client = Minecraft.getInstance();
 
-        if (KnownServerDataOnClient.currentMinigame == null && KnownServerDataOnClient.partyState != PartyStatus.State.AFTER_VOTING_INTERMISSION) {
+        if (KnownServerDataOnClient.nextMinigame == null || KnownServerDataOnClient.partyState != PartyStatus.State.AFTER_VOTING_INTERMISSION) {
+            guiGraphics.drawCenteredString(
+                    client.font,
+                    "Skill issue",
+                    client.getWindow().getGuiScaledWidth() / 2,
+                    10,
+                    0xFFFFFF
+            );
+
             return;
         }
 
@@ -36,7 +44,7 @@ public class GuiMixin {
         int textY = imageY + imageHeight + spacing;
 
         guiGraphics.blit(
-                KnownServerDataOnClient.currentMinigame.getSettings().getBannerImg(),
+                KnownServerDataOnClient.nextMinigame.getSettings().getBannerImg(),
                 imageX,
                 imageY,
                 0,
@@ -47,7 +55,7 @@ public class GuiMixin {
                 imageHeight
         );
 
-        String minigameName = KnownServerDataOnClient.currentMinigame.getSettings().getName().getString();
+        String minigameName = KnownServerDataOnClient.nextMinigame.getSettings().getName().getString();
         guiGraphics.drawCenteredString(
                 client.font,
                 minigameName,

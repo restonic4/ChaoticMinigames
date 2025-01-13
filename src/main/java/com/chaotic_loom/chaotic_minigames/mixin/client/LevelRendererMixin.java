@@ -23,17 +23,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(LevelRenderer.class)
 public class LevelRendererMixin {
-    /*@Inject(method = "renderLevel", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/LevelRenderer;renderEntity(Lnet/minecraft/world/entity/Entity;DDDFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;)V", shift = At.Shift.AFTER))
-    public void captureMatrix(PoseStack poseStack, float f, long l, boolean bl, Camera camera, GameRenderer gameRenderer, LightTexture lightTexture, Matrix4f matrix4f, CallbackInfo ci, @Local Entity entity) {
-        if (entity instanceof LaserProjectile laserProjectile) {
-            Vec3 position = laserProjectile.position();
-            Vec3 velocity = laserProjectile.getDeltaMovement();
-
-            RenderingHelper.renderSphere(poseStack, matrix4f, camera, (float) position.x, (float) position.y, (float) position.z, 1);
-            RenderingHelper.renderBillboardQuad(poseStack, matrix4f, camera, (float) position.x, (float) position.y, (float) position.z, (float) (position.x + velocity.x), (float) (position.y + velocity.y), (float) (position.z + velocity.z), 2);
-        }
-    }*/
-
     @Inject(method = "renderLevel", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/FogRenderer;setupNoFog()V", shift = At.Shift.AFTER))
     public void renderLevel(PoseStack poseStack, float f, long l, boolean bl, Camera camera, GameRenderer gameRenderer, LightTexture lightTexture, Matrix4f matrix4f, CallbackInfo ci) {
         if (KnownServerDataOnClient.currentMinigame != null) {

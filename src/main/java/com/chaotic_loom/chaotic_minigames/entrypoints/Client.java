@@ -2,12 +2,14 @@ package com.chaotic_loom.chaotic_minigames.entrypoints;
 
 import com.chaotic_loom.chaotic_minigames.core.GameManager;
 import com.chaotic_loom.chaotic_minigames.core.MusicManager;
+import com.chaotic_loom.chaotic_minigames.core.registries.LaserProjectile;
 import com.chaotic_loom.chaotic_minigames.core.registries.common.SoundRegistry;
 import com.chaotic_loom.chaotic_minigames.entrypoints.constants.CMSharedConstants;
-import com.chaotic_loom.under_control.api.client.ClientAPI;
 import com.chaotic_loom.under_control.api.incompatibilities.IncompatibilitiesAPI;
 import com.chaotic_loom.under_control.api.whitelist.WhitelistAPI;
+import com.chaotic_loom.under_control.client.EntityTracker;
 import com.chaotic_loom.under_control.client.gui.FatalErrorScreen;
+import com.chaotic_loom.under_control.client.rendering.RenderingHelper;
 import com.chaotic_loom.under_control.client.rendering.effects.CylinderManager;
 import com.chaotic_loom.under_control.events.types.ClientLifeExtraEvents;
 import com.chaotic_loom.under_control.networking.services.ApiClient;
@@ -24,6 +26,7 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.phys.Vec3;
 
 import java.util.List;
 import java.util.Map;
@@ -38,6 +41,15 @@ public class Client implements ClientModInitializer {
         IncompatibilitiesAPI.registerIncompatibleMod(CMSharedConstants.ID, "fancymenu");
 
         GameManager.getInstanceOrCreate().setSynchronizationHelper(new SynchronizationHelper(6));
+
+        EntityTracker.trackEntityType(LaserProjectile.class);
+        EntityTracker.addConsumer((poseStack, matrix4f, camera, laserProjectile) -> {
+            Vec3 position = laserProjectile.position();
+            Vec3 velocity = laserProjectile.getDeltaMovement();
+
+            RenderingHelper.renderSphere(poseStack, matrix4f, camera, (float) position.x, (float) position.y, (float) position.z, 1);
+            RenderingHelper.renderBillboardQuad(poseStack, matrix4f, camera, (float) position.x, (float) position.y, (float) position.z, (float) (position.x + velocity.x), (float) (position.y + velocity.y), (float) (position.z + velocity.z), 2);
+        });
 
         ClientLifeExtraEvents.CLIENT_STARTED_DELAYED.register((minecraft) -> {
             MusicManager.playMusic(SoundRegistry.MUSIC_MAIN_MENU_1, 4000, EasingSystem.EasingType.LINEAR);

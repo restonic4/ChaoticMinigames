@@ -33,6 +33,8 @@ public class SendServerDataToClient {
     public static void receive(Minecraft minecraft, ClientPacketListener clientPacketListener, FriendlyByteBuf friendlyByteBuf, PacketSender packetSender) {
         KnownServerDataOnClient.serverType = ServerStatus.Type.valueOf(friendlyByteBuf.readUtf());
 
+        CMSharedConstants.LOGGER.info("Server type received: {}", KnownServerDataOnClient.serverType);
+
         if (KnownServerDataOnClient.serverType == ServerStatus.Type.PARTY) {
             KnownServerDataOnClient.partyState = PartyStatus.State.valueOf(friendlyByteBuf.readUtf());
 
@@ -40,10 +42,19 @@ public class SendServerDataToClient {
 
             String minigameId = friendlyByteBuf.readUtf();
 
+            CMSharedConstants.LOGGER.info("Minigame received: {}", minigameId);
+            CMSharedConstants.LOGGER.info("Party state received: {}", KnownServerDataOnClient.partyState);
+
             if (!minigameId.equals("null")) {
+                boolean isMinigameDataBeforePlaying = friendlyByteBuf.readBoolean();
+
                 for (GenericMinigame genericMinigame : MinigameRegistry.MINIGAMES) {
                     if (genericMinigame.getSettings().getId().equals(minigameId)) {
-                        KnownServerDataOnClient.currentMinigame = genericMinigame;
+                        if (isMinigameDataBeforePlaying) {
+                            KnownServerDataOnClient.nextMinigame = genericMinigame;
+                        } else {
+                            KnownServerDataOnClient.currentMinigame = genericMinigame;
+                        }
                     }
                 }
             }
@@ -62,11 +73,11 @@ public class SendServerDataToClient {
         GameManager gameManager = GameManager.getInstance();
         PartyManager partyManager = gameManager.getPartyManager();
 
+        FriendlyByteBuf friendlyByteBuf = PacketByteBufs.create();
+
         if (gameManager.getServerStatus().getType() == null) {
             return;
         }
-
-        FriendlyByteBuf friendlyByteBuf = PacketByteBufs.create();
 
         friendlyByteBuf.writeUtf(gameManager.getServerStatus().getType().name());
 
@@ -75,6 +86,8 @@ public class SendServerDataToClient {
 
             if (partyManager.getCurrentMinigame() != null) {
                 friendlyByteBuf.writeUtf(partyManager.getCurrentMinigame().getSettings().getId());
+
+                friendlyByteBuf.writeBoolean(partyManager.getPartyStatus().getState() == PartyStatus.State.AFTER_VOTING_INTERMISSION);
             } else {
                 friendlyByteBuf.writeUtf("null");
             }

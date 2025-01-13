@@ -59,15 +59,41 @@ public class Sweeper extends GenericMinigame {
                                 "classic_sweeper",
                                 spawns
                         ).setCenter(new BlockPos(56, 38, 56))
-                                .setMinHeight(22)
                                 .setTime(1000)
                                 .setRain(false),
+
+
                         new SweeperMapData(
                                 "nether_sweeper",
                                 spawns
                         ).setCenter(new BlockPos(56, 38, 56))
-                                .setMinHeight(22)
                                 .setTime(18000)
+                                .setRain(false),
+
+
+                        new SweeperMapData(
+                                "end_sweeper",
+                                spawns
+                        ).setCenter(new BlockPos(56, 38, 56))
+                                .setTime(18000)
+                                .setRain(false),
+
+
+                        new SweeperMapData(
+                                "joined_sweeper",
+                                createSpawns(
+                                        new MapSpawn(56, 38, 38),
+                                        new MapSpawn(69, 38, 44),
+                                        new MapSpawn(74, 38, 56),
+                                        new MapSpawn(68, 38, 69),
+                                        new MapSpawn(56, 38, 74),
+                                        new MapSpawn(43, 38, 68),
+                                        new MapSpawn(38, 38, 56),
+                                        new MapSpawn(44, 38, 43)
+                                )
+                        ).setCenter(new BlockPos(56, 38, 56))
+                                .setSpins(20)
+                                .setTime(1000)
                                 .setRain(false)
                 )
         ));
@@ -96,9 +122,11 @@ public class Sweeper extends GenericMinigame {
 
         music.playRandom();
 
+        SweeperMapData map = partyManager.getCurrentMapData(SweeperMapData.class);
+
         int totalDuration = 60000;
-        int spins = 15;
-        int radius = 25;
+        int spins = map.getSpins();
+        float radius = map.getBarRadius();
 
         long currentTime = System.currentTimeMillis();
 

@@ -11,8 +11,11 @@ import com.chaotic_loom.chaotic_minigames.entrypoints.constants.CMSharedConstant
 import com.chaotic_loom.chaotic_minigames.networking.packets.server_to_client.*;
 import com.chaotic_loom.under_control.api.whitelist.WhitelistAPI;
 import com.chaotic_loom.under_control.client.gui.FatalErrorScreen;
+import com.chaotic_loom.under_control.events.EventResult;
+import com.chaotic_loom.under_control.events.types.LivingEntityExtraEvents;
 import com.chaotic_loom.under_control.util.MathHelper;
 import com.chaotic_loom.under_control.util.ThreadHelper;
+import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
 import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
@@ -60,6 +63,7 @@ public class PartyManager {
     public PartyManager() {
         this.gameManager = GameManager.getInstance();
         this.partyStatus = new PartyStatus();
+        this.partyStatus.setState(PartyStatus.State.IDLE);
 
         this.music = new Playlist();
 
@@ -69,15 +73,8 @@ public class PartyManager {
 
     public void onStart() {
         ServerLevel serverLevel = GameManager.getInstance().getServer().getLevel(Level.OVERWORLD);
-        serverLevel.setDefaultSpawnPos(new BlockPos(0, 0,0), 10);
 
-        serverLevel.getGameRules().getRule(GameRules.RULE_DO_IMMEDIATE_RESPAWN).set(true, serverLevel.getServer());
-        serverLevel.getGameRules().getRule(GameRules.RULE_DAYLIGHT).set(false, serverLevel.getServer());
-        serverLevel.getGameRules().getRule(GameRules.RULE_WEATHER_CYCLE).set(false, serverLevel.getServer());
-        serverLevel.getServer().setDifficulty(Difficulty.HARD, true);
-
-        serverLevel.setDayTime(1000);
-        serverLevel.setWeatherParameters(0, 0, false, false);
+        resetServerLevel();
 
         ServerPlayConnectionEvents.DISCONNECT.register((serverGamePacketListener, minecraftServer) -> {
             ServerPlayer serverPlayer = serverGamePacketListener.getPlayer();
@@ -93,7 +90,31 @@ public class PartyManager {
             }
         });
 
+        LivingEntityExtraEvents.PUSHABLE.register((entity, actor) -> {
+            if (entity instanceof Player) {
+                return EventResult.CANCELED;
+            }
+
+            return EventResult.CONTINUE;
+        });
+
+        ServerLivingEntityEvents.ALLOW_DAMAGE.register((livingEntity, damageSource, amount) -> {
+            return !(livingEntity instanceof Player);
+        });
+
         loop();
+    }
+
+    public void resetServerLevel() {
+        serverLevel.setDefaultSpawnPos(new BlockPos(0, 0,0), 10);
+
+        serverLevel.getGameRules().getRule(GameRules.RULE_DO_IMMEDIATE_RESPAWN).set(true, serverLevel.getServer());
+        serverLevel.getGameRules().getRule(GameRules.RULE_DAYLIGHT).set(false, serverLevel.getServer());
+        serverLevel.getGameRules().getRule(GameRules.RULE_WEATHER_CYCLE).set(false, serverLevel.getServer());
+        serverLevel.getServer().setDifficulty(Difficulty.HARD, true);
+
+        serverLevel.setDayTime(1000);
+        serverLevel.setWeatherParameters(0, 0, false, false);
     }
 
     public void loop() {
@@ -177,8 +198,6 @@ public class PartyManager {
     private void onAfterVote() {
         System.out.println("After vote");
 
-        setState(PartyStatus.State.AFTER_VOTING_INTERMISSION);
-
         String minigameId = getWinningVote();
         GenericMinigame minigame = null;
 
@@ -197,6 +216,8 @@ public class PartyManager {
 
         currentMinigame = minigame;
         currentMapData = currentMinigame.getSettings().getMaps().getRandom();
+
+        setState(PartyStatus.State.AFTER_VOTING_INTERMISSION);
 
         loadMap(serverLevel, currentMapData.getStructureId());
 
@@ -245,6 +266,8 @@ public class PartyManager {
         currentMapData = null;
         currentMinigame = null;
         inGamePlayers.clear();
+
+        resetServerLevel();
     }
 
     private void setState(PartyStatus.State state) {
@@ -398,22 +421,25 @@ public class PartyManager {
             getCurrentMapData().getOnUnLoad().run();
         }
 
+        int minHeight = -64;
+        int areaRange = 160;
+
         serverLevel.getServer().execute(() -> {
-            AABB area = new AABB(0, -64, 0, 160, 160, 160);
+            for (int x = 0; x <= areaRange; x++) {
+                for (int y = minHeight; y <= areaRange; y++) {
+                    for (int z = 0; z <= areaRange; z++) {
+                        BlockPos pos = new BlockPos(x, y, z);
+                        serverLevel.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
+                    }
+                }
+            }
+
+            AABB area = new AABB(0, minHeight, 0, areaRange, areaRange, areaRange);
             List<Entity> entities = serverLevel.getEntities(null, area);
 
             for (Entity entity : entities) {
                 if (!(entity instanceof Player)) {
                     entity.discard();
-                }
-            }
-
-            for (int x = 0; x <= 160; x++) {
-                for (int y = -64; y <= 160; y++) {
-                    for (int z = 0; z <= 160; z++) {
-                        BlockPos pos = new BlockPos(x, y, z);
-                        serverLevel.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
-                    }
                 }
             }
         });

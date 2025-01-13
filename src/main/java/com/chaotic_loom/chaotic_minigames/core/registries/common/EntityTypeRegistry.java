@@ -19,6 +19,9 @@ public class EntityTypeRegistry {
             new ResourceLocation(CMSharedConstants.ID, "lase_projectile"),
             FabricEntityTypeBuilder.<LaserProjectile>create(MobCategory.MISC, LaserProjectile::new)
                     .dimensions(EntityDimensions.fixed(0.25F, 0.25F))
+                    .trackRangeBlocks(100)
+                    .trackedUpdateRate(3)
+                    .forceTrackedVelocityUpdates(true)
                     .fireImmune()
                     .build()
     );

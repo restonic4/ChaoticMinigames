@@ -19,5 +19,7 @@ public class KnownServerDataOnClient {
     public static MutableComponent minigameSummaryToVote1, minigameSummaryToVote2, minigameSummaryToVote3;
     public static ResourceLocation minigameImageToVote1, minigameImageToVote2, minigameImageToVote3;
 
+    public static GenericMinigame nextMinigame;
+
     public static Vector3f frozenPosition = null;
 }
