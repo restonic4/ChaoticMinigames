@@ -10,6 +10,10 @@ public class MapSpawn {
         this.blockPos = blockPos;
     }
 
+    public MapSpawn(int x, int y, int z) {
+        this.blockPos = new BlockPos(x, y, z);
+    }
+
     public MapSpawn(BlockPos blockPos, String extraData) {
         this.blockPos = blockPos;
         this.extraData = extraData;

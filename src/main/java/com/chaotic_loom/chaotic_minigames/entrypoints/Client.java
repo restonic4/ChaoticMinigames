@@ -4,6 +4,7 @@ import com.chaotic_loom.chaotic_minigames.core.GameManager;
 import com.chaotic_loom.chaotic_minigames.core.MusicManager;
 import com.chaotic_loom.chaotic_minigames.core.registries.common.SoundRegistry;
 import com.chaotic_loom.chaotic_minigames.entrypoints.constants.CMSharedConstants;
+import com.chaotic_loom.under_control.api.client.ClientAPI;
 import com.chaotic_loom.under_control.api.incompatibilities.IncompatibilitiesAPI;
 import com.chaotic_loom.under_control.api.whitelist.WhitelistAPI;
 import com.chaotic_loom.under_control.client.gui.FatalErrorScreen;

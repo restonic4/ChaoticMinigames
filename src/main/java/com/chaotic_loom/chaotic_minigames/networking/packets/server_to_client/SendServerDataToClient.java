@@ -62,6 +62,10 @@ public class SendServerDataToClient {
         GameManager gameManager = GameManager.getInstance();
         PartyManager partyManager = gameManager.getPartyManager();
 
+        if (gameManager.getServerStatus().getType() == null) {
+            return;
+        }
+
         FriendlyByteBuf friendlyByteBuf = PacketByteBufs.create();
 
         friendlyByteBuf.writeUtf(gameManager.getServerStatus().getType().name());

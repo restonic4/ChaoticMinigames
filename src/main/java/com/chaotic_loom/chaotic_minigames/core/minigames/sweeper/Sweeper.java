@@ -3,10 +3,7 @@ package com.chaotic_loom.chaotic_minigames.core.minigames.sweeper;
 import com.chaotic_loom.chaotic_minigames.annotations.Minigame;
 import com.chaotic_loom.chaotic_minigames.core.GameManager;
 import com.chaotic_loom.chaotic_minigames.core.PartyManager;
-import com.chaotic_loom.chaotic_minigames.core.data.MapSpawn;
-import com.chaotic_loom.chaotic_minigames.core.data.MinigameSettings;
-import com.chaotic_loom.chaotic_minigames.core.data.PartyStatus;
-import com.chaotic_loom.chaotic_minigames.core.data.Playlist;
+import com.chaotic_loom.chaotic_minigames.core.data.*;
 import com.chaotic_loom.chaotic_minigames.core.minigames.GenericMinigame;
 import com.chaotic_loom.chaotic_minigames.core.minigames.bullet_chaos.BulletChaosMapData;
 import com.chaotic_loom.chaotic_minigames.core.minigames.bullet_chaos.bullet.BulletManager;
@@ -29,6 +26,29 @@ public class Sweeper extends GenericMinigame {
 
     private SpinningBar spinningBar;
 
+    private static final MapList<MapSpawn> spawns = createSpawns(
+            new MapSpawn(56, 38, 34),
+            new MapSpawn(49, 38, 35),
+            new MapSpawn(42, 38, 37),
+            new MapSpawn(37, 38, 42),
+            new MapSpawn(35, 38, 49),
+            new MapSpawn(34, 38, 56),
+            new MapSpawn(35, 38, 63),
+            new MapSpawn(37, 38, 70),
+            new MapSpawn(42, 38, 75),
+            new MapSpawn(49, 38, 77),
+            new MapSpawn(56, 38, 78),
+            new MapSpawn(63, 38, 77),
+            new MapSpawn(70, 38, 75),
+            new MapSpawn(75, 38, 70),
+            new MapSpawn(77, 38, 63),
+            new MapSpawn(78, 38, 56),
+            new MapSpawn(77, 38, 49),
+            new MapSpawn(75, 38, 42),
+            new MapSpawn(70, 38, 37),
+            new MapSpawn(63, 38, 35)
+    );
+
     public Sweeper() {
         super(new MinigameSettings(
                 "sweeper",
@@ -37,31 +57,17 @@ public class Sweeper extends GenericMinigame {
                 createMaps(
                         new SweeperMapData(
                                 "classic_sweeper",
-                                createSpawns(
-                                        new MapSpawn(new BlockPos(56, 38, 34)),
-                                        new MapSpawn(new BlockPos(49, 38, 35)),
-                                        new MapSpawn(new BlockPos(42, 38, 37)),
-                                        new MapSpawn(new BlockPos(37, 38, 42)),
-                                        new MapSpawn(new BlockPos(35, 38, 49)),
-                                        new MapSpawn(new BlockPos(34, 38, 56)),
-                                        new MapSpawn(new BlockPos(35, 38, 63)),
-                                        new MapSpawn(new BlockPos(37, 38, 70)),
-                                        new MapSpawn(new BlockPos(42, 38, 75)),
-                                        new MapSpawn(new BlockPos(49, 38, 77)),
-                                        new MapSpawn(new BlockPos(56, 38, 78)),
-                                        new MapSpawn(new BlockPos(63, 38, 77)),
-                                        new MapSpawn(new BlockPos(70, 38, 75)),
-                                        new MapSpawn(new BlockPos(75, 38, 70)),
-                                        new MapSpawn(new BlockPos(77, 38, 63)),
-                                        new MapSpawn(new BlockPos(78, 38, 56)),
-                                        new MapSpawn(new BlockPos(77, 38, 49)),
-                                        new MapSpawn(new BlockPos(75, 38, 42)),
-                                        new MapSpawn(new BlockPos(70, 38, 37)),
-                                        new MapSpawn(new BlockPos(63, 38, 35))
-                                )
+                                spawns
                         ).setCenter(new BlockPos(56, 38, 56))
                                 .setMinHeight(22)
                                 .setTime(1000)
+                                .setRain(false),
+                        new SweeperMapData(
+                                "nether_sweeper",
+                                spawns
+                        ).setCenter(new BlockPos(56, 38, 56))
+                                .setMinHeight(22)
+                                .setTime(18000)
                                 .setRain(false)
                 )
         ));
