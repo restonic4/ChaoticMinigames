@@ -1,5 +1,7 @@
 package com.chaotic_loom.chaotic_minigames.entrypoints.constants;
 
+import com.chaotic_loom.under_control.client.rendering.shader.ShaderProfile;
+import com.chaotic_loom.under_control.registries.client.UnderControlShaders;
 import net.minecraft.client.multiplayer.ServerData;
 
 import java.util.ArrayList;

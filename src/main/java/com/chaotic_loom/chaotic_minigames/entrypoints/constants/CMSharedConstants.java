@@ -17,6 +17,12 @@ public class CMSharedConstants {
     public static final int VOTE_TIME = 10;
     public static final int AFTER_VOTE_TIME = 10;
 
+    public static final float[] netherTopColor = {0.9f, 0.2f, 0.1f, 1.0f};
+    public static final float[] netherBottomColor = {0.3f, 0.05f, 0.02f, 1.0f};
+
+    public static final float[] endTopColor = {0.4f, 0.4f, 0.5f, 1.0f};
+    public static final float[] endBottomColor = {0.1f, 0.05f, 0.2f, 1.0f};
+
     public static final List<BlockPos> LOBBY_SPAWNS = new ArrayList<>();
 
     static {

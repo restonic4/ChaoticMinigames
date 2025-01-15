@@ -11,11 +11,16 @@ import com.chaotic_loom.chaotic_minigames.core.minigames.sweeper.packets.SpawnSp
 import com.chaotic_loom.chaotic_minigames.core.minigames.sweeper.spining_bar.ServerSpinningBar;
 import com.chaotic_loom.chaotic_minigames.core.minigames.sweeper.spining_bar.SpinningBar;
 import com.chaotic_loom.chaotic_minigames.core.registries.common.SoundRegistry;
+import com.chaotic_loom.chaotic_minigames.entrypoints.constants.CMSharedConstants;
 import com.chaotic_loom.chaotic_minigames.entrypoints.constants.KnownServerDataOnClient;
+import com.chaotic_loom.chaotic_minigames.networking.packets.server_to_client.CreateSkySphere;
+import com.chaotic_loom.chaotic_minigames.networking.packets.server_to_client.DeleteSkySphere;
 import com.chaotic_loom.under_control.core.annotations.ExecutionSide;
+import com.chaotic_loom.under_control.util.MathHelper;
 import com.chaotic_loom.under_control.util.ThreadHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
+import org.joml.Vector3f;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -25,6 +30,8 @@ public class Sweeper extends GenericMinigame {
     private final Playlist music;
 
     private SpinningBar spinningBar;
+
+    public static long skyId = System.currentTimeMillis() + MathHelper.getUniqueID();
 
     private static final MapList<MapSpawn> spawns = createSpawns(
             new MapSpawn(56, 38, 34),
@@ -68,7 +75,23 @@ public class Sweeper extends GenericMinigame {
                                 spawns
                         ).setCenter(new BlockPos(56, 38, 56))
                                 .setTime(18000)
-                                .setRain(false),
+                                .setRain(false)
+                                .executeOnLoad(() -> {
+                                    CreateSkySphere.sendToAll(
+                                            GameManager.getInstance().getServer(),
+                                            skyId,
+                                            CMSharedConstants.netherTopColor,
+                                            CMSharedConstants.netherBottomColor,
+                                            new Vector3f(56, 38, 56),
+                                            100
+                                    );
+                                })
+                                .executeOnUnLoad(() -> {
+                                    DeleteSkySphere.sendToAll(
+                                            GameManager.getInstance().getServer(),
+                                            skyId
+                                    );
+                                }),
 
 
                         new SweeperMapData(
@@ -76,7 +99,23 @@ public class Sweeper extends GenericMinigame {
                                 spawns
                         ).setCenter(new BlockPos(56, 38, 56))
                                 .setTime(18000)
-                                .setRain(false),
+                                .setRain(false)
+                                .executeOnLoad(() -> {
+                                    CreateSkySphere.sendToAll(
+                                            GameManager.getInstance().getServer(),
+                                            skyId,
+                                            CMSharedConstants.endTopColor,
+                                            CMSharedConstants.endBottomColor,
+                                            new Vector3f(56, 38, 56),
+                                            100
+                                    );
+                                })
+                                .executeOnUnLoad(() -> {
+                                    DeleteSkySphere.sendToAll(
+                                            GameManager.getInstance().getServer(),
+                                            skyId
+                                    );
+                                }),
 
 
                         new SweeperMapData(
