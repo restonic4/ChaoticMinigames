@@ -10,10 +10,13 @@ import com.chaotic_loom.under_control.api.whitelist.WhitelistAPI;
 import com.chaotic_loom.under_control.client.EntityTracker;
 import com.chaotic_loom.under_control.client.gui.FatalErrorScreen;
 import com.chaotic_loom.under_control.client.rendering.RenderingHelper;
+import com.chaotic_loom.under_control.client.rendering.effects.Cube;
+import com.chaotic_loom.under_control.client.rendering.effects.CubeManager;
 import com.chaotic_loom.under_control.client.rendering.effects.CylinderManager;
 import com.chaotic_loom.under_control.events.types.ClientLifeExtraEvents;
 import com.chaotic_loom.under_control.networking.services.ApiClient;
 import com.chaotic_loom.under_control.networking.services.ApiResponse;
+import com.chaotic_loom.under_control.registries.client.UnderControlShaders;
 import com.chaotic_loom.under_control.util.EasingSystem;
 import com.chaotic_loom.under_control.util.MathHelper;
 import com.chaotic_loom.under_control.util.SynchronizationHelper;
@@ -27,12 +30,19 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.phys.Vec3;
+import org.joml.Vector3f;
 
 import java.util.List;
 import java.util.Map;
 
 public class Client implements ClientModInitializer {
     public static boolean allowed = true;
+
+    public static Cube debugCube = CubeManager.create(-213);
+
+    static {
+        debugCube.setScale(new Vector3f(1, 1, 1));
+    }
 
     @Override
     public void onInitializeClient() {
@@ -47,7 +57,7 @@ public class Client implements ClientModInitializer {
             Vec3 position = laserProjectile.position();
             Vec3 velocity = laserProjectile.getDeltaMovement();
 
-            RenderingHelper.renderSphere(poseStack, matrix4f, camera, (float) position.x, (float) position.y, (float) position.z, 1);
+            RenderingHelper.renderSphere(poseStack, matrix4f, camera, UnderControlShaders.SIMPLE_COLOR, (float) position.x, (float) position.y, (float) position.z, 1, 1, 1, 0, 0, 0, 0);
             RenderingHelper.renderBillboardQuad(poseStack, matrix4f, camera, (float) position.x, (float) position.y, (float) position.z, (float) (position.x + velocity.x), (float) (position.y + velocity.y), (float) (position.z + velocity.z), 2);
         });
 

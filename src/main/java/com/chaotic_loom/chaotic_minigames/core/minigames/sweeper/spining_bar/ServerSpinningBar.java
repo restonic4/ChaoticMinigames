@@ -2,6 +2,7 @@ package com.chaotic_loom.chaotic_minigames.core.minigames.sweeper.spining_bar;
 
 import com.chaotic_loom.chaotic_minigames.Util;
 import com.chaotic_loom.chaotic_minigames.core.GameManager;
+import com.chaotic_loom.chaotic_minigames.networking.packets.server_to_client.UpdateDebugCube;
 import com.chaotic_loom.under_control.util.MathHelper;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
@@ -43,6 +44,8 @@ public class ServerSpinningBar extends SpinningBar {
         if (isFinished()) {
             return;
         }
+
+        UpdateDebugCube.sendToAll(GameManager.getInstance().getServer(), getPosition1());
 
         List<ServerPlayer> players = GameManager.getInstance().getPartyManager().getInGamePlayers();
         for (int i = players.size() - 1; i >= 0; i--) {
