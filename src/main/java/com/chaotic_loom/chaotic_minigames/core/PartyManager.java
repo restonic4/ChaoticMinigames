@@ -236,6 +236,8 @@ public class PartyManager {
     private void onPlaying() {
         System.out.println("Playing");
 
+        SyncClients.sendToAll(serverLevel.getServer());
+
         if (serverLevel.getServer().getPlayerCount() < currentMinigame.getSettings().getMinPlayers() || serverLevel.getServer().getPlayerCount() > currentMinigame.getSettings().getMaxPlayers()) {
             shouldRestart = true;
 

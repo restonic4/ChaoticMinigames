@@ -27,8 +27,8 @@ dependencies {
     // Fabric API. This is technically optional, but you probably want it anyway.
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
-    modImplementation "maven.modrinth:under-control:${under_control_version}"
-    //modImplementation files('libs/UnderControl-1.14.jar')
+    //modImplementation "maven.modrinth:under-control:${under_control_version}"
+    modImplementation files("libs/UnderControl-${under_control_version}.jar")
 
     modImplementation "maven.modrinth:cloth-config:11.1.136+fabric"
     modImplementation "maven.modrinth:auth-me:7.0.2+1.20"

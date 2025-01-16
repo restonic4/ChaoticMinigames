@@ -23,6 +23,8 @@ import com.chaotic_loom.under_control.util.SynchronizationHelper;
 import com.mojang.authlib.GameProfile;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
@@ -35,6 +37,7 @@ import org.joml.Vector3f;
 import java.util.List;
 import java.util.Map;
 
+@Environment(value = EnvType.CLIENT)
 public class Client implements ClientModInitializer {
     public static boolean allowed = true;
 
