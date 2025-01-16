@@ -55,7 +55,7 @@ public class GameManager {
         GameManager newGameManager = new GameManager(server);
         GameManager.instance = newGameManager;
 
-        newGameManager.synchronizationHelper = new SynchronizationHelper(6);
+        newGameManager.synchronizationHelper = new SynchronizationHelper();
 
         ConfigProvider configProvider = ServerConfigRegistry.registerProvider(server);
 
