@@ -54,6 +54,7 @@ public class Client implements ClientModInitializer {
         IncompatibilitiesAPI.registerIncompatibleMod(CMSharedConstants.ID, "fancymenu");
 
         GameManager.getInstanceOrCreate().setSynchronizationHelper(new SynchronizationHelper());
+        GameManager.getInstance().getSynchronizationHelper().schedulePeriodicSynchronization(30000);
 
         EntityTracker.trackEntityType(LaserProjectile.class);
         EntityTracker.addConsumer((poseStack, matrix4f, camera, laserProjectile) -> {

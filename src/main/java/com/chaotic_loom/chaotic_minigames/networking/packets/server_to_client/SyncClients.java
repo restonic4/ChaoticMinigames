@@ -27,14 +27,6 @@ public class SyncClients {
 
     public static void receive(Minecraft minecraft, ClientPacketListener clientPacketListener, FriendlyByteBuf friendlyByteBuf, PacketSender packetSender) {
         GameManager.getInstance().getSynchronizationHelper().askForSynchronization();
-        GameManager.getInstance().getSynchronizationHelper().dump();
-        new Thread(() -> {
-            try {
-                Thread.sleep(4000);
-            } catch (Exception ignored) {}
-
-            GameManager.getInstance().getSynchronizationHelper().dump();
-        }).start();
     }
 
     public static void sendToClient(ServerPlayer serverPlayer) {

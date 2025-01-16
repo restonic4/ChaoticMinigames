@@ -45,7 +45,7 @@ public class ServerSpinningBar extends SpinningBar {
             return;
         }
 
-        UpdateDebugCube.sendToAll(GameManager.getInstance().getServer(), getPosition1());
+        UpdateDebugCube.sendToAll(GameManager.getInstance().getServer(), getPosition2());
 
         List<ServerPlayer> players = GameManager.getInstance().getPartyManager().getInGamePlayers();
         for (int i = players.size() - 1; i >= 0; i--) {
