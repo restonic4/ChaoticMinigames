@@ -5,8 +5,6 @@ import com.chaotic_loom.chaotic_minigames.core.GameManager;
 import com.chaotic_loom.chaotic_minigames.core.PartyManager;
 import com.chaotic_loom.chaotic_minigames.core.data.*;
 import com.chaotic_loom.chaotic_minigames.core.minigames.GenericMinigame;
-import com.chaotic_loom.chaotic_minigames.core.minigames.bullet_chaos.BulletChaosMapData;
-import com.chaotic_loom.chaotic_minigames.core.minigames.bullet_chaos.bullet.BulletManager;
 import com.chaotic_loom.chaotic_minigames.core.minigames.sweeper.packets.SpawnSpinningBar;
 import com.chaotic_loom.chaotic_minigames.core.minigames.sweeper.spining_bar.ServerSpinningBar;
 import com.chaotic_loom.chaotic_minigames.core.minigames.sweeper.spining_bar.SpinningBar;
@@ -18,6 +16,7 @@ import com.chaotic_loom.chaotic_minigames.networking.packets.server_to_client.De
 import com.chaotic_loom.under_control.core.annotations.ExecutionSide;
 import com.chaotic_loom.under_control.util.MathHelper;
 import com.chaotic_loom.under_control.util.ThreadHelper;
+import com.chaotic_loom.under_control.util.pooling.PoolManager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
 import org.joml.Vector3f;
@@ -31,7 +30,7 @@ public class Sweeper extends GenericMinigame {
 
     private SpinningBar spinningBar;
 
-    public static long skyId = -MathHelper.getUniqueID();
+    public static String skyId = "sky" + MathHelper.getUniqueID();
 
     private static final MapList<MapSpawn> spawns = createSpawns(
             new MapSpawn(56, 38, 34),
@@ -169,7 +168,7 @@ public class Sweeper extends GenericMinigame {
 
         long currentTime = System.currentTimeMillis();
 
-        spinningBar = new ServerSpinningBar(
+        spinningBar = PoolManager.acquire(ServerSpinningBar.class).initialize(
                 partyManager.getCurrentMapData(SweeperMapData.class).getCenter().getCenter().toVector3f(),
                 radius,
                 currentTime + 4000,
@@ -183,7 +182,8 @@ public class Sweeper extends GenericMinigame {
                 radius,
                 currentTime + 4000,
                 currentTime + 4000 + totalDuration,
-                spins
+                spins,
+                getSettings().getId() + MathHelper.getUniqueID()
         );
 
         ThreadHelper.sleep(2000);

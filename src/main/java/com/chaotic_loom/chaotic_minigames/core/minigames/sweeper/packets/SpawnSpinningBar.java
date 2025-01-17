@@ -7,12 +7,13 @@ import com.chaotic_loom.chaotic_minigames.core.minigames.sweeper.Sweeper;
 import com.chaotic_loom.chaotic_minigames.core.minigames.sweeper.spining_bar.SpinningBarRenderer;
 import com.chaotic_loom.chaotic_minigames.entrypoints.constants.CMSharedConstants;
 import com.chaotic_loom.under_control.client.rendering.effects.Cube;
-import com.chaotic_loom.under_control.client.rendering.effects.CubeManager;
-import com.chaotic_loom.under_control.client.rendering.effects.Sphere;
-import com.chaotic_loom.under_control.client.rendering.effects.SphereManager;
+import com.chaotic_loom.under_control.client.rendering.effects.EffectManager;
 import com.chaotic_loom.under_control.core.annotations.Packet;
 import com.chaotic_loom.under_control.core.annotations.PacketDirection;
 import com.chaotic_loom.under_control.util.MathHelper;
+import com.chaotic_loom.under_control.util.pooling.PoolManager;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -38,21 +39,21 @@ public class SpawnSpinningBar {
         long startTime = friendlyByteBuf.readLong();
         long endTime = friendlyByteBuf.readLong();
         int spins = friendlyByteBuf.readInt();
-        long id = friendlyByteBuf.readLong();
+        String id = friendlyByteBuf.readUtf();
 
         minecraft.execute(() -> {
-            Cube cube = CubeManager.create(id);
+            Cube cube = (Cube) EffectManager.add(new Cube(id));
 
             cube.setPosition(position);
             cube.setColor(new Color(0xFF0000));
 
             GenericMinigame.getInstance(Sweeper.class).setClientSpinningBar(
-                    new SpinningBarRenderer(cube, position, radius, startTime, endTime, spins)
+                    PoolManager.acquire(SpinningBarRenderer.class).initialize(cube, position, radius, startTime, endTime, spins)
             );
         });
     }
 
-    public static void sendToAll(MinecraftServer server, Vector3f position, float radius, long startTime, long endTime, int spins) {
+    public static void sendToAll(MinecraftServer server, Vector3f position, float radius, long startTime, long endTime, int spins, String id) {
         FriendlyByteBuf friendlyByteBuf = PacketByteBufs.create();
 
         friendlyByteBuf.writeVector3f(position);
@@ -60,7 +61,7 @@ public class SpawnSpinningBar {
         friendlyByteBuf.writeLong(startTime);
         friendlyByteBuf.writeLong(endTime);
         friendlyByteBuf.writeInt(spins);
-        friendlyByteBuf.writeLong(MathHelper.getUniqueID());
+        friendlyByteBuf.writeUtf(id);
 
         for (ServerPlayer serverPlayer : server.getPlayerList().getPlayers()) {
             ServerPlayNetworking.send(serverPlayer, getId(), friendlyByteBuf);

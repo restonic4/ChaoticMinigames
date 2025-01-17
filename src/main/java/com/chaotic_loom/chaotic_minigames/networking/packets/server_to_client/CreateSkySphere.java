@@ -2,14 +2,16 @@ package com.chaotic_loom.chaotic_minigames.networking.packets.server_to_client;
 
 import com.chaotic_loom.chaotic_minigames.core.MusicManager;
 import com.chaotic_loom.chaotic_minigames.entrypoints.constants.CMSharedConstants;
+import com.chaotic_loom.under_control.client.rendering.effects.EffectManager;
 import com.chaotic_loom.under_control.client.rendering.effects.Sphere;
-import com.chaotic_loom.under_control.client.rendering.effects.SphereManager;
 import com.chaotic_loom.under_control.client.rendering.shader.ShaderProfile;
 import com.chaotic_loom.under_control.core.annotations.Packet;
 import com.chaotic_loom.under_control.core.annotations.PacketDirection;
 import com.chaotic_loom.under_control.registries.client.UnderControlShaders;
 import com.chaotic_loom.under_control.util.EasingSystem;
 import com.chaotic_loom.under_control.util.data_holders.RenderingFlags;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -30,7 +32,7 @@ public class CreateSkySphere {
     }
 
     public static void receive(Minecraft minecraft, ClientPacketListener clientPacketListener, FriendlyByteBuf friendlyByteBuf, PacketSender packetSender) {
-        long sphereID = friendlyByteBuf.readLong();
+        String sphereID = friendlyByteBuf.readUtf();
 
         int topColorLength = friendlyByteBuf.readInt();
         float[] topColor = new float[topColorLength];
@@ -53,17 +55,17 @@ public class CreateSkySphere {
         shaderProfile.setUniformData("Center", new float[]{position.x(), position.y(), position.z()});
         shaderProfile.setUniformData("Radius", new float[]{radius});
 
-        Sphere sphere = SphereManager.create(sphereID);
+        Sphere sphere = (Sphere) EffectManager.add(new Sphere(sphereID));
         sphere.setPosition(position);
-        sphere.setRadius(radius);
+        sphere.setScale(new Vector3f(radius));
         sphere.setShaderProfile(shaderProfile);
         sphere.setRenderingFlags(RenderingFlags.INVERT_NORMALS);
     }
 
-    public static void sendToAll(MinecraftServer server, long sphereID, float[] topColor, float[] bottomColor, Vector3f position, float radius) {
+    public static void sendToAll(MinecraftServer server, String sphereID, float[] topColor, float[] bottomColor, Vector3f position, float radius) {
         FriendlyByteBuf friendlyByteBuf = PacketByteBufs.create();
 
-        friendlyByteBuf.writeLong(sphereID);
+        friendlyByteBuf.writeUtf(sphereID);
 
         friendlyByteBuf.writeInt(topColor.length);
         for (float value : topColor) {

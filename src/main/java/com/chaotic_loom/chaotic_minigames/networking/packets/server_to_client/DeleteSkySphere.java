@@ -1,9 +1,7 @@
 package com.chaotic_loom.chaotic_minigames.networking.packets.server_to_client;
 
 import com.chaotic_loom.chaotic_minigames.entrypoints.constants.CMSharedConstants;
-import com.chaotic_loom.under_control.client.rendering.effects.Sphere;
-import com.chaotic_loom.under_control.client.rendering.effects.SphereManager;
-import com.chaotic_loom.under_control.client.rendering.shader.ShaderProfile;
+import com.chaotic_loom.under_control.client.rendering.effects.EffectManager;
 import com.chaotic_loom.under_control.core.annotations.Packet;
 import com.chaotic_loom.under_control.core.annotations.PacketDirection;
 import com.chaotic_loom.under_control.registries.client.UnderControlShaders;
@@ -26,14 +24,14 @@ public class DeleteSkySphere {
     }
 
     public static void receive(Minecraft minecraft, ClientPacketListener clientPacketListener, FriendlyByteBuf friendlyByteBuf, PacketSender packetSender) {
-        long sphereID = friendlyByteBuf.readLong();
-        SphereManager.delete(sphereID);
+        String sphereID = friendlyByteBuf.readUtf();
+        EffectManager.delete(sphereID);
     }
 
-    public static void sendToAll(MinecraftServer server, long sphereID) {
+    public static void sendToAll(MinecraftServer server, String sphereID) {
         FriendlyByteBuf friendlyByteBuf = PacketByteBufs.create();
 
-        friendlyByteBuf.writeLong(sphereID);
+        friendlyByteBuf.writeUtf(sphereID);
 
         for (ServerPlayer serverPlayer : server.getPlayerList().getPlayers()) {
             ServerPlayNetworking.send(serverPlayer, getId(), friendlyByteBuf);

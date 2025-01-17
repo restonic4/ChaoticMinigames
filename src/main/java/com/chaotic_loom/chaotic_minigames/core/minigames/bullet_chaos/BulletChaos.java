@@ -14,6 +14,7 @@ import com.chaotic_loom.under_control.core.annotations.ExecutionSide;
 
 import com.chaotic_loom.under_control.util.MathHelper;
 import com.chaotic_loom.under_control.util.ThreadHelper;
+import com.chaotic_loom.under_control.util.pooling.PoolManager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
 import org.joml.Vector3f;
@@ -187,8 +188,8 @@ public class BulletChaos extends GenericMinigame {
 
         long currentTime = System.currentTimeMillis();
 
-        SpawnBullet.sendToAll(partyManager.getServerLevel().getServer(), offsetStartPoint, offsetEndPoint, currentTime, currentTime + reachTime, sphereRadius);
-        serverBulletBulletManager.addBullet(new ServerBullet(sphereRadius, currentTime, currentTime + reachTime, offsetStartPoint, offsetEndPoint));
+        SpawnBullet.sendToAll(partyManager.getServerLevel().getServer(), offsetStartPoint, offsetEndPoint, currentTime, currentTime + reachTime, sphereRadius, getSettings().getId() + MathHelper.getUniqueID());
+        serverBulletBulletManager.addBullet(PoolManager.acquire(ServerBullet.class).initialize(sphereRadius, currentTime, currentTime + reachTime, offsetStartPoint, offsetEndPoint));
     }
 
     public BulletManager<BulletRenderer> getClientBulletManager() {

@@ -2,6 +2,10 @@ package com.chaotic_loom.chaotic_minigames.entrypoints;
 
 import com.chaotic_loom.chaotic_minigames.core.GameManager;
 import com.chaotic_loom.chaotic_minigames.core.MusicManager;
+import com.chaotic_loom.chaotic_minigames.core.minigames.bullet_chaos.bullet.BulletRenderer;
+import com.chaotic_loom.chaotic_minigames.core.minigames.bullet_chaos.bullet.ServerBullet;
+import com.chaotic_loom.chaotic_minigames.core.minigames.sweeper.spining_bar.ServerSpinningBar;
+import com.chaotic_loom.chaotic_minigames.core.minigames.sweeper.spining_bar.SpinningBarRenderer;
 import com.chaotic_loom.chaotic_minigames.core.registries.LaserProjectile;
 import com.chaotic_loom.chaotic_minigames.core.registries.common.SoundRegistry;
 import com.chaotic_loom.chaotic_minigames.entrypoints.constants.CMSharedConstants;
@@ -11,8 +15,6 @@ import com.chaotic_loom.under_control.client.EntityTracker;
 import com.chaotic_loom.under_control.client.gui.FatalErrorScreen;
 import com.chaotic_loom.under_control.client.rendering.RenderingHelper;
 import com.chaotic_loom.under_control.client.rendering.effects.Cube;
-import com.chaotic_loom.under_control.client.rendering.effects.CubeManager;
-import com.chaotic_loom.under_control.client.rendering.effects.CylinderManager;
 import com.chaotic_loom.under_control.events.types.ClientLifeExtraEvents;
 import com.chaotic_loom.under_control.networking.services.ApiClient;
 import com.chaotic_loom.under_control.networking.services.ApiResponse;
@@ -20,6 +22,7 @@ import com.chaotic_loom.under_control.registries.client.UnderControlShaders;
 import com.chaotic_loom.under_control.util.EasingSystem;
 import com.chaotic_loom.under_control.util.MathHelper;
 import com.chaotic_loom.under_control.util.SynchronizationHelper;
+import com.chaotic_loom.under_control.util.pooling.PoolManager;
 import com.mojang.authlib.GameProfile;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.fabricmc.api.ClientModInitializer;
@@ -40,12 +43,6 @@ import java.util.Map;
 @Environment(value = EnvType.CLIENT)
 public class Client implements ClientModInitializer {
     public static boolean allowed = true;
-
-    public static Cube debugCube = CubeManager.create(-213);
-
-    static {
-        debugCube.setScale(new Vector3f(1, 1, 1));
-    }
 
     @Override
     public void onInitializeClient() {
@@ -76,6 +73,9 @@ public class Client implements ClientModInitializer {
         ClientPlayConnectionEvents.DISCONNECT.register((clientPacketListener, minecraft) -> {
             GameManager.getInstance().getSynchronizationHelper().clearOffsets();
         });
+
+        PoolManager.createPool(BulletRenderer.class, BulletRenderer::new);
+        PoolManager.createPool(SpinningBarRenderer.class, SpinningBarRenderer::new);
     }
 
     public static boolean areKeysPressed(Minecraft client, int... keys) {

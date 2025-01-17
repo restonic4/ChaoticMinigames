@@ -9,10 +9,11 @@ public abstract class SpinningBar {
     public static final float HITBOX_HEIGHT = 0.25f;
     public static float hitbox_radius = 0.25f;
 
-    protected final Vector3f position;
-    protected final float radius;
-    protected final long startTime, endTime;
-    protected final int spins;
+    protected Vector3f position;
+    protected float radius;
+    protected long startTime;
+    protected long endTime;
+    protected int spins;
     protected boolean finished = false;
 
     private float angleOffset = 10f;
@@ -80,6 +81,8 @@ public abstract class SpinningBar {
         if (currentTime >= endTime) {
             finished = true;
             return;
+        } else {
+            finished = false;
         }
 
         currentAngle = calculatePosition(cachePosition1, cachePosition2);

@@ -5,11 +5,12 @@ import com.chaotic_loom.chaotic_minigames.core.minigames.GenericMinigame;
 import com.chaotic_loom.chaotic_minigames.core.minigames.bullet_chaos.BulletChaos;
 import com.chaotic_loom.chaotic_minigames.core.minigames.bullet_chaos.bullet.BulletRenderer;
 import com.chaotic_loom.chaotic_minigames.entrypoints.constants.CMSharedConstants;
+import com.chaotic_loom.under_control.client.rendering.effects.EffectManager;
 import com.chaotic_loom.under_control.client.rendering.effects.Sphere;
-import com.chaotic_loom.under_control.client.rendering.effects.SphereManager;
 import com.chaotic_loom.under_control.core.annotations.Packet;
 import com.chaotic_loom.under_control.core.annotations.PacketDirection;
 import com.chaotic_loom.under_control.util.MathHelper;
+import com.chaotic_loom.under_control.util.pooling.PoolManager;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -35,22 +36,22 @@ public class SpawnBullet {
         long spawnTime = friendlyByteBuf.readLong();
         long deSpawnTime = friendlyByteBuf.readLong();
         float radius = friendlyByteBuf.readFloat();
-        long id = friendlyByteBuf.readLong();
+        String id = friendlyByteBuf.readUtf();
 
         minecraft.execute(() -> {
-            Sphere sphere = SphereManager.create(id);
+            Sphere sphere = (Sphere) EffectManager.add(new Sphere(id));
 
             sphere.setPosition(spawnPoint);
-            sphere.setRadius(radius);
+            sphere.setScale(new Vector3f(radius));
             sphere.setColor(new Color(0xFF0000));
 
             GenericMinigame.getInstance(BulletChaos.class).getClientBulletManager().addBullet(
-                    new BulletRenderer(sphere, spawnPoint, endPoint, spawnTime, deSpawnTime)
+                    PoolManager.acquire(BulletRenderer.class).initialize(sphere, spawnPoint, endPoint, spawnTime, deSpawnTime)
             );
         });
     }
 
-    public static void sendToAll(MinecraftServer server, Vector3f spawnPoint, Vector3f endPoint, long spawnTime, long deSpawnTime, float radius) {
+    public static void sendToAll(MinecraftServer server, Vector3f spawnPoint, Vector3f endPoint, long spawnTime, long deSpawnTime, float radius, String id) {
         FriendlyByteBuf friendlyByteBuf = PacketByteBufs.create();
 
         friendlyByteBuf.writeVector3f(spawnPoint);
@@ -58,7 +59,7 @@ public class SpawnBullet {
         friendlyByteBuf.writeLong(spawnTime);
         friendlyByteBuf.writeLong(deSpawnTime);
         friendlyByteBuf.writeFloat(radius);
-        friendlyByteBuf.writeLong(MathHelper.getUniqueID());
+        friendlyByteBuf.writeUtf(id);
 
         for (ServerPlayer serverPlayer : server.getPlayerList().getPlayers()) {
             ServerPlayNetworking.send(serverPlayer, getId(), friendlyByteBuf);

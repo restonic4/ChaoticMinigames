@@ -5,8 +5,10 @@ import com.chaotic_loom.under_control.util.EasingSystem;
 import org.joml.Vector3f;
 
 public abstract class Bullet {
-    protected final Vector3f spawnPoint, endPoint;
-    protected final long spawnedTime, endTime;
+    protected Vector3f spawnPoint;
+    protected Vector3f endPoint;
+    protected long spawnedTime;
+    protected long endTime;
     protected boolean finished = false;
 
     public Bullet(Vector3f spawnPoint, Vector3f endPoint, long spawnedTime, long endTime) {
@@ -37,6 +39,8 @@ public abstract class Bullet {
         if (currentTime >= endTime) {
             finished = true;
             return;
+        } else {
+            finished = false;
         }
 
         calculatePosition(cachePosition);
