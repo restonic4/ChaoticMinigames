@@ -35,9 +35,10 @@ public class SpawnBullet {
         long spawnTime = friendlyByteBuf.readLong();
         long deSpawnTime = friendlyByteBuf.readLong();
         float radius = friendlyByteBuf.readFloat();
+        long id = friendlyByteBuf.readLong();
 
         minecraft.execute(() -> {
-            Sphere sphere = SphereManager.create(MathHelper.getUniqueID());
+            Sphere sphere = SphereManager.create(id);
 
             sphere.setPosition(spawnPoint);
             sphere.setRadius(radius);
@@ -57,6 +58,7 @@ public class SpawnBullet {
         friendlyByteBuf.writeLong(spawnTime);
         friendlyByteBuf.writeLong(deSpawnTime);
         friendlyByteBuf.writeFloat(radius);
+        friendlyByteBuf.writeLong(MathHelper.getUniqueID());
 
         for (ServerPlayer serverPlayer : server.getPlayerList().getPlayers()) {
             ServerPlayNetworking.send(serverPlayer, getId(), friendlyByteBuf);

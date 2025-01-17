@@ -31,7 +31,7 @@ public class Sweeper extends GenericMinigame {
 
     private SpinningBar spinningBar;
 
-    public static long skyId = System.currentTimeMillis() + MathHelper.getUniqueID();
+    public static long skyId = -MathHelper.getUniqueID();
 
     private static final MapList<MapSpawn> spawns = createSpawns(
             new MapSpawn(56, 38, 34),

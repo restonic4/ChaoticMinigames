@@ -38,9 +38,10 @@ public class SpawnSpinningBar {
         long startTime = friendlyByteBuf.readLong();
         long endTime = friendlyByteBuf.readLong();
         int spins = friendlyByteBuf.readInt();
+        long id = friendlyByteBuf.readLong();
 
         minecraft.execute(() -> {
-            Cube cube = CubeManager.create(MathHelper.getUniqueID());
+            Cube cube = CubeManager.create(id);
 
             cube.setPosition(position);
             cube.setColor(new Color(0xFF0000));
@@ -59,6 +60,7 @@ public class SpawnSpinningBar {
         friendlyByteBuf.writeLong(startTime);
         friendlyByteBuf.writeLong(endTime);
         friendlyByteBuf.writeInt(spins);
+        friendlyByteBuf.writeLong(MathHelper.getUniqueID());
 
         for (ServerPlayer serverPlayer : server.getPlayerList().getPlayers()) {
             ServerPlayNetworking.send(serverPlayer, getId(), friendlyByteBuf);

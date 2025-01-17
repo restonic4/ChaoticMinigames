@@ -70,7 +70,7 @@ public class Client implements ClientModInitializer {
         });
 
         ClientPlayConnectionEvents.JOIN.register((clientPacketListener, packetSender ,minecraft) -> {
-            GameManager.getInstance().getSynchronizationHelper().askForSynchronization();
+            GameManager.getInstance().getSynchronizationHelper().askForMultipleSynchronizations(16, 2000);
         });
 
         ClientPlayConnectionEvents.DISCONNECT.register((clientPacketListener, minecraft) -> {
