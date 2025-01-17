@@ -4,6 +4,8 @@ import com.chaotic_loom.chaotic_minigames.core.GameManager;
 import com.chaotic_loom.chaotic_minigames.core.MusicManager;
 import com.chaotic_loom.chaotic_minigames.core.minigames.bullet_chaos.bullet.BulletRenderer;
 import com.chaotic_loom.chaotic_minigames.core.minigames.bullet_chaos.bullet.ServerBullet;
+import com.chaotic_loom.chaotic_minigames.core.minigames.quick_drop.crusher.CrusherRenderer;
+import com.chaotic_loom.chaotic_minigames.core.minigames.quick_drop.crusher.ServerCrusher;
 import com.chaotic_loom.chaotic_minigames.core.minigames.sweeper.spining_bar.ServerSpinningBar;
 import com.chaotic_loom.chaotic_minigames.core.minigames.sweeper.spining_bar.SpinningBarRenderer;
 import com.chaotic_loom.chaotic_minigames.core.registries.LaserProjectile;
@@ -76,6 +78,7 @@ public class Client implements ClientModInitializer {
 
         PoolManager.createPool(BulletRenderer.class, BulletRenderer::new);
         PoolManager.createPool(SpinningBarRenderer.class, SpinningBarRenderer::new);
+        PoolManager.createPool(CrusherRenderer.class, CrusherRenderer::new);
     }
 
     public static boolean areKeysPressed(Minecraft client, int... keys) {

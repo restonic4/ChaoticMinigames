@@ -3,6 +3,7 @@ package com.chaotic_loom.chaotic_minigames.core.minigames.sweeper.spining_bar;
 import com.chaotic_loom.chaotic_minigames.Util;
 import com.chaotic_loom.chaotic_minigames.core.GameManager;
 import com.chaotic_loom.under_control.util.MathHelper;
+import com.chaotic_loom.under_control.util.pooling.PoolManager;
 import com.chaotic_loom.under_control.util.pooling.Poolable;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
@@ -70,5 +71,11 @@ public class ServerSpinningBar extends SpinningBar implements Poolable {
                 GameManager.getInstance().getPartyManager().disqualifyPlayer(serverPlayer);
             }
         }
+    }
+
+    @Override
+    public void markFinish() {
+        super.markFinish();
+        PoolManager.release(this);
     }
 }

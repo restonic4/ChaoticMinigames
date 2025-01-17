@@ -1,22 +1,16 @@
 package com.chaotic_loom.chaotic_minigames.core;
 
-import com.chaotic_loom.chaotic_minigames.core.data.MapData;
-import com.chaotic_loom.chaotic_minigames.core.data.MinigameSettings;
-import com.chaotic_loom.chaotic_minigames.core.data.PartyStatus;
-import com.chaotic_loom.chaotic_minigames.core.data.Playlist;
+import com.chaotic_loom.chaotic_minigames.core.data.*;
 import com.chaotic_loom.chaotic_minigames.core.minigames.GenericMinigame;
 import com.chaotic_loom.chaotic_minigames.core.registries.common.SoundRegistry;
 import com.chaotic_loom.chaotic_minigames.core.registries.common.MinigameRegistry;
 import com.chaotic_loom.chaotic_minigames.entrypoints.constants.CMSharedConstants;
 import com.chaotic_loom.chaotic_minigames.networking.packets.server_to_client.*;
-import com.chaotic_loom.under_control.api.whitelist.WhitelistAPI;
-import com.chaotic_loom.under_control.client.gui.FatalErrorScreen;
 import com.chaotic_loom.under_control.events.EventResult;
 import com.chaotic_loom.under_control.events.types.LivingEntityExtraEvents;
 import com.chaotic_loom.under_control.util.MathHelper;
 import com.chaotic_loom.under_control.util.ThreadHelper;
 import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
-import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.minecraft.core.BlockPos;
@@ -25,7 +19,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Difficulty;
-import net.minecraft.world.damagesource.DamageSources;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
@@ -42,7 +35,6 @@ import org.joml.Vector3f;
 
 import java.util.*;
 import java.util.function.Consumer;
-import java.util.function.Predicate;
 
 import static com.chaotic_loom.chaotic_minigames.entrypoints.constants.CMSharedConstants.LOBBY_SPAWNS;
 
@@ -350,31 +342,39 @@ public class PartyManager {
     }
 
     public void teleportRandomly() {
-        for (ServerPlayer serverPlayer : inGamePlayers) {
-            BlockPos spawnPos = currentMapData.getSpawns().getRandom().getBlockPos();
-            serverPlayer.teleportTo(spawnPos.getX() + 0.5f, spawnPos.getY(), spawnPos.getZ() + 0.5f);
+        if (currentMapData instanceof SpawnerMapData spawnerMapData) {
+            for (ServerPlayer serverPlayer : inGamePlayers) {
+                BlockPos spawnPos = spawnerMapData.getSpawns().getRandom().getBlockPos();
+                serverPlayer.teleportTo(spawnPos.getX() + 0.5f, spawnPos.getY(), spawnPos.getZ() + 0.5f);
+            }
         }
     }
 
     public void teleportInOrder() {
         int spawnIndex = 0;
 
-        for (ServerPlayer serverPlayer : inGamePlayers) {
-            BlockPos spawnPos = currentMapData.getSpawns().get(spawnIndex).getBlockPos();
-            serverPlayer.teleportTo(spawnPos.getX() + 0.5f, spawnPos.getY(), spawnPos.getZ() + 0.5f);
+        if (currentMapData instanceof SpawnerMapData spawnerMapData) {
+            for (ServerPlayer serverPlayer : inGamePlayers) {
+                BlockPos spawnPos = spawnerMapData.getSpawns().get(spawnIndex).getBlockPos();
+                serverPlayer.teleportTo(spawnPos.getX() + 0.5f, spawnPos.getY(), spawnPos.getZ() + 0.5f);
 
-            if (spawnIndex + 1 >= currentMapData.getSpawns().size()) {
-                spawnIndex = 0;
-            } else {
-                spawnIndex++;
+                if (spawnIndex + 1 >= spawnerMapData.getSpawns().size()) {
+                    spawnIndex = 0;
+                } else {
+                    spawnIndex++;
+                }
             }
         }
     }
 
+    public void teleportLobby(ServerPlayer serverPlayer) {
+        BlockPos spawnPos = getRandomLobbySpawn();
+        serverPlayer.teleportTo(spawnPos.getX(), spawnPos.getY(), spawnPos.getZ());
+    }
+
     public void teleportLobby() {
         for (ServerPlayer serverPlayer : inGamePlayers) {
-            BlockPos spawnPos = getRandomLobbySpawn();
-            serverPlayer.teleportTo(spawnPos.getX(), spawnPos.getY(), spawnPos.getZ());
+            teleportLobby(serverPlayer);
         }
     }
 
@@ -589,7 +589,7 @@ public class PartyManager {
     }
 
     @SuppressWarnings("unchecked")
-    public <T extends MapData> T getCurrentMapData(Class<T> mapClass) {
+    public <T extends SpawnerMapData> T getCurrentMapData(Class<T> mapClass) {
         if (mapClass.isInstance(currentMapData)) {
             return (T) currentMapData;
         }

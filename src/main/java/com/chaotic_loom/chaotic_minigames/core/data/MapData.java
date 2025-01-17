@@ -2,25 +2,20 @@ package com.chaotic_loom.chaotic_minigames.core.data;
 
 public class MapData {
     private final String structureId;
-    private final MapList<MapSpawn> spawns;
 
     private long time;
     private boolean rain;
 
     private Runnable onLoad, onUnLoad;
 
-    public MapData(String structureId, MapList<MapSpawn> spawns) {
+    public MapData(String structureId) {
         this.structureId = structureId;
-        this.spawns = spawns;
     }
 
     public String getStructureId() {
         return structureId;
     }
 
-    public MapList<MapSpawn> getSpawns() {
-        return spawns;
-    }
 
     public MapData setTime(long time) {
         this.time = time;

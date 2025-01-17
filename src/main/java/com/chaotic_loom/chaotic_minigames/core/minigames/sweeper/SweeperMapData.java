@@ -1,12 +1,11 @@
 package com.chaotic_loom.chaotic_minigames.core.minigames.sweeper;
 
-import com.chaotic_loom.chaotic_minigames.core.data.MapData;
+import com.chaotic_loom.chaotic_minigames.core.data.SpawnerMapData;
 import com.chaotic_loom.chaotic_minigames.core.data.MapList;
 import com.chaotic_loom.chaotic_minigames.core.data.MapSpawn;
-import com.chaotic_loom.chaotic_minigames.core.minigames.bullet_chaos.BulletChaosMapData;
 import net.minecraft.core.BlockPos;
 
-public class SweeperMapData extends MapData {
+public class SweeperMapData extends SpawnerMapData {
     private BlockPos center;
     private float minHeight = 22;
     private float barRadius = 25;

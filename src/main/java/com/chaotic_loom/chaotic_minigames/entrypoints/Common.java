@@ -1,6 +1,7 @@
 package com.chaotic_loom.chaotic_minigames.entrypoints;
 
 import com.chaotic_loom.chaotic_minigames.core.minigames.bullet_chaos.bullet.ServerBullet;
+import com.chaotic_loom.chaotic_minigames.core.minigames.quick_drop.crusher.ServerCrusher;
 import com.chaotic_loom.chaotic_minigames.core.minigames.sweeper.spining_bar.ServerSpinningBar;
 import com.chaotic_loom.chaotic_minigames.entrypoints.constants.CMSharedConstants;
 import com.chaotic_loom.under_control.api.whitelist.WhitelistAPI;
@@ -19,5 +20,6 @@ public class Common implements ModInitializer {
     public void onInitialize() {
         PoolManager.createPool(ServerBullet.class, ServerBullet::new);
         PoolManager.createPool(ServerSpinningBar.class, ServerSpinningBar::new);
+        PoolManager.createPool(ServerCrusher.class, ServerCrusher::new);
     }
 }

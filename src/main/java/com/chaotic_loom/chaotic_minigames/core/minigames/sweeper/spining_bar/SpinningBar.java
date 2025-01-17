@@ -2,10 +2,11 @@ package com.chaotic_loom.chaotic_minigames.core.minigames.sweeper.spining_bar;
 
 import com.chaotic_loom.chaotic_minigames.core.GameManager;
 import com.chaotic_loom.under_control.util.EasingSystem;
+import com.chaotic_loom.under_control.util.pooling.Poolable;
 import net.minecraft.world.entity.player.Player;
 import org.joml.Vector3f;
 
-public abstract class SpinningBar {
+public abstract class SpinningBar implements Poolable {
     public static final float HITBOX_HEIGHT = 0.25f;
     public static float hitbox_radius = 0.25f;
 
@@ -76,13 +77,11 @@ public abstract class SpinningBar {
     private final Vector3f cachePosition2 = new Vector3f();
     private float currentAngle = 0;
     public void tick() {
-        long currentTime = System.currentTimeMillis();
+        long currentTime = GameManager.getInstance().getSynchronizationHelper().getCurrentTime();
 
         if (currentTime >= endTime) {
             finished = true;
             return;
-        } else {
-            finished = false;
         }
 
         currentAngle = calculatePosition(cachePosition1, cachePosition2);
@@ -106,5 +105,10 @@ public abstract class SpinningBar {
 
     public float getCurrentAngle() {
         return currentAngle;
+    }
+
+    @Override
+    public void reset() {
+        this.finished = false;
     }
 }

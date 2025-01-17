@@ -2,9 +2,10 @@ package com.chaotic_loom.chaotic_minigames.core.minigames.bullet_chaos.bullet;
 
 import com.chaotic_loom.chaotic_minigames.core.GameManager;
 import com.chaotic_loom.under_control.util.EasingSystem;
+import com.chaotic_loom.under_control.util.pooling.Poolable;
 import org.joml.Vector3f;
 
-public abstract class Bullet {
+public abstract class Bullet implements Poolable {
     protected Vector3f spawnPoint;
     protected Vector3f endPoint;
     protected long spawnedTime;
@@ -34,13 +35,11 @@ public abstract class Bullet {
 
     private final Vector3f cachePosition = new Vector3f();
     public void tick() {
-        long currentTime = System.currentTimeMillis();
+        long currentTime = GameManager.getInstance().getSynchronizationHelper().getCurrentTime();
 
         if (currentTime >= endTime) {
             finished = true;
             return;
-        } else {
-            finished = false;
         }
 
         calculatePosition(cachePosition);
@@ -48,5 +47,10 @@ public abstract class Bullet {
 
     public Vector3f getPosition() {
         return cachePosition;
+    }
+
+    @Override
+    public void reset() {
+        this.finished = false;
     }
 }

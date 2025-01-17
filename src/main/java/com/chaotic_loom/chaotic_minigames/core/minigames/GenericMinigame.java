@@ -2,10 +2,7 @@ package com.chaotic_loom.chaotic_minigames.core.minigames;
 
 import com.chaotic_loom.chaotic_minigames.core.GameManager;
 import com.chaotic_loom.chaotic_minigames.core.PartyManager;
-import com.chaotic_loom.chaotic_minigames.core.data.MapData;
-import com.chaotic_loom.chaotic_minigames.core.data.MapList;
-import com.chaotic_loom.chaotic_minigames.core.data.MapSpawn;
-import com.chaotic_loom.chaotic_minigames.core.data.MinigameSettings;
+import com.chaotic_loom.chaotic_minigames.core.data.*;
 import com.chaotic_loom.chaotic_minigames.core.registries.common.MinigameRegistry;
 import com.chaotic_loom.under_control.core.annotations.ExecutionSide;
 import net.minecraft.network.chat.Component;

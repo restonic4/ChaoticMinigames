@@ -4,6 +4,7 @@ import com.chaotic_loom.chaotic_minigames.Util;
 import com.chaotic_loom.chaotic_minigames.entrypoints.constants.CMClientConstants;
 import com.chaotic_loom.under_control.client.rendering.effects.*;
 import com.chaotic_loom.under_control.util.MathHelper;
+import com.chaotic_loom.under_control.util.pooling.PoolManager;
 import com.chaotic_loom.under_control.util.pooling.Poolable;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.AbstractClientPlayer;
@@ -89,5 +90,11 @@ public class SpinningBarRenderer extends SpinningBar implements Poolable {
             debugSphere2.setPosition(getPosition2());
             debugSphere2.setScale(cacheDebugHitboxesScale);
         }
+    }
+
+    @Override
+    public void markFinish() {
+        super.markFinish();
+        PoolManager.release(this);
     }
 }
