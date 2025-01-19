@@ -14,6 +14,8 @@ import com.chaotic_loom.chaotic_minigames.core.minigames.sweeper.spining_bar.Ser
 import com.chaotic_loom.chaotic_minigames.core.minigames.sweeper.spining_bar.SpinningBar;
 import com.chaotic_loom.chaotic_minigames.core.registries.common.SoundRegistry;
 import com.chaotic_loom.chaotic_minigames.entrypoints.constants.KnownServerDataOnClient;
+import com.chaotic_loom.under_control.client.rendering.effects.Cube;
+import com.chaotic_loom.under_control.client.rendering.effects.EffectManager;
 import com.chaotic_loom.under_control.core.annotations.ExecutionSide;
 import com.chaotic_loom.under_control.util.MathHelper;
 import com.chaotic_loom.under_control.util.ThreadHelper;
@@ -22,13 +24,17 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
 import org.joml.Vector3f;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Minigame
 public class QuickDrop extends GenericMinigame {
     private final Playlist music;
 
+    private List<ServerPlayer> winners = new ArrayList<>();
+
     private Crusher crusher;
+    private Cube winCube;
 
     public QuickDrop() {
         super(new MinigameSettings(
@@ -104,7 +110,9 @@ public class QuickDrop extends GenericMinigame {
 
         ThreadHelper.sleep(2000);
 
-        announceWinners();
+        announceWinners(winners);
+
+        winners.clear();
     }
 
     @Override
@@ -120,12 +128,25 @@ public class QuickDrop extends GenericMinigame {
 
                 if (serverPlayer.position().y() <= 0) {
                     GameManager.getInstance().getPartyManager().teleportLobby(serverPlayer);
-                    awardPlayer(serverPlayer);
+                    GameManager.getInstance().getPartyManager().resetInventory(serverPlayer);
+                    awardPlayer(serverPlayer, true);
+                    winners.add(serverPlayer);
                 }
             }
-        } else if (executionSide == ExecutionSide.CLIENT && KnownServerDataOnClient.partyState != PartyStatus.State.PLAYING) {
-            if (this.crusher != null) {
-                crusher.markFinish();
+        } else if (executionSide == ExecutionSide.CLIENT) {
+            if (KnownServerDataOnClient.partyState != PartyStatus.State.PLAYING) {
+                if (this.crusher != null) {
+                    crusher.markFinish();
+                }
+            } else {
+                if (winCube == null) {
+                    winCube = new Cube("winCube" + MathHelper.getUniqueID());
+
+                    winCube.setScale(100, 0.5f, 100);
+                    winCube.setPosition(0, 0, 0);
+                }
+
+                EffectManager.add(winCube);
             }
         }
     }
@@ -148,6 +169,8 @@ public class QuickDrop extends GenericMinigame {
         }
 
         super.clientCleanup();
+
+        EffectManager.delete(winCube.getId());
 
         this.crusher = null;
     }

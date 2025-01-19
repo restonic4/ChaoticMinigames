@@ -9,6 +9,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.level.ServerPlayer;
 
+import java.util.Arrays;
 import java.util.List;
 
 public abstract class GenericMinigame {
@@ -54,13 +55,32 @@ public abstract class GenericMinigame {
     }
 
     public void awardPlayer(ServerPlayer serverPlayer) {
+        awardPlayer(serverPlayer, false);
+    }
+
+    public void awardPlayer(ServerPlayer serverPlayer, boolean removeFromList) {
         System.out.println("Awarding " + serverPlayer.getName());
+
+        if (removeFromList) {
+            GameManager.getInstance().getPartyManager().disqualifyPlayer(serverPlayer, false);
+        }
     }
 
     public void announceWinners() {
-        MutableComponent component = Component.translatable("message.chaotic_minigames.winners");
+        announceWinners(GameManager.getInstance().getPartyManager().getInGamePlayers());
+    }
 
-        List<ServerPlayer> players = GameManager.getInstance().getPartyManager().getInGamePlayers();
+    public void announceWinners(ServerPlayer... players) {
+        announceWinners(Arrays.stream(players).toList());
+    }
+
+    public void announceNoWinners() {
+        MutableComponent component = Component.translatable("message.chaotic_minigames.winners").append("Nobody");
+        GameManager.getInstance().sendSubtitleToPlayers(component);
+    }
+
+    public void announceWinners(List<ServerPlayer> players) {
+        MutableComponent component = Component.translatable("message.chaotic_minigames.winners");
 
         if (players.isEmpty()) {
             component.append("Nobody");

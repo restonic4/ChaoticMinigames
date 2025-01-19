@@ -97,6 +97,7 @@ public class GameManager {
         serverPlayer.moveTo(randomSpawn.getX(), randomSpawn.getY(), randomSpawn.getZ());
         serverPlayer.setGameMode(GameType.SURVIVAL);
         serverPlayer.getInventory().clearContent();
+        serverPlayer.removeAllEffects();
     }
 
     private static final Random RANDOM = new Random();

@@ -21,5 +21,13 @@
 
   "minigame.chaotic_minigames.sweeper.name": "Sweeper",
   "minigame.chaotic_minigames.sweeper.summary": "Survive the sweeper!",
-  "minigame.chaotic_minigames.sweeper.description": "Avoid a spinning stick by jumping to survive."
+  "minigame.chaotic_minigames.sweeper.description": "Avoid a spinning stick by jumping to survive.",
+
+  "minigame.chaotic_minigames.quick_drop.name": "Quick drop",
+  "minigame.chaotic_minigames.quick_drop.summary": "Avoid getting crushed by the ceiling!",
+  "minigame.chaotic_minigames.quick_drop.description": "You must reach the finish line without dying. Be careful, as the ceiling will keep lowering until it crushes you!",
+
+  "minigame.chaotic_minigames.mine_and_shine.name": "Mine & Shine",
+  "minigame.chaotic_minigames.mine_and_shine.summary": "Be among the first to find the gems!",
+  "minigame.chaotic_minigames.mine_and_shine.description": "Mine until you find an emerald; only the first three will win."
 }

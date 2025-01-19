@@ -20,6 +20,9 @@
     ],
     "server": [
       "com.chaotic_loom.chaotic_minigames.entrypoints.DedicatedServer"
+    ],
+    "fabric-datagen": [
+      "com.chaotic_loom.chaotic_minigames.datagen.DataGen"
     ]
   },
   "mixins": [

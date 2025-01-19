@@ -6,6 +6,7 @@ import com.chaotic_loom.chaotic_minigames.entrypoints.constants.CMClientConstant
 import com.chaotic_loom.under_control.client.rendering.effects.Cube;
 import com.chaotic_loom.under_control.client.rendering.effects.Cylinder;
 import com.chaotic_loom.under_control.client.rendering.effects.EffectManager;
+import com.chaotic_loom.under_control.util.MathHelper;
 import com.chaotic_loom.under_control.util.pooling.PoolManager;
 import com.chaotic_loom.under_control.util.pooling.Poolable;
 import net.minecraft.client.Minecraft;

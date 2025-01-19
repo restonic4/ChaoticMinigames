@@ -10,10 +10,12 @@
     "common.StructureBlockEntityMixin"
   ],
   "client": [
+    "client.AbstractZombieRendererMixin",
     "client.AccessibilityOnboardingScreenMixin",
     "client.ClientPacketListenerMixin",
     "client.GuiMixin",
     "client.LevelRendererMixin",
+    "client.LivingEntityRendererMixin",
     "client.MinecraftMixin",
     "client.OptionsMixins",
     "client.PauseScreenMixin",

@@ -10,6 +10,7 @@ import com.chaotic_loom.chaotic_minigames.core.minigames.sweeper.spining_bar.Ser
 import com.chaotic_loom.chaotic_minigames.core.minigames.sweeper.spining_bar.SpinningBarRenderer;
 import com.chaotic_loom.chaotic_minigames.core.registries.LaserProjectile;
 import com.chaotic_loom.chaotic_minigames.core.registries.common.SoundRegistry;
+import com.chaotic_loom.chaotic_minigames.entrypoints.constants.CMClientConstants;
 import com.chaotic_loom.chaotic_minigames.entrypoints.constants.CMSharedConstants;
 import com.chaotic_loom.under_control.api.incompatibilities.IncompatibilitiesAPI;
 import com.chaotic_loom.under_control.api.whitelist.WhitelistAPI;
@@ -74,6 +75,7 @@ public class Client implements ClientModInitializer {
 
         ClientPlayConnectionEvents.DISCONNECT.register((clientPacketListener, minecraft) -> {
             GameManager.getInstance().getSynchronizationHelper().clearOffsets();
+            CMClientConstants.zombiePlayersUUIDs.clear();
         });
 
         PoolManager.createPool(BulletRenderer.class, BulletRenderer::new);

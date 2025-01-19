@@ -35,10 +35,14 @@ import org.joml.Vector3f;
 
 import java.util.*;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 import static com.chaotic_loom.chaotic_minigames.entrypoints.constants.CMSharedConstants.LOBBY_SPAWNS;
 
 public class PartyManager {
+    public static final int MIN_HEIGHT = -64;
+    public static final int AREA_RANGE = 160;
+
     private final Playlist music;
 
     private final GameManager gameManager;
@@ -53,6 +57,7 @@ public class PartyManager {
 
     private boolean hasMapBeenLoaded = false;
     private boolean shouldRestart = false;
+    private boolean allowDamage = false;
 
     public PartyManager() {
         this.gameManager = GameManager.getInstance();
@@ -93,6 +98,10 @@ public class PartyManager {
         });
 
         ServerLivingEntityEvents.ALLOW_DAMAGE.register((livingEntity, damageSource, amount) -> {
+            if (allowDamage) {
+                return true;
+            }
+
             return !(livingEntity instanceof Player) || damageSource.is(DamageTypes.FELL_OUT_OF_WORLD) || damageSource.is(DamageTypes.OUTSIDE_BORDER) || damageSource.is(DamageTypes.GENERIC) || damageSource.is(DamageTypes.GENERIC_KILL);
         });
 
@@ -105,6 +114,8 @@ public class PartyManager {
         serverLevel.getGameRules().getRule(GameRules.RULE_DO_IMMEDIATE_RESPAWN).set(true, serverLevel.getServer());
         serverLevel.getGameRules().getRule(GameRules.RULE_DAYLIGHT).set(false, serverLevel.getServer());
         serverLevel.getGameRules().getRule(GameRules.RULE_WEATHER_CYCLE).set(false, serverLevel.getServer());
+        serverLevel.getGameRules().getRule(GameRules.RULE_DOMOBSPAWNING).set(false, serverLevel.getServer());
+        serverLevel.getGameRules().getRule(GameRules.RULE_RANDOMTICKING).set(0, serverLevel.getServer());
         serverLevel.getServer().setDifficulty(Difficulty.HARD, true);
 
         serverLevel.setDayTime(1000);
@@ -242,6 +253,7 @@ public class PartyManager {
 
         setState(PartyStatus.State.PLAYING);
 
+        resetInventories();
         inGamePlayers.addAll(serverLevel.getServer().getPlayerList().getPlayers());
         currentMinigame.onStart(this);
     }
@@ -256,7 +268,9 @@ public class PartyManager {
         }
 
         teleportLobby();
+        resetInventories();
         unFreezeAll();
+        disallowDamage();
 
         unLoadMap(serverLevel);
         currentMapData = null;
@@ -350,6 +364,13 @@ public class PartyManager {
         }
     }
 
+    public void teleportRandomly(MapList<MapSpawn> spawns, List<ServerPlayer> players) {
+        for (ServerPlayer serverPlayer : players) {
+            BlockPos spawnPos = spawns.getRandom().getBlockPos();
+            serverPlayer.teleportTo(spawnPos.getX() + 0.5f, spawnPos.getY(), spawnPos.getZ() + 0.5f);
+        }
+    }
+
     public void teleportInOrder() {
         int spawnIndex = 0;
 
@@ -367,15 +388,26 @@ public class PartyManager {
         }
     }
 
+    public void teleportLobby() {
+        for (ServerPlayer serverPlayer : inGamePlayers) {
+            teleportLobby(serverPlayer);
+        }
+    }
+
     public void teleportLobby(ServerPlayer serverPlayer) {
         BlockPos spawnPos = getRandomLobbySpawn();
         serverPlayer.teleportTo(spawnPos.getX(), spawnPos.getY(), spawnPos.getZ());
     }
 
-    public void teleportLobby() {
+    public void resetInventories() {
         for (ServerPlayer serverPlayer : inGamePlayers) {
-            teleportLobby(serverPlayer);
+            resetInventory(serverPlayer);
         }
+    }
+
+    public void resetInventory(ServerPlayer serverPlayer) {
+        serverPlayer.getInventory().clearContent();
+        serverPlayer.removeAllEffects();
     }
 
     public void loadMapWeather() {
@@ -425,20 +457,17 @@ public class PartyManager {
             getCurrentMapData().getOnUnLoad().run();
         }
 
-        int minHeight = -64;
-        int areaRange = 160;
-
         serverLevel.getServer().execute(() -> {
-            for (int x = 0; x <= areaRange; x++) {
-                for (int y = minHeight; y <= areaRange; y++) {
-                    for (int z = 0; z <= areaRange; z++) {
+            for (int x = -1; x <= AREA_RANGE + 1; x++) {
+                for (int y = MIN_HEIGHT; y <= AREA_RANGE + 1; y++) {
+                    for (int z = -1; z <= AREA_RANGE + 1; z++) {
                         BlockPos pos = new BlockPos(x, y, z);
                         serverLevel.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
                     }
                 }
             }
 
-            AABB area = new AABB(0, minHeight, 0, areaRange, areaRange, areaRange);
+            AABB area = new AABB(0, MIN_HEIGHT, 0, AREA_RANGE, AREA_RANGE, AREA_RANGE);
             List<Entity> entities = serverLevel.getEntities(null, area);
 
             for (Entity entity : entities) {
@@ -497,6 +526,14 @@ public class PartyManager {
         });
     }
 
+    public void startCountDown(int seconds, Runnable runnable, Predicate<Integer> cancelCondition) {
+        ThreadHelper.runCountDown(seconds, runnable, (timeLeft) -> {
+            gameManager.sendSubtitleToPlayers(Component.literal(getCountDownText(timeLeft)));
+
+            return !cancelCondition.test(timeLeft);
+        });
+    }
+
     public void executeForAllInGame(Consumer<ServerPlayer> consumer) {
         for (ServerPlayer serverPlayer : inGamePlayers) {
             consumer.accept(serverPlayer);
@@ -531,9 +568,26 @@ public class PartyManager {
         return text;
     }
 
+    public ServerPlayer getRandomInGamePlayer() {
+        if (inGamePlayers == null || inGamePlayers.isEmpty()) {
+            return null;
+        }
+
+        Random random = new Random();
+        int randomIndex = random.nextInt(inGamePlayers.size());
+        return inGamePlayers.get(randomIndex);
+    }
+
     public void disqualifyPlayer(ServerPlayer serverPlayer) {
+        disqualifyPlayer(serverPlayer, true);
+    }
+
+    public void disqualifyPlayer(ServerPlayer serverPlayer, boolean reset) {
         this.inGamePlayers.remove(serverPlayer);
-        serverPlayer.kill();
+
+        if (reset) {
+            serverPlayer.kill();
+        }
 
         CMSharedConstants.LOGGER.info("{} disqualified!", serverPlayer.getDisplayName());
     }
@@ -589,7 +643,7 @@ public class PartyManager {
     }
 
     @SuppressWarnings("unchecked")
-    public <T extends SpawnerMapData> T getCurrentMapData(Class<T> mapClass) {
+    public <T extends MapData> T getCurrentMapData(Class<T> mapClass) {
         if (mapClass.isInstance(currentMapData)) {
             return (T) currentMapData;
         }
@@ -602,5 +656,13 @@ public class PartyManager {
 
     public List<ServerPlayer> getInGamePlayers() {
         return this.inGamePlayers;
+    }
+
+    public void allowDamage() {
+        this.allowDamage = true;
+    }
+
+    public void disallowDamage() {
+        this.allowDamage = false;
     }
 }

@@ -43,7 +43,7 @@ public class ServerCrusher extends Crusher implements Poolable {
         for (int i = players.size() - 1; i >= 0; i--) {
             ServerPlayer serverPlayer = players.get(i);
 
-            if (serverPlayer.getEyeY() >= this.position.y) {
+            if (serverPlayer.getEyeY() >= this.position.y && serverPlayer.position().x <= 160 && serverPlayer.position().z <= 160 && serverPlayer.position().x >= 0 && serverPlayer.position().z >= 0) {
                 GameManager.getInstance().getPartyManager().disqualifyPlayer(serverPlayer);
             }
         }
