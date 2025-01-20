@@ -371,6 +371,13 @@ public class PartyManager {
         }
     }
 
+    public void teleportRandomly(MapList<MapSpawn> spawns, ServerPlayer... players) {
+        for (ServerPlayer serverPlayer : players) {
+            BlockPos spawnPos = spawns.getRandom().getBlockPos();
+            serverPlayer.teleportTo(spawnPos.getX() + 0.5f, spawnPos.getY(), spawnPos.getZ() + 0.5f);
+        }
+    }
+
     public void teleportInOrder() {
         int spawnIndex = 0;
 
