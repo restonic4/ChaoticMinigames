@@ -47,12 +47,19 @@ public class EpidemicRush extends GenericMinigame {
                 GENERIC_MAX_PLAYERS,
                 createMaps(
                         new MultipleSpawnerMapData(
-                                "template_city",
+                                "city",
                                 createSpawns(
-                                    new MapSpawn(23, 4, 23)
+                                        new MapSpawn(150, 2, 17),
+                                        new MapSpawn(51, 3, 126)
                                 ),
                                 createSpawns(
-                                    new MapSpawn(68, 4, 102)
+                                        new MapSpawn(17, 2, 67),
+                                        new MapSpawn(49, 2, 46),
+                                        new MapSpawn(72, 2, 17),
+                                        new MapSpawn(110, 2, 66),
+                                        new MapSpawn(70, 3, 83),
+                                        new MapSpawn(110, 2, 103),
+                                        new MapSpawn(79, 3, 41)
                                 )
                         ).setTime(18000).setRain(false)
                 )
@@ -125,13 +132,20 @@ public class EpidemicRush extends GenericMinigame {
 
         setInventories();
 
-        int totalDuration = 60000;
+        int totalDuration = 120000;
 
         ThreadHelper.sleep(2000);
 
         partyManager.unFreezeAll();
+        partyManager.freezePlayer(mainZombie, mainZombie.position().toVector3f());
         startTickingOnServer();
         partyManager.allowDamage();
+
+        ThreadHelper.runAsync(() -> {
+            ThreadHelper.sleep(5000);
+
+            partyManager.unFreezeAll();
+        });
 
         partyManager.startCountDown(totalDuration / 1000, () -> {}, (timeLeft) -> {
             return zombies.isEmpty() || partyManager.getInGamePlayers().isEmpty();
