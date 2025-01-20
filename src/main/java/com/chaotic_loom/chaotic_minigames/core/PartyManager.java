@@ -439,6 +439,8 @@ public class PartyManager {
 
             if (structure == null) {
                 GameManager.LOGGER.error("Could not place the structure: {}", structureName);
+                shouldRestart = true;
+                hasMapBeenLoaded = true;
                 return;
             }
 

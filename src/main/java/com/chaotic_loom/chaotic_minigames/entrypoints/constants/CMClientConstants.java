@@ -22,16 +22,16 @@ public class CMClientConstants {
     public static List<String> zombiePlayersUUIDs = new ArrayList<>();
 
     static {
-        /*SERVERS.add(new ServerData(
+        SERVERS.add(new ServerData(
                 "Test server 1",
                 "127.0.0.1:25565",
                 false
-        ));*/
+        ));
 
-        SERVERS.add(new ServerData(
+        /*SERVERS.add(new ServerData(
                 "Test server 1",
                 "restonic4-tests.exaroton.me:40617",
                 false
-        ));
+        ));*/
     }
 }
