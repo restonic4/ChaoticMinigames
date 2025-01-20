@@ -39,6 +39,7 @@ public class SendServerDataToClient {
             KnownServerDataOnClient.partyState = PartyStatus.State.valueOf(friendlyByteBuf.readUtf());
 
             KnownServerDataOnClient.currentMinigame = null;
+            KnownServerDataOnClient.nextMinigame = null;
 
             String minigameId = friendlyByteBuf.readUtf();
 
