@@ -41,14 +41,14 @@ public class KnockEmOff extends GenericMinigame {
                 GENERIC_MAX_PLAYERS,
                 createMaps(
                         new KnockEmOffMap(
-                                "template_pool",
+                                "template",
                                 createSpawns(
-                                    new MapSpawn(23, 4, 23)
+                                    new MapSpawn(1, 1, 1)
                                 ),
                                 createSpawns(
-                                    new MapSpawn(68, 4, 102)
+                                    new MapSpawn(2, 2, 2)
                                 )
-                        ).setCameraPos(new Vector3f()).setCameraRot(new Vector2f())
+                        ).setCameraPos(new Vector3f(1, 2, 5)).setCameraRot(new Vector2f(-133, 48))
                                 .setTime(1000).setRain(false)
                 )
         ));
@@ -76,7 +76,7 @@ public class KnockEmOff extends GenericMinigame {
     }
 
     @Override
-    public void onStart(PartyManager partyManager) {
+    public void onServerStart(PartyManager partyManager) {
         partyManager.loadMapWeather();
 
         music.playRandom();
@@ -131,13 +131,16 @@ public class KnockEmOff extends GenericMinigame {
     }
 
     @Override
-    public void tick(ExecutionSide executionSide) {
-        if (executionSide == ExecutionSide.CLIENT) {
-            CutsceneAPI.setPosition(currentCameraPos);
-            CutsceneAPI.setRotation(currentCameraRot);
+    public void onClientStart() {
+        CutsceneAPI.setPosition(currentCameraPos);
+        CutsceneAPI.setRotation(currentCameraRot);
 
-            CutsceneAPI.play();
-        }
+        CutsceneAPI.play();
+    }
+
+    @Override
+    public void tick(ExecutionSide executionSide) {
+
     }
 
     @Override

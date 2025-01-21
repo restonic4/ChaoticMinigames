@@ -111,7 +111,7 @@ public class EpidemicRush extends GenericMinigame {
     }
 
     @Override
-    public void onStart(PartyManager partyManager) {
+    public void onServerStart(PartyManager partyManager) {
         partyManager.loadMapWeather();
 
         music.playRandom();
@@ -195,8 +195,8 @@ public class EpidemicRush extends GenericMinigame {
     public void setInventories() {
         PartyManager partyManager = GameManager.getInstanceOrCreate().getPartyManager();
 
-        mainZombie.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 65 * 20, 2, false, false, false));
-        mainZombie.addEffect(new MobEffectInstance(MobEffects.NIGHT_VISION, 65 * 20, 0, false, false, false));
+        mainZombie.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 125 * 20, 2, false, false, false));
+        mainZombie.addEffect(new MobEffectInstance(MobEffects.NIGHT_VISION, 125 * 20, 0, false, false, false));
         mainZombie.addEffect(new MobEffectInstance(MobEffects.DARKNESS, 10 * 20, 0, false, false, false));
     }
 }

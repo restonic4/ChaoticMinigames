@@ -28,10 +28,10 @@ public class CMClientConstants {
                 false
         ));
 
-        /*SERVERS.add(new ServerData(
+        SERVERS.add(new ServerData(
                 "Test server 1",
                 "restonic4-tests.exaroton.me:40617",
                 false
-        ));*/
+        ));
     }
 }

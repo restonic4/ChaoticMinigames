@@ -30,7 +30,9 @@ public abstract class GenericMinigame {
         return playerCount >= minigameSettings.getMinPlayers() && playerCount <= minigameSettings.getMaxPlayers();
     }
 
-    public abstract void onStart(PartyManager partyManager);
+    public abstract void onServerStart(PartyManager partyManager);
+
+    public void onClientStart() {}
 
     public abstract void tick(ExecutionSide executionSide);
 

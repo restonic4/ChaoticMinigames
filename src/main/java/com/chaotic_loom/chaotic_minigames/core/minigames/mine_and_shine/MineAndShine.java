@@ -91,7 +91,7 @@ public class MineAndShine extends GenericMinigame {
     }
 
     @Override
-    public void onStart(PartyManager partyManager) {
+    public void onServerStart(PartyManager partyManager) {
         partyManager.teleportInOrder();
         partyManager.freezeAll();
         partyManager.loadMapWeather();

@@ -67,7 +67,7 @@ public class BulletChaos extends GenericMinigame {
     }
 
     @Override
-    public void onStart(PartyManager partyManager) {
+    public void onServerStart(PartyManager partyManager) {
         partyManager.teleportRandomly();
         partyManager.loadMapWeather();
 

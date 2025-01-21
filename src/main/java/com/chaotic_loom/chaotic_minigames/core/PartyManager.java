@@ -239,7 +239,7 @@ public class PartyManager {
     private void onPlaying() {
         System.out.println("Playing");
 
-        SyncClients.sendToAll(serverLevel.getServer());
+        ClientMinigameStart.sendToAll(serverLevel.getServer(), currentMinigame.getSettings().getId());
 
         if (serverLevel.getServer().getPlayerCount() < currentMinigame.getSettings().getMinPlayers() || serverLevel.getServer().getPlayerCount() > currentMinigame.getSettings().getMaxPlayers()) {
             shouldRestart = true;
@@ -255,7 +255,7 @@ public class PartyManager {
 
         resetInventories();
         inGamePlayers.addAll(serverLevel.getServer().getPlayerList().getPlayers());
-        currentMinigame.onStart(this);
+        currentMinigame.onServerStart(this);
     }
 
     private void onAfterPlaying() {
