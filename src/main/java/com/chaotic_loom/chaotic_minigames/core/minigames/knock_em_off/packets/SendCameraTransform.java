@@ -18,6 +18,7 @@ import org.joml.Vector2f;
 import org.joml.Vector3f;
 
 import java.util.List;
+import java.util.UUID;
 
 @Packet(direction = PacketDirection.SERVER_TO_CLIENT)
 public class SendCameraTransform {
@@ -26,16 +27,19 @@ public class SendCameraTransform {
     }
 
     public static void receive(Minecraft minecraft, ClientPacketListener clientPacketListener, FriendlyByteBuf friendlyByteBuf, PacketSender packetSender) {
+        String juggernautName = friendlyByteBuf.readUtf();
         Vector3f pos = friendlyByteBuf.readVector3f();
         Vector3f rot = friendlyByteBuf.readVector3f();
 
         KnockEmOff.setCurrentCameraPos(pos);
         KnockEmOff.setCurrentCameraRot(new Vector2f(rot.x, rot.y));
+        KnockEmOff.setCurrentJuggernaut(juggernautName.equals(minecraft.player.getName().getString()));
     }
 
-    public static void sendToAll(MinecraftServer server, Vector3f pos, Vector2f rot) {
+    public static void sendToAll(MinecraftServer server, ServerPlayer juggernaut, Vector3f pos, Vector2f rot) {
         FriendlyByteBuf friendlyByteBuf = PacketByteBufs.create();
 
+        friendlyByteBuf.writeUtf(juggernaut.getName().getString());
         friendlyByteBuf.writeVector3f(pos);
         friendlyByteBuf.writeVector3f(new Vector3f(rot.x, rot.y, 0));
 

@@ -27,3 +27,4 @@ accessible field net/minecraft/world/entity/projectile/AbstractArrow FLAG_NOPHYS
 accessible method net/minecraft/client/renderer/GameRenderer getFov (Lnet/minecraft/client/Camera;FZ)D
 accessible method net/minecraft/client/renderer/GameRenderer bobHurt (Lcom/mojang/blaze3d/vertex/PoseStack;F)V
 accessible method net/minecraft/client/renderer/GameRenderer bobView (Lcom/mojang/blaze3d/vertex/PoseStack;F)V
+accessible field net/minecraft/world/entity/LivingEntity jumping Z

@@ -24,7 +24,7 @@ import org.joml.Vector3f;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-@Minigame
+//@Minigame
 public class Sweeper extends GenericMinigame {
     private final Playlist music;
 

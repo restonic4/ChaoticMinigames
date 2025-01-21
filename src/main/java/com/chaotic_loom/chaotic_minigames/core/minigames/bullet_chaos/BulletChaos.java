@@ -22,7 +22,7 @@ import org.joml.Vector3f;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-@Minigame
+//@Minigame
 public class BulletChaos extends GenericMinigame {
     private final BulletManager<BulletRenderer> clientBulletManager;
     private final BulletManager<ServerBullet> serverBulletBulletManager;

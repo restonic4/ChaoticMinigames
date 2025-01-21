@@ -10,6 +10,8 @@ public class KnockEmOffMap extends MultipleSpawnerMapData {
     private Vector3f cameraPos;
     private Vector2f cameraRot;
 
+    private Vector3f pointA, pointB;
+
     @SafeVarargs
     public KnockEmOffMap(String structureId, MapList<MapSpawn>... spawns) {
         super(structureId, spawns);
@@ -30,6 +32,24 @@ public class KnockEmOffMap extends MultipleSpawnerMapData {
 
     public KnockEmOffMap setCameraRot(Vector2f cameraRot) {
         this.cameraRot = cameraRot;
+        return this;
+    }
+
+    public Vector3f getPointA() {
+        return pointA;
+    }
+
+    public KnockEmOffMap setPointA(Vector3f pointA) {
+        this.pointA = pointA;
+        return this;
+    }
+
+    public Vector3f getPointB() {
+        return pointB;
+    }
+
+    public KnockEmOffMap setPointB(Vector3f pointB) {
+        this.pointB = pointB;
         return this;
     }
 }

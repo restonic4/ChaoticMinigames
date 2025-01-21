@@ -27,7 +27,7 @@ import org.joml.Vector3f;
 import java.util.ArrayList;
 import java.util.List;
 
-@Minigame
+//@Minigame
 public class QuickDrop extends GenericMinigame {
     private final Playlist music;
 
