@@ -6,6 +6,7 @@ import com.chaotic_loom.under_control.client.rendering.effects.Sphere;
 import com.chaotic_loom.under_control.util.MathHelper;
 import com.chaotic_loom.under_control.util.pooling.PoolManager;
 import com.chaotic_loom.under_control.util.pooling.Poolable;
+import net.minecraft.client.Minecraft;
 import org.joml.Vector3f;
 
 public class BallRenderer extends Ball implements Poolable {
@@ -13,7 +14,11 @@ public class BallRenderer extends Ball implements Poolable {
 
     public BallRenderer(float radius, long startTime, long endTime) {
         super(radius, startTime, endTime);
-        sphere = (Sphere) EffectManager.add(new Sphere("ball" + MathHelper.getUniqueID()));
+        sphere = new Sphere("ball" + MathHelper.getUniqueID());
+
+        Minecraft.getInstance().execute(() -> {
+            EffectManager.add(sphere);
+        });
     }
 
     public BallRenderer initialize(float radius, long startTime, long endTime) {
@@ -21,7 +26,11 @@ public class BallRenderer extends Ball implements Poolable {
         super.startTime = startTime;
         super.endTime = endTime;
 
-        sphere = (Sphere) EffectManager.add(new Sphere("ball" + MathHelper.getUniqueID()));
+        sphere = new Sphere("ball" + MathHelper.getUniqueID());
+
+        Minecraft.getInstance().execute(() -> {
+            EffectManager.add(sphere);
+        });
 
         return this;
     }

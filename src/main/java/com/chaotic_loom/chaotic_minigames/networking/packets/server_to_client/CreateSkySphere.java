@@ -55,11 +55,13 @@ public class CreateSkySphere {
         shaderProfile.setUniformData("Center", new float[]{position.x(), position.y(), position.z()});
         shaderProfile.setUniformData("Radius", new float[]{radius});
 
-        Sphere sphere = (Sphere) EffectManager.add(new Sphere(sphereID));
-        sphere.setPosition(position);
-        sphere.setScale(new Vector3f(radius));
-        sphere.setShaderProfile(shaderProfile);
-        sphere.setRenderingFlags(RenderingFlags.INVERT_NORMALS);
+        minecraft.execute(() -> {
+            Sphere sphere = (Sphere) EffectManager.add(new Sphere(sphereID));
+            sphere.setPosition(position);
+            sphere.setScale(new Vector3f(radius));
+            sphere.setShaderProfile(shaderProfile);
+            sphere.setRenderingFlags(RenderingFlags.INVERT_NORMALS);
+        });
     }
 
     public static void sendToAll(MinecraftServer server, String sphereID, float[] topColor, float[] bottomColor, Vector3f position, float radius) {
