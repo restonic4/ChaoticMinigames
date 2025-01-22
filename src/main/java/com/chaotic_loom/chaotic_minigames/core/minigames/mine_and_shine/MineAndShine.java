@@ -33,7 +33,7 @@ import java.util.Random;
 import static com.chaotic_loom.chaotic_minigames.core.PartyManager.AREA_RANGE;
 import static com.chaotic_loom.chaotic_minigames.core.PartyManager.MIN_HEIGHT;
 
-//@Minigame
+@Minigame
 public class MineAndShine extends GenericMinigame {
     private final Playlist music;
 
