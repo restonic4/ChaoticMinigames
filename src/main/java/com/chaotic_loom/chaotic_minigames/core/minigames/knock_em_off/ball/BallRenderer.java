@@ -11,13 +11,12 @@ import org.joml.Vector3f;
 public class BallRenderer extends Ball implements Poolable {
     private Sphere sphere;
 
-    public BallRenderer(Vector3f position, float radius, long startTime, long endTime) {
-        super(position, radius, startTime, endTime);
+    public BallRenderer(float radius, long startTime, long endTime) {
+        super(radius, startTime, endTime);
         sphere = (Sphere) EffectManager.add(new Sphere("ball" + MathHelper.getUniqueID()));
     }
 
-    public BallRenderer initialize(Vector3f position, float radius, long startTime, long endTime) {
-        super.position = position;
+    public BallRenderer initialize(float radius, long startTime, long endTime) {
         super.radius = radius;
         super.startTime = startTime;
         super.endTime = endTime;

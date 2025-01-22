@@ -1,7 +1,6 @@
 package com.chaotic_loom.chaotic_minigames.core.minigames.knock_em_off.packets;
 
 import com.chaotic_loom.chaotic_minigames.core.minigames.knock_em_off.KnockEmOff;
-import com.chaotic_loom.chaotic_minigames.entrypoints.constants.CMClientConstants;
 import com.chaotic_loom.chaotic_minigames.entrypoints.constants.CMSharedConstants;
 import com.chaotic_loom.under_control.core.annotations.Packet;
 import com.chaotic_loom.under_control.core.annotations.PacketDirection;
@@ -17,11 +16,8 @@ import net.minecraft.server.level.ServerPlayer;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 
-import java.util.List;
-import java.util.UUID;
-
 @Packet(direction = PacketDirection.SERVER_TO_CLIENT)
-public class SendCameraTransform {
+public class SendKnockEmOffData {
     public static ResourceLocation getId() {
         return new ResourceLocation(CMSharedConstants.ID, "send_camera_transform");
     }

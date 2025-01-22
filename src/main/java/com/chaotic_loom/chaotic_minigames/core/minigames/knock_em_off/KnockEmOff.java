@@ -5,40 +5,29 @@ import com.chaotic_loom.chaotic_minigames.core.GameManager;
 import com.chaotic_loom.chaotic_minigames.core.PartyManager;
 import com.chaotic_loom.chaotic_minigames.core.data.MapSpawn;
 import com.chaotic_loom.chaotic_minigames.core.data.MinigameSettings;
-import com.chaotic_loom.chaotic_minigames.core.data.MultipleSpawnerMapData;
 import com.chaotic_loom.chaotic_minigames.core.data.Playlist;
 import com.chaotic_loom.chaotic_minigames.core.minigames.GenericMinigame;
-import com.chaotic_loom.chaotic_minigames.core.minigames.epidemic_rush.packets.UpdateZombieData;
 import com.chaotic_loom.chaotic_minigames.core.minigames.knock_em_off.ball.Ball;
-import com.chaotic_loom.chaotic_minigames.core.minigames.knock_em_off.packets.SendCameraTransform;
+import com.chaotic_loom.chaotic_minigames.core.minigames.knock_em_off.packets.SendKnockEmOffData;
+import com.chaotic_loom.chaotic_minigames.core.minigames.knock_em_off.packets.ThrowBall;
 import com.chaotic_loom.chaotic_minigames.core.registries.common.SoundRegistry;
 import com.chaotic_loom.chaotic_minigames.entrypoints.constants.CMSharedConstants;
 import com.chaotic_loom.under_control.api.cutscene.CutsceneAPI;
 import com.chaotic_loom.under_control.core.annotations.ExecutionSide;
 import com.chaotic_loom.under_control.events.types.ServerPlayerExtraEvents;
 import com.chaotic_loom.under_control.util.ThreadHelper;
-import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
+import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.animal.Bee;
-import net.minecraft.world.entity.decoration.ArmorStand;
-import net.minecraft.world.phys.Vec3;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
 
 @Minigame
 public class KnockEmOff extends GenericMinigame {
     private final Playlist music;
 
     private ServerPlayer juggernaut;
-    private Ball ball;
+    private static Ball ball;
 
     private static Vector3f currentCameraPos;
     private static Vector2f currentCameraRot;
@@ -58,8 +47,8 @@ public class KnockEmOff extends GenericMinigame {
                                 createSpawns(
                                     new MapSpawn(9, 2, 7)
                                 )
-                        ).setCameraPos(new Vector3f(1, 2, 5))
-                         .setCameraRot(new Vector2f(48, -133))
+                        ).setCameraPos(new Vector3f(-2, 6, 7))
+                         .setCameraRot(new Vector2f(-90, 25))
                          .setPointA(new Vector3f(9, 2, 2))
                          .setPointB(new Vector3f(9, 2, 12))
                          .setTime(1000)
@@ -105,7 +94,7 @@ public class KnockEmOff extends GenericMinigame {
         partyManager.disqualifyPlayer(juggernaut, false);
 
         KnockEmOffMap map = partyManager.getCurrentMapData(KnockEmOffMap.class);
-        SendCameraTransform.sendToAll(partyManager.getServerLevel().getServer(), juggernaut, map.getCameraPos(), map.getCameraRot());
+        SendKnockEmOffData.sendToAll(partyManager.getServerLevel().getServer(), juggernaut, map.getCameraPos(), map.getCameraRot());
 
         CMSharedConstants.LOGGER.info("Juggernaut: {}", juggernaut.getDisplayName());
 
@@ -155,17 +144,18 @@ public class KnockEmOff extends GenericMinigame {
     }
 
     @Override
-    public void onClientStart() {
-        CutsceneAPI.setPosition(currentCameraPos);
-        CutsceneAPI.setRotation(currentCameraRot);
-
-        CutsceneAPI.play();
-    }
-
-    @Override
     public void tick(ExecutionSide executionSide) {
-        if (executionSide == ExecutionSide.CLIENT && isLocalPlayerJuggernaut) {
-            CutsceneAPI.stop();
+        if (executionSide == ExecutionSide.CLIENT && !isLocalPlayerJuggernaut) {
+            CutsceneAPI.setPosition(currentCameraPos);
+            CutsceneAPI.setRotation(currentCameraRot);
+
+            CutsceneAPI.play();
+        } else if (executionSide == ExecutionSide.SERVER && juggernaut != null) {
+            for (ServerPlayer serverPlayer : GameManager.getInstance().getServer().getPlayerList().getPlayers()) {
+                if (!serverPlayer.equals(juggernaut)) {
+                    serverPlayer.lookAt(EntityAnchorArgument.Anchor.EYES, juggernaut.position());
+                }
+            }
         }
     }
 
@@ -182,9 +172,29 @@ public class KnockEmOff extends GenericMinigame {
         Vector3f pointB = map.getPointB();
 
         Vector3f impactPoint = calculateImpactPoint(playerPos, direction, pointA, pointB);
-        Vector3f symmetricImpactPoint = getSymmetricPoint(pointA, pointB, impactPoint);
+        Vector3f symmetricImpactPoint = getSymmetricPointInRect(pointA, pointB, impactPoint);
 
+        Vector3f midPoint = getRectMidPoint(pointA, pointB);
+        Vector3f backPoint = getSymmetricPoint(playerPos, pointA, pointB);
 
+        float radius = 2;
+
+        long spawnTime = System.currentTimeMillis();
+
+        ThrowBall.sendToAll(
+                partyManager.getServerLevel().getServer(),
+                radius,
+                spawnTime,
+                spawnTime + 5000,
+                playerPos,
+                findFartherPoint(playerPos, impactPoint, midPoint),
+                impactPoint,
+                findFartherPoint(impactPoint, backPoint, midPoint),
+                backPoint,
+                findFartherPoint(backPoint, symmetricImpactPoint, midPoint),
+                symmetricImpactPoint,
+                findFartherPoint(symmetricImpactPoint, playerPos, midPoint)
+        );
     }
 
     public static Vector3f getFlatLookDirection(ServerPlayer player) {
@@ -224,7 +234,7 @@ public class KnockEmOff extends GenericMinigame {
         return distanceToA <= distanceToB ? pointA : pointB;
     }
 
-    public static Vector3f getSymmetricPoint(Vector3f A, Vector3f B, Vector3f P) {
+    public static Vector3f getSymmetricPointInRect(Vector3f A, Vector3f B, Vector3f P) {
         Vector3f midPoint = new Vector3f();
         A.add(B, midPoint);
         midPoint.mul(0.5f);
@@ -236,6 +246,45 @@ public class KnockEmOff extends GenericMinigame {
         midPoint.sub(difference, opposite);
 
         return opposite;
+    }
+
+    public static Vector3f getSymmetricPoint(Vector3f point, Vector3f a, Vector3f b) {
+        Vector3f direction = new Vector3f(b).sub(a);
+        Vector3f ap = new Vector3f(point).sub(a);
+
+        float t = ap.dot(direction) / direction.dot(direction);
+        Vector3f projection = new Vector3f(direction).mul(t);
+
+        Vector3f pProjected = new Vector3f(a).add(projection);
+
+        return new Vector3f(pProjected).mul(2).sub(point);
+    }
+
+    public static Vector3f getRectMidPoint(Vector3f pointA, Vector3f pointB) {
+        return new Vector3f(pointA).add(pointB).mul(0.5f);
+    }
+
+    public static Vector3f findFartherPoint(Vector3f pointA, Vector3f pointB, Vector3f extraPoint) {
+        Vector3f midpoint = new Vector3f(pointA).add(pointB).mul(0.5f);
+        Vector3f direction = new Vector3f(pointB).sub(pointA).normalize();
+
+        Vector3f perpendicular = new Vector3f();
+        if (Math.abs(direction.x) < 1e-6 && Math.abs(direction.y) < 1e-6) {
+            perpendicular.set(1, 0, 0);
+        } else {
+            perpendicular.set(-direction.y, direction.x, 0).normalize();
+        }
+
+        float halfLength = pointA.distance(pointB) / 2.0f;
+        perpendicular.mul(halfLength);
+
+        Vector3f point1 = new Vector3f(midpoint).add(perpendicular);
+        Vector3f point2 = new Vector3f(midpoint).sub(perpendicular);
+
+        float distance1 = point1.distanceSquared(extraPoint);
+        float distance2 = point2.distanceSquared(extraPoint);
+
+        return distance1 > distance2 ? point1 : point2;
     }
 
     @Override
@@ -256,5 +305,9 @@ public class KnockEmOff extends GenericMinigame {
 
     public static void setCurrentJuggernaut(boolean value) {
         isLocalPlayerJuggernaut = value;
+    }
+
+    public static void setBall(Ball newBall) {
+        ball = newBall;
     }
 }

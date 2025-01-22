@@ -3,22 +3,23 @@ package com.chaotic_loom.chaotic_minigames.core.minigames.knock_em_off.ball;
 import com.chaotic_loom.chaotic_minigames.core.GameManager;
 import com.chaotic_loom.under_control.util.BezierCurve;
 import com.chaotic_loom.under_control.util.EasingSystem;
+import com.chaotic_loom.under_control.util.MathHelper;
 import com.chaotic_loom.under_control.util.pooling.Poolable;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 
 public class Ball implements Poolable {
-    protected Vector3f position;
     protected float radius;
     protected long startTime;
     protected long endTime;
 
-    protected Vector2f startBezierPoint, midBezierPoint, endBezierPoint;
+    protected Vector3f position = new Vector3f();
+
+    protected Vector2f originPoint, collisionPoint, inverseCollisionPoint, backPoint, leftCornerControlPoint, backLeftCornerControlPoint, backRightCornerControlPoint, rightCornerControlPoint;
 
     protected boolean finished = false;
 
-    public Ball(Vector3f position, float radius, long startTime, long endTime) {
-        this.position = position;
+    public Ball(float radius, long startTime, long endTime) {
         this.radius = radius;
         this.startTime = startTime;
         this.endTime = endTime;
@@ -28,15 +29,33 @@ public class Ball implements Poolable {
     protected void calculatePosition(Vector3f result) {
         long currentTime = GameManager.getInstance().getSynchronizationHelper().getCurrentTime();
 
-        if (startBezierPoint == null) {
+        if (!hasBeenInitialized()) {
             return;
         }
 
-        cacheBezierCurve.modifyControlPoint(0, startBezierPoint.x, startBezierPoint.y);
-        cacheBezierCurve.modifyControlPoint(1, midBezierPoint.x, midBezierPoint.y);
-        cacheBezierCurve.modifyControlPoint(2, endBezierPoint.x, endBezierPoint.y);
+        float globalProgress = MathHelper.getProgress(currentTime, startTime, endTime);
+        int phase = calculatePhase(globalProgress);
+        float phaseProgress = calculatePhaseProgress(globalProgress, phase);
 
-        float[] progress = EasingSystem.getEasedBezierValue(currentTime, startTime, endTime, cacheBezierCurve, EasingSystem.EasingType.QUAD_IN);
+        if (phase == 0) {
+            cacheBezierCurve.modifyControlPoint(0, originPoint.x, originPoint.y);
+            cacheBezierCurve.modifyControlPoint(1, leftCornerControlPoint.x, leftCornerControlPoint.y);
+            cacheBezierCurve.modifyControlPoint(2, collisionPoint.x, collisionPoint.y);
+        } else if (phase == 1) {
+            cacheBezierCurve.modifyControlPoint(0, collisionPoint.x, collisionPoint.y);
+            cacheBezierCurve.modifyControlPoint(1, backLeftCornerControlPoint.x, backLeftCornerControlPoint.y);
+            cacheBezierCurve.modifyControlPoint(2, backPoint.x, backPoint.y);
+        } else if (phase == 2) {
+            cacheBezierCurve.modifyControlPoint(0, backPoint.x, backPoint.y);
+            cacheBezierCurve.modifyControlPoint(1, backRightCornerControlPoint.x, backRightCornerControlPoint.y);
+            cacheBezierCurve.modifyControlPoint(2, inverseCollisionPoint.x, inverseCollisionPoint.y);
+        } else if (phase == 3) {
+            cacheBezierCurve.modifyControlPoint(0, inverseCollisionPoint.x, inverseCollisionPoint.y);
+            cacheBezierCurve.modifyControlPoint(1, leftCornerControlPoint.x, leftCornerControlPoint.y);
+            cacheBezierCurve.modifyControlPoint(2, originPoint.x, originPoint.y);
+        }
+
+        float[] progress = EasingSystem.getEasedBezierValue(phaseProgress, cacheBezierCurve, EasingSystem.EasingType.QUAD_IN);
 
         result.set(progress[0], result.y, progress[1]);
     }
@@ -52,12 +71,26 @@ public class Ball implements Poolable {
         calculatePosition(position);
     }
 
+    private static int calculatePhase(float globalProgress) {
+        return Math.min(3, (int) (globalProgress * 4));
+    }
+
+    private static float calculatePhaseProgress(float globalProgress, int phase) {
+        float phaseStart = phase / 4.0f;
+        float phaseEnd = (phase + 1) / 4.0f;
+        return (globalProgress - phaseStart) / (phaseEnd - phaseStart);
+    }
+
     public boolean isFinished() {
         return finished;
     }
 
     public void markFinish() {
         this.finished = true;
+    }
+
+    public boolean hasBeenInitialized() {
+        return originPoint != null &&  collisionPoint != null && inverseCollisionPoint != null && backPoint != null && leftCornerControlPoint != null && backLeftCornerControlPoint != null && backRightCornerControlPoint != null && rightCornerControlPoint != null;
     }
 
     public Vector3f getPosition() {
@@ -69,27 +102,67 @@ public class Ball implements Poolable {
         this.finished = false;
     }
 
-    public Vector2f getStartBezierPoint() {
-        return startBezierPoint;
+    public Vector2f getOriginPoint() {
+        return originPoint;
     }
 
-    public void setStartBezierPoint(Vector2f startBezierPoint) {
-        this.startBezierPoint = startBezierPoint;
+    public void setOriginPoint(Vector2f originPoint) {
+        this.originPoint = originPoint;
     }
 
-    public Vector2f getMidBezierPoint() {
-        return midBezierPoint;
+    public Vector2f getCollisionPoint() {
+        return collisionPoint;
     }
 
-    public void setMidBezierPoint(Vector2f midBezierPoint) {
-        this.midBezierPoint = midBezierPoint;
+    public void setCollisionPoint(Vector2f collisionPoint) {
+        this.collisionPoint = collisionPoint;
     }
 
-    public Vector2f getEndBezierPoint() {
-        return endBezierPoint;
+    public Vector2f getInverseCollisionPoint() {
+        return inverseCollisionPoint;
     }
 
-    public void setEndBezierPoint(Vector2f endBezierPoint) {
-        this.endBezierPoint = endBezierPoint;
+    public void setInverseCollisionPoint(Vector2f inverseCollisionPoint) {
+        this.inverseCollisionPoint = inverseCollisionPoint;
+    }
+
+    public Vector2f getBackPoint() {
+        return backPoint;
+    }
+
+    public void setBackPoint(Vector2f backPoint) {
+        this.backPoint = backPoint;
+    }
+
+    public Vector2f getBackLeftCornerControlPoint() {
+        return backLeftCornerControlPoint;
+    }
+
+    public void setBackLeftCornerControlPoint(Vector2f backLeftCornerControlPoint) {
+        this.backLeftCornerControlPoint = backLeftCornerControlPoint;
+    }
+
+    public Vector2f getLeftCornerControlPoint() {
+        return leftCornerControlPoint;
+    }
+
+    public void setLeftCornerControlPoint(Vector2f leftCornerControlPoint) {
+        this.leftCornerControlPoint = leftCornerControlPoint;
+    }
+
+    public Vector2f getBackRightCornerControlPoint() {
+        return backRightCornerControlPoint;
+    }
+
+    public void setBackRightCornerControlPoint(Vector2f backRightCornerControlPoint) {
+        this.backRightCornerControlPoint = backRightCornerControlPoint;
+    }
+
+    public Vector2f getRightCornerControlPoint() {
+        return rightCornerControlPoint;
+    }
+
+    public void setRightCornerControlPoint(Vector2f rightCornerControlPoint) {
+        this.rightCornerControlPoint = rightCornerControlPoint;
     }
 }
