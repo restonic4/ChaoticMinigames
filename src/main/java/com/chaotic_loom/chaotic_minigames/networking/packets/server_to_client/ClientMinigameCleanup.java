@@ -28,11 +28,13 @@ public class ClientMinigameCleanup {
     public static void receive(Minecraft minecraft, ClientPacketListener clientPacketListener, FriendlyByteBuf friendlyByteBuf, PacketSender packetSender) {
         String minigameId = friendlyByteBuf.readUtf();
 
-        for (GenericMinigame genericMinigame : MinigameRegistry.MINIGAMES) {
-            if (genericMinigame.getSettings().getId().equals(minigameId)) {
-                genericMinigame.clientCleanup();
+        minecraft.execute(() -> {
+            for (GenericMinigame genericMinigame : MinigameRegistry.MINIGAMES) {
+                if (genericMinigame.getSettings().getId().equals(minigameId)) {
+                    genericMinigame.clientCleanup();
+                }
             }
-        }
+        });
     }
 
     public static void sendToAll(MinecraftServer server, String minigameId) {

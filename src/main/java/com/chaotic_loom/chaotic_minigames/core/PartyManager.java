@@ -31,6 +31,7 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlac
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplateManager;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3f;
 
 import java.util.*;
@@ -85,7 +86,11 @@ public class PartyManager {
                 ServerPlayer serverPlayer = entry.getKey();
                 Vector3f frozenPosition = entry.getValue();
 
-                serverPlayer.teleportTo(frozenPosition.x(), frozenPosition.y(), frozenPosition.z());
+                serverPlayer.setDeltaMovement(0, 0, 0);
+
+                if (frozenPosition.distance((float) serverPlayer.position().x, (float) serverPlayer.position().y, (float) serverPlayer.position().z) >= 1.5f) {
+                    serverPlayer.moveTo(frozenPosition.x(), frozenPosition.y(), frozenPosition.z());
+                }
             }
         });
 
@@ -624,6 +629,24 @@ public class PartyManager {
     public void unFreezeAll() {
         for (ServerPlayer serverPlayer : serverLevel.getServer().getPlayerList().getPlayers()) {
             unFreezePlayer(serverPlayer);
+        }
+    }
+
+    public void unFreezeAll(ServerPlayer... playerExceptions) {
+        for (ServerPlayer serverPlayer : serverLevel.getServer().getPlayerList().getPlayers()) {
+            boolean shouldPlayerBeSkipped = false;
+
+            for (int i = 0; i < playerExceptions.length && !shouldPlayerBeSkipped; i++) {
+                ServerPlayer exception = playerExceptions[i];
+
+                if (exception.equals(serverPlayer)) {
+                    shouldPlayerBeSkipped = true;
+                }
+            }
+
+            if (!shouldPlayerBeSkipped) {
+                unFreezePlayer(serverPlayer);
+            }
         }
     }
 

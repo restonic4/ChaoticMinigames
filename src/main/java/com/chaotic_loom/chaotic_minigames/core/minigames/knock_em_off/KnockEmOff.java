@@ -107,10 +107,8 @@ public class KnockEmOff extends GenericMinigame {
 
         ThreadHelper.sleep(2000);
 
-        partyManager.unFreezeAll();
+        partyManager.unFreezeAll(juggernaut);
         startTickingOnServer();
-
-        partyManager.freezePlayer(juggernaut, juggernaut.position().toVector3f());
 
         partyManager.startCountDown(totalDuration / 1000, () -> {}, (timeLeft) -> {
             return juggernaut == null || partyManager.getInGamePlayers().isEmpty();
