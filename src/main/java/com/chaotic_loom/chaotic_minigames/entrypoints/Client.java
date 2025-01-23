@@ -80,13 +80,7 @@ public class Client implements ClientModInitializer {
 
         ClientPlayConnectionEvents.DISCONNECT.register((clientPacketListener, minecraft) -> {
             GameManager.getInstance().getSynchronizationHelper().clearOffsets();
-            CMClientConstants.zombiePlayersUUIDs.clear();
-        });
-
-        ClientTickEvents.END_CLIENT_TICK.register((minecraft) -> {
-            if (KnownServerDataOnClient.frozenPosition != null && minecraft.player != null) {
-                minecraft.player.setDeltaMovement(0, 0, 0);
-            }
+            KnownServerDataOnClient.clear();
         });
 
         PoolManager.createPool(BulletRenderer.class, BulletRenderer::new);

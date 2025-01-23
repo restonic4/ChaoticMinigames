@@ -42,15 +42,17 @@ public class KnockEmOff extends GenericMinigame {
                         new KnockEmOffMap(
                                 "pool",
                                 createSpawns(
-                                    new MapSpawn(2, 2, 7)
+                                        new MapSpawn(43, 20, 75)
                                 ),
                                 createSpawns(
-                                    new MapSpawn(9, 2, 7)
+                                        new MapSpawn(58, 22, 67),
+                                        new MapSpawn(58, 22, 82),
+                                        new MapSpawn(58, 22, 75)
                                 )
-                        ).setCameraPos(new Vector3f(-2, 6, 7))
-                         .setCameraRot(new Vector2f(-90, 25))
-                         .setPointA(new Vector3f(9, 2, 2))
-                         .setPointB(new Vector3f(9, 2, 12))
+                        ).setCameraPos(new Vector3f(41.5f, 24, 75))
+                         .setCameraRot(new Vector2f(-90, 30))
+                         .setPointA(new Vector3f(58, 22, 65))
+                         .setPointB(new Vector3f(58, 22, 84))
                          .setTime(1000)
                          .setRain(false)
                 )

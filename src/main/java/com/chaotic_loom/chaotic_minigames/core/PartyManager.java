@@ -239,6 +239,8 @@ public class PartyManager {
             ThreadHelper.sleep(1000);
             secondsWaited++;
         }
+
+        unFreezeAll();
     }
 
     private void onPlaying() {

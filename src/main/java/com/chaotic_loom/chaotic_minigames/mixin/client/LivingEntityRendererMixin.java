@@ -1,6 +1,7 @@
 package com.chaotic_loom.chaotic_minigames.mixin.client;
 
 import com.chaotic_loom.chaotic_minigames.entrypoints.constants.CMClientConstants;
+import com.chaotic_loom.chaotic_minigames.entrypoints.constants.KnownServerDataOnClient;
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
@@ -111,7 +112,7 @@ public abstract class LivingEntityRendererMixin<T extends LivingEntity, M extend
     @Unique
     private boolean isZombie(Entity livingEntity) {
         if (livingEntity instanceof Player player) {
-            for (String playerFound : CMClientConstants.zombiePlayersUUIDs) {
+            for (String playerFound : KnownServerDataOnClient.zombiePlayersUUIDs) {
                 if (playerFound.equals(player.getGameProfile().getId().toString())) {
                     return true;
                 }

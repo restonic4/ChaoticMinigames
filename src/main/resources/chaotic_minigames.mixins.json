@@ -16,6 +16,7 @@
     "client.GuiMixin",
     "client.LevelRendererMixin",
     "client.LivingEntityRendererMixin",
+    "client.LocalPlayerMixin",
     "client.MinecraftMixin",
     "client.OptionsMixins",
     "client.PauseScreenMixin",

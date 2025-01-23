@@ -28,3 +28,4 @@ accessible method net/minecraft/client/renderer/GameRenderer getFov (Lnet/minecr
 accessible method net/minecraft/client/renderer/GameRenderer bobHurt (Lcom/mojang/blaze3d/vertex/PoseStack;F)V
 accessible method net/minecraft/client/renderer/GameRenderer bobView (Lcom/mojang/blaze3d/vertex/PoseStack;F)V
 accessible field net/minecraft/world/entity/LivingEntity jumping Z
+accessible method net/minecraft/client/player/LocalPlayer sendPosition ()V

@@ -19,8 +19,6 @@ public class CMClientConstants {
     public static ResourceLocation ZOMBIE_TEXTURE;
     public static EntityModel ZOMBIE_MODEL;
 
-    public static List<String> zombiePlayersUUIDs = new ArrayList<>();
-
     static {
         SERVERS.add(new ServerData(
                 "Test server 1",

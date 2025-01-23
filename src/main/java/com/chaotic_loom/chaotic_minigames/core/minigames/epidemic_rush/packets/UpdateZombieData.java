@@ -2,6 +2,7 @@ package com.chaotic_loom.chaotic_minigames.core.minigames.epidemic_rush.packets;
 
 import com.chaotic_loom.chaotic_minigames.entrypoints.constants.CMClientConstants;
 import com.chaotic_loom.chaotic_minigames.entrypoints.constants.CMSharedConstants;
+import com.chaotic_loom.chaotic_minigames.entrypoints.constants.KnownServerDataOnClient;
 import com.chaotic_loom.under_control.core.annotations.Packet;
 import com.chaotic_loom.under_control.core.annotations.PacketDirection;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
@@ -27,11 +28,11 @@ public class UpdateZombieData {
     public static void receive(Minecraft minecraft, ClientPacketListener clientPacketListener, FriendlyByteBuf friendlyByteBuf, PacketSender packetSender) {
         int zombiesTotal = friendlyByteBuf.readInt();
 
-        CMClientConstants.zombiePlayersUUIDs.clear();
+        KnownServerDataOnClient.zombiePlayersUUIDs.clear();
 
         for (int i = 0; i < zombiesTotal; i++) {
             String uuid = friendlyByteBuf.readUtf();
-            CMClientConstants.zombiePlayersUUIDs.add(uuid);
+            KnownServerDataOnClient.zombiePlayersUUIDs.add(uuid);
         }
     }
 
