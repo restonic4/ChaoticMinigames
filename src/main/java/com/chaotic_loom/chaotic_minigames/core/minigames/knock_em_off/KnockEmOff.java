@@ -145,6 +145,10 @@ public class KnockEmOff extends GenericMinigame {
 
     @Override
     public void tick(ExecutionSide executionSide) {
+        if (ball != null) {
+            ball.tick();
+        }
+
         if (executionSide == ExecutionSide.CLIENT && !isLocalPlayerJuggernaut) {
             CutsceneAPI.setPosition(currentCameraPos);
             CutsceneAPI.setRotation(currentCameraRot);
@@ -178,11 +182,13 @@ public class KnockEmOff extends GenericMinigame {
         Vector3f backPoint = getSymmetricPoint(playerPos, pointA, pointB);
 
         float radius = 2;
+        float yLevel = playerPos.y;
 
         long spawnTime = System.currentTimeMillis();
 
         ThrowBall.sendToAll(
                 partyManager.getServerLevel().getServer(),
+                yLevel,
                 radius,
                 spawnTime,
                 spawnTime + 5000,
@@ -288,7 +294,20 @@ public class KnockEmOff extends GenericMinigame {
     }
 
     @Override
+    public void serverCleanup() {
+        if (ball != null) {
+            ball.tick();
+        }
+
+        super.serverCleanup();
+    }
+
+    @Override
     public void clientCleanup() {
+        if (ball != null) {
+            ball.tick();
+        }
+
         super.clientCleanup();
 
         CutsceneAPI.stop();

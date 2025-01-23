@@ -29,5 +29,13 @@
 
   "minigame.chaotic_minigames.mine_and_shine.name": "Mine & Shine",
   "minigame.chaotic_minigames.mine_and_shine.summary": "Be among the first to find the gems!",
-  "minigame.chaotic_minigames.mine_and_shine.description": "Mine until you find an emerald; only the first three will win."
+  "minigame.chaotic_minigames.mine_and_shine.description": "Mine until you find an emerald; only the first three will win.",
+
+  "minigame.chaotic_minigames.epidemic_rush.name": "Epidemic rush",
+  "minigame.chaotic_minigames.epidemic_rush.summary": "Escape from the zombies!",
+  "minigame.chaotic_minigames.epidemic_rush.description": "Escape from the zombies or turn the other players into zombies!",
+
+  "minigame.chaotic_minigames.knock_em_off.name": "Knock 'Em Off",
+  "minigame.chaotic_minigames.knock_em_off.summary": "Knock the others into the water!",
+  "minigame.chaotic_minigames.knock_em_off.description": "Use the ball to knock the other players into the water before the time runs out!"
 }

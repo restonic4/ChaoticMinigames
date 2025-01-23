@@ -1,17 +1,22 @@
 package com.chaotic_loom.chaotic_minigames.mixin.client.music;
 
+import com.chaotic_loom.chaotic_minigames.core.MusicManager;
 import com.chaotic_loom.chaotic_minigames.mixin_extra.SoundEngineExtra;
 import com.google.common.collect.Multimap;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.blaze3d.audio.Channel;
+import com.mojang.blaze3d.audio.SoundBuffer;
+import net.minecraft.client.resources.sounds.Sound;
 import net.minecraft.client.resources.sounds.SoundInstance;
 import net.minecraft.client.resources.sounds.TickableSoundInstance;
 import net.minecraft.client.sounds.ChannelAccess;
 import net.minecraft.client.sounds.SoundEngine;
 import net.minecraft.client.sounds.SoundEngineExecutor;
 import net.minecraft.sounds.SoundSource;
+import org.lwjgl.openal.AL10;
+import org.lwjgl.openal.AL11;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
@@ -25,6 +30,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
@@ -192,5 +198,18 @@ public abstract class SoundEngineMixin implements SoundEngineExtra {
         if (soundInstance.getSource() == SoundSource.MUSIC || soundInstance.getSource() == SoundSource.MASTER) {
             ci.cancel();
         }
+    }
+
+    @Redirect(method = "play", at = @At(value = "INVOKE", target = "Ljava/util/concurrent/CompletableFuture;thenAccept(Ljava/util/function/Consumer;)Ljava/util/concurrent/CompletableFuture;", ordinal = 0))
+    private CompletableFuture<Void> playSound(CompletableFuture<SoundBuffer> instance, Consumer<? super Channel> action, @Local ChannelAccess.ChannelHandle channelHandle, @Local SoundSource soundSource) {
+        return instance.thenAccept(soundBuffer -> channelHandle.execute(channel -> {
+            channel.attachStaticBuffer(soundBuffer);
+
+            if (soundSource == SoundSource.MUSIC) {
+                AL10.alSourcef(channel.source, AL11.AL_SEC_OFFSET, MusicManager.getMusicStartingSecond());
+            }
+
+            channel.play();
+        }));
     }
 }

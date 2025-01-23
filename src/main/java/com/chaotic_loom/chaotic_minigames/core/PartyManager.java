@@ -69,6 +69,13 @@ public class PartyManager {
 
         this.music.addMusic(SoundRegistry.MUSIC_MAIN_MENU_1);
         this.music.addMusic(SoundRegistry.ROLLERDISCO_RUMBLE);
+        this.music.addMusic(SoundRegistry.ghost_and_ghost_spooky_thoughts, 41);
+        this.music.addMusic(SoundRegistry.ghost_and_ghost_lighthouse, 33);
+        this.music.addMusic(SoundRegistry.ghost_and_ghost_coconut_mystery, 47.5f);
+        this.music.addMusic(SoundRegistry.ghost_and_ghost_sir_ghostington, 60f);
+        this.music.addMusic(SoundRegistry.ghost_and_ghost_melancholy, 48);
+        this.music.addMusic(SoundRegistry.ghost_and_ghost_the_adventure, 62);
+        this.music.addMusic(SoundRegistry.ghost_and_ghost_red_lights, 42);
     }
 
     public void onStart() {

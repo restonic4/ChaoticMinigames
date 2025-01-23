@@ -23,6 +23,15 @@ public class SoundRegistry {
     public static SoundEvent DOUBLE_TIME;
     public static SoundEvent DASHING_ON_THE_DOUBLE;
 
+    // Argofox
+    public static SoundEvent ghost_and_ghost_spooky_thoughts;
+    public static SoundEvent ghost_and_ghost_lighthouse;
+    public static SoundEvent ghost_and_ghost_coconut_mystery;
+    public static SoundEvent ghost_and_ghost_sir_ghostington;
+    public static SoundEvent ghost_and_ghost_melancholy;
+    public static SoundEvent ghost_and_ghost_the_adventure;
+    public static SoundEvent ghost_and_ghost_red_lights;
+
     public static void register() {
         MUSIC_MAIN_MENU_1 = registerSoundEvent(new ResourceLocation(CMSharedConstants.ID, "music_main_menu_1"));
         ROLLERDISCO_RUMBLE = registerSoundEvent(new ResourceLocation(CMSharedConstants.ID, "rollerdisco_rumble"));
@@ -36,6 +45,13 @@ public class SoundRegistry {
         LICKETY_SPLIT = registerSoundEvent(new ResourceLocation(CMSharedConstants.ID, "lickety_split"));
         DOUBLE_TIME = registerSoundEvent(new ResourceLocation(CMSharedConstants.ID, "double_time"));
         DASHING_ON_THE_DOUBLE = registerSoundEvent(new ResourceLocation(CMSharedConstants.ID, "dashing_on_the_double"));
+        ghost_and_ghost_spooky_thoughts = registerSoundEvent(new ResourceLocation(CMSharedConstants.ID, "ghost_and_ghost_spooky_thoughts"));
+        ghost_and_ghost_lighthouse = registerSoundEvent(new ResourceLocation(CMSharedConstants.ID, "ghost_and_ghost_lighthouse"));
+        ghost_and_ghost_coconut_mystery = registerSoundEvent(new ResourceLocation(CMSharedConstants.ID, "ghost_and_ghost_coconut_mystery"));
+        ghost_and_ghost_sir_ghostington = registerSoundEvent(new ResourceLocation(CMSharedConstants.ID, "ghost_and_ghost_sir_ghostington"));
+        ghost_and_ghost_melancholy = registerSoundEvent(new ResourceLocation(CMSharedConstants.ID, "ghost_and_ghost_melancholy"));
+        ghost_and_ghost_the_adventure = registerSoundEvent(new ResourceLocation(CMSharedConstants.ID, "ghost_and_ghost_the_adventure"));
+        ghost_and_ghost_red_lights = registerSoundEvent(new ResourceLocation(CMSharedConstants.ID, "ghost_and_ghost_red_lights"));
     }
 
     public static SoundEvent registerSoundEvent(ResourceLocation location) {

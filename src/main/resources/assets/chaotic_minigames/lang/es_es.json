@@ -22,5 +22,11 @@
   "minigame.chaotic_minigames.quick_drop.description": "Llega a la meta sin morir. ¡Cuidado, que el techo te aplastará!",
   "minigame.chaotic_minigames.mine_and_shine.name": "Mina y triunfa",
   "minigame.chaotic_minigames.mine_and_shine.summary": "¡Se de los primeros en conseguir gemas!",
-  "minigame.chaotic_minigames.mine_and_shine.description": "Mina hasta que encuentres esmeraldas. Solo ganaran los 3 primeros."
+  "minigame.chaotic_minigames.mine_and_shine.description": "Mina hasta que encuentres esmeraldas. Solo ganaran los 3 primeros.",
+  "minigame.chaotic_minigames.epidemic_rush.name": "Fuga apocalíptica",
+  "minigame.chaotic_minigames.epidemic_rush.summary": "¡Escapa de los zombis!",
+  "minigame.chaotic_minigames.epidemic_rush.description": "¡Huye de los zombis o convierte al resto de jugadores!",
+  "minigame.chaotic_minigames.knock_em_off.name": "¡Al agua patos!",
+  "minigame.chaotic_minigames.knock_em_off.summary": "¡Mantente en la barra sin caer al agua!",
+  "minigame.chaotic_minigames.knock_em_off.description": "Mantente en la barra sin caer al agua ¡Un jugador intnetara tirarte!"
 }

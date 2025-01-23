@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Random;
 
 public class Playlist {
-    private final List<SoundEvent> musics;
+    private final List<MusicHolder> musics;
     private final Random random;
 
     public Playlist() {
@@ -20,10 +20,18 @@ public class Playlist {
     }
 
     public void addMusic(SoundEvent music) {
-        this.musics.add(music);
+        this.musics.add(new MusicHolder(music, 0));
+    }
+
+    public void addMusic(SoundEvent music, float startTime) {
+        this.musics.add(new MusicHolder(music, startTime));
     }
 
     public SoundEvent getRandom() {
+        return getRandomHolder().getSoundEvent();
+    }
+
+    public MusicHolder getRandomHolder() {
         if (musics.isEmpty()) {
             return null;
         }
@@ -41,16 +49,34 @@ public class Playlist {
     }
 
     public void playRandom(long fadeDuration, EasingSystem.EasingType easingType) {
-        SoundEvent music = getRandom();
+        MusicHolder music = getRandomHolder();
 
         if (music == null) {
             throw new RuntimeException("Empty playlist");
         }
 
-        PlayMusic.sendToAll(GameManager.getInstance().getServer(), music, fadeDuration, easingType);
+        PlayMusic.sendToAll(GameManager.getInstance().getServer(), music.getSoundEvent(), fadeDuration, music.getStartTime(), easingType);
     }
 
-    public List<SoundEvent> getMusics() {
+    public List<MusicHolder> getMusics() {
         return musics;
+    }
+
+    public static class MusicHolder {
+        private final SoundEvent soundEvent;
+        private final float startTime;
+
+        public MusicHolder(SoundEvent soundEvent, float startTime) {
+            this.soundEvent = soundEvent;
+            this.startTime = startTime;
+        }
+
+        public SoundEvent getSoundEvent() {
+            return soundEvent;
+        }
+
+        public float getStartTime() {
+            return startTime;
+        }
     }
 }

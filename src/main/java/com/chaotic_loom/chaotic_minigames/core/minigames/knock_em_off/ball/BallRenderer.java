@@ -12,8 +12,8 @@ import org.joml.Vector3f;
 public class BallRenderer extends Ball implements Poolable {
     private Sphere sphere;
 
-    public BallRenderer(float radius, long startTime, long endTime) {
-        super(radius, startTime, endTime);
+    public BallRenderer(float yLevel, float radius, long startTime, long endTime) {
+        super(yLevel, radius, startTime, endTime);
         sphere = new Sphere("ball" + MathHelper.getUniqueID());
 
         Minecraft.getInstance().execute(() -> {
@@ -21,7 +21,8 @@ public class BallRenderer extends Ball implements Poolable {
         });
     }
 
-    public BallRenderer initialize(float radius, long startTime, long endTime) {
+    public BallRenderer initialize(float yLevel, float radius, long startTime, long endTime) {
+        super.yLevel = yLevel;
         super.radius = radius;
         super.startTime = startTime;
         super.endTime = endTime;

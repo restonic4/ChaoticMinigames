@@ -33,7 +33,7 @@ import java.util.Random;
 import static com.chaotic_loom.chaotic_minigames.core.PartyManager.AREA_RANGE;
 import static com.chaotic_loom.chaotic_minigames.core.PartyManager.MIN_HEIGHT;
 
-//@Minigame
+@Minigame
 public class EpidemicRush extends GenericMinigame {
     private final Playlist music;
 
@@ -67,16 +67,8 @@ public class EpidemicRush extends GenericMinigame {
 
         this.music = new Playlist();
 
-        this.music.addMusic(SoundRegistry.CHOP_CHOP);
-        this.music.addMusic(SoundRegistry.AGILE_ACCELERANDO);
-        this.music.addMusic(SoundRegistry.BREAKNECK_BOOGIE);
-        this.music.addMusic(SoundRegistry.DASHING_ON_THE_DOUBLE);
-        this.music.addMusic(SoundRegistry.DOUBLE_TIME);
-        this.music.addMusic(SoundRegistry.LICKETY_SPLIT);
-        this.music.addMusic(SoundRegistry.NIMBLY_DOES_IT);
-        this.music.addMusic(SoundRegistry.PRONTO);
-        this.music.addMusic(SoundRegistry.SWIFT_DESCENT);
-        this.music.addMusic(SoundRegistry.TIME_IS_OF_THE_ESSENCE);
+        this.music.addMusic(SoundRegistry.ghost_and_ghost_spooky_thoughts, 104);
+        this.music.addMusic(SoundRegistry.ghost_and_ghost_coconut_mystery, 144);
 
         ServerPlayConnectionEvents.DISCONNECT.register((serverGamePacketListener, minecraftServer) -> {
             ServerPlayer serverPlayer = serverGamePacketListener.getPlayer();

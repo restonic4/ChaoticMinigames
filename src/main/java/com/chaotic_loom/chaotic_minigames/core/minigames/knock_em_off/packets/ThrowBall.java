@@ -25,6 +25,7 @@ public class ThrowBall {
     }
 
     public static void receive(Minecraft minecraft, ClientPacketListener clientPacketListener, FriendlyByteBuf friendlyByteBuf, PacketSender packetSender) {
+        float yLevel = friendlyByteBuf.readFloat();
         float radius = friendlyByteBuf.readFloat();
         long startTime = friendlyByteBuf.readLong();
         long endTime = friendlyByteBuf.readLong();
@@ -38,7 +39,7 @@ public class ThrowBall {
         Vector3f inverseCollisionPoint = friendlyByteBuf.readVector3f();
         Vector3f rightPoint = friendlyByteBuf.readVector3f();
 
-        BallRenderer ball = new BallRenderer(radius, startTime, endTime);
+        BallRenderer ball = new BallRenderer(yLevel, radius, startTime, endTime);
 
         ball.setOriginPoint(new Vector2f(originPoint.x, originPoint.z));
         ball.setLeftCornerControlPoint(new Vector2f(leftPoint.x, leftPoint.z));
@@ -52,9 +53,10 @@ public class ThrowBall {
         KnockEmOff.setBall(ball);
     }
 
-    public static void sendToAll(MinecraftServer server, float radius, long startTime, long endTime, Vector3f origin, Vector3f left, Vector3f collision, Vector3f backLeft, Vector3f back, Vector3f backRight, Vector3f inverse, Vector3f right) {
+    public static void sendToAll(MinecraftServer server, float yLevel, float radius, long startTime, long endTime, Vector3f origin, Vector3f left, Vector3f collision, Vector3f backLeft, Vector3f back, Vector3f backRight, Vector3f inverse, Vector3f right) {
         FriendlyByteBuf friendlyByteBuf = PacketByteBufs.create();
 
+        friendlyByteBuf.writeFloat(yLevel);
         friendlyByteBuf.writeFloat(radius);
         friendlyByteBuf.writeLong(startTime);
         friendlyByteBuf.writeLong(endTime);

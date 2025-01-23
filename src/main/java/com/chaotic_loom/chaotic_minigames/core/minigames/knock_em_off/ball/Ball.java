@@ -9,6 +9,7 @@ import org.joml.Vector2f;
 import org.joml.Vector3f;
 
 public class Ball implements Poolable {
+    protected float yLevel;
     protected float radius;
     protected long startTime;
     protected long endTime;
@@ -19,7 +20,8 @@ public class Ball implements Poolable {
 
     protected boolean finished = false;
 
-    public Ball(float radius, long startTime, long endTime) {
+    public Ball(float yLevel, float radius, long startTime, long endTime) {
+        this.yLevel = yLevel;
         this.radius = radius;
         this.startTime = startTime;
         this.endTime = endTime;
@@ -57,7 +59,7 @@ public class Ball implements Poolable {
 
         float[] progress = EasingSystem.getEasedBezierValue(phaseProgress, cacheBezierCurve, EasingSystem.EasingType.QUAD_IN);
 
-        result.set(progress[0], result.y, progress[1]);
+        result.set(progress[0], yLevel, progress[1]);
     }
 
     public void tick() {

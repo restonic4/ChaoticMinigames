@@ -30,26 +30,33 @@ public class PlayMusic {
     public static void receive(Minecraft minecraft, ClientPacketListener clientPacketListener, FriendlyByteBuf friendlyByteBuf, PacketSender packetSender) {
         SoundEvent soundEvent = BuiltInRegistries.SOUND_EVENT.get(new ResourceLocation(friendlyByteBuf.readUtf()));
         long fadeDuration = friendlyByteBuf.readLong();
+        float startTime = friendlyByteBuf.readFloat();
         EasingSystem.EasingType easingType = EasingSystem.EasingType.valueOf(friendlyByteBuf.readUtf());
 
-        MusicManager.playMusic(soundEvent, fadeDuration, easingType);
+        MusicManager.playMusic(soundEvent, fadeDuration, startTime, easingType);
     }
 
-    public static void sendToClient(ServerPlayer serverPlayer, SoundEvent soundEvent, long fadeDuration, EasingSystem.EasingType easingType) {
+    public static void sendToClient(ServerPlayer serverPlayer, SoundEvent soundEvent, long fadeDuration, float startTime, EasingSystem.EasingType easingType) {
         FriendlyByteBuf friendlyByteBuf = PacketByteBufs.create();
 
         friendlyByteBuf.writeUtf(soundEvent.getLocation().toString());
         friendlyByteBuf.writeLong(fadeDuration);
+        friendlyByteBuf.writeFloat(startTime);
         friendlyByteBuf.writeUtf(easingType.name().toUpperCase());
 
         ServerPlayNetworking.send(serverPlayer, getId(), friendlyByteBuf);
     }
 
     public static void sendToAll(MinecraftServer server, SoundEvent soundEvent, long fadeDuration, EasingSystem.EasingType easingType) {
+        sendToAll(server, soundEvent, fadeDuration, 0, easingType);
+    }
+
+    public static void sendToAll(MinecraftServer server, SoundEvent soundEvent, long fadeDuration, float startTime, EasingSystem.EasingType easingType) {
         FriendlyByteBuf friendlyByteBuf = PacketByteBufs.create();
 
         friendlyByteBuf.writeUtf(soundEvent.getLocation().toString());
         friendlyByteBuf.writeLong(fadeDuration);
+        friendlyByteBuf.writeFloat(startTime);
         friendlyByteBuf.writeUtf(easingType.name().toUpperCase());
 
         for (ServerPlayer serverPlayer : server.getPlayerList().getPlayers()) {
