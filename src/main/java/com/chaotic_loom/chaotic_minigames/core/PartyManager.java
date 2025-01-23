@@ -69,13 +69,24 @@ public class PartyManager {
 
         this.music.addMusic(SoundRegistry.MUSIC_MAIN_MENU_1);
         this.music.addMusic(SoundRegistry.ROLLERDISCO_RUMBLE);
-        this.music.addMusic(SoundRegistry.ghost_and_ghost_spooky_thoughts, 41);
-        this.music.addMusic(SoundRegistry.ghost_and_ghost_lighthouse, 33);
+        this.music.addMusic(SoundRegistry.ghost_and_ghost_spooky_thoughts, 41f);
+        this.music.addMusic(SoundRegistry.ghost_and_ghost_lighthouse, 33f);
         this.music.addMusic(SoundRegistry.ghost_and_ghost_coconut_mystery, 47.5f);
         this.music.addMusic(SoundRegistry.ghost_and_ghost_sir_ghostington, 60f);
-        this.music.addMusic(SoundRegistry.ghost_and_ghost_melancholy, 48);
-        this.music.addMusic(SoundRegistry.ghost_and_ghost_the_adventure, 62);
-        this.music.addMusic(SoundRegistry.ghost_and_ghost_red_lights, 42);
+        this.music.addMusic(SoundRegistry.ghost_and_ghost_melancholy, 48f);
+        this.music.addMusic(SoundRegistry.ghost_and_ghost_the_adventure, 62f);
+        this.music.addMusic(SoundRegistry.ghost_and_ghost_red_lights, 42f);
+        this.music.addMusic(SoundRegistry.ghost_and_ghost_lazy_sunday, 47f);
+        this.music.addMusic(SoundRegistry.sybranax_rogue, 37f);
+        this.music.addMusic(SoundRegistry.meizong_rebirth, 43f);
+        this.music.addMusic(SoundRegistry.dugn1r_45_degrees, 28.5f);
+        this.music.addMusic(SoundRegistry.redvox_time, 140.5f);
+        this.music.addMusic(SoundRegistry.dugn1r_monster_inside_you, 31.5f);
+        this.music.addMusic(SoundRegistry.redvox_the_ruby, 67f);
+        this.music.addMusic(SoundRegistry.aron_kruk_astral_finale, 136f);
+        this.music.addMusic(SoundRegistry.aaron_kruk_orion_s_reverie, 47f);
+        this.music.addMusic(SoundRegistry.dino_rano_not_the_one, 29.75f);
+        this.music.addMusic(SoundRegistry.aaron_kruk_zenith, 52.75f);
     }
 
     public void onStart() {

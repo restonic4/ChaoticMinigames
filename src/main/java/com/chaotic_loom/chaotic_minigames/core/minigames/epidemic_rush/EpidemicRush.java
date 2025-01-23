@@ -69,6 +69,8 @@ public class EpidemicRush extends GenericMinigame {
 
         this.music.addMusic(SoundRegistry.ghost_and_ghost_spooky_thoughts, 104);
         this.music.addMusic(SoundRegistry.ghost_and_ghost_coconut_mystery, 144);
+        this.music.addMusic(SoundRegistry.meizong_krasch, 14);
+        this.music.addMusic(SoundRegistry.foxhunt_rapture, 120);
 
         ServerPlayConnectionEvents.DISCONNECT.register((serverGamePacketListener, minecraftServer) -> {
             ServerPlayer serverPlayer = serverGamePacketListener.getPlayer();
@@ -140,6 +142,10 @@ public class EpidemicRush extends GenericMinigame {
         });
 
         partyManager.startCountDown(totalDuration / 1000, () -> {}, (timeLeft) -> {
+            if (timeLeft == 15) {
+                glow();
+            }
+
             return zombies.isEmpty() || partyManager.getInGamePlayers().isEmpty();
         });
 
@@ -190,5 +196,13 @@ public class EpidemicRush extends GenericMinigame {
         mainZombie.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 125 * 20, 2, false, false, false));
         mainZombie.addEffect(new MobEffectInstance(MobEffects.NIGHT_VISION, 125 * 20, 0, false, false, false));
         mainZombie.addEffect(new MobEffectInstance(MobEffects.DARKNESS, 10 * 20, 0, false, false, false));
+    }
+
+    public void glow() {
+        PartyManager partyManager = GameManager.getInstanceOrCreate().getPartyManager();
+
+        partyManager.executeForAllInGame((serverPlayer) -> {
+            serverPlayer.addEffect(new MobEffectInstance(MobEffects.GLOWING, 10 * 20, 0, false, false, false));
+        });
     }
 }

@@ -142,5 +142,141 @@
         "stream": false
       }
     ]
+  },
+  "ghost_and_ghost_red_lights": {
+    "sounds": [
+      {
+        "name": "chaotic_minigames:ghost_and_ghost_red_lights",
+        "stream": false
+      }
+    ]
+  },
+  "ghost_and_ghost_lazy_sunday": {
+    "sounds": [
+      {
+        "name": "chaotic_minigames:ghost_and_ghost_lazy_sunday",
+        "stream": false
+      }
+    ]
+  },
+  "sybranax_rogue": {
+    "sounds": [
+      {
+        "name": "chaotic_minigames:sybranax_rogue",
+        "stream": false
+      }
+    ]
+  },
+  "meizong_rebirth": {
+    "sounds": [
+      {
+        "name": "chaotic_minigames:meizong_rebirth",
+        "stream": false
+      }
+    ]
+  },
+  "dugn1r_45_degrees": {
+    "sounds": [
+      {
+        "name": "chaotic_minigames:dugn1r_45_degrees",
+        "stream": false
+      }
+    ]
+  },
+  "meizong_krasch": {
+    "sounds": [
+      {
+        "name": "chaotic_minigames:meizong_krasch",
+        "stream": false
+      }
+    ]
+  },
+  "redvox_time": {
+    "sounds": [
+      {
+        "name": "chaotic_minigames:redvox_time",
+        "stream": false
+      }
+    ]
+  },
+  "meizong_spark": {
+    "sounds": [
+      {
+        "name": "chaotic_minigames:meizong_spark",
+        "stream": false
+      }
+    ]
+  },
+  "dugn1r_monster_inside_you": {
+    "sounds": [
+      {
+        "name": "chaotic_minigames:dugn1r_monster_inside_you",
+        "stream": false
+      }
+    ]
+  },
+  "redvox_the_ruby": {
+    "sounds": [
+      {
+        "name": "chaotic_minigames:redvox_the_ruby",
+        "stream": false
+      }
+    ]
+  },
+  "aron_kruk_astral_finale": {
+    "sounds": [
+      {
+        "name": "chaotic_minigames:aron_kruk_astral_finale",
+        "stream": false
+      }
+    ]
+  },
+  "aaron_kruk_orion_s_reverie": {
+    "sounds": [
+      {
+        "name": "chaotic_minigames:aaron_kruk_orion_s_reverie",
+        "stream": false
+      }
+    ]
+  },
+  "dino_rano_not_the_one": {
+    "sounds": [
+      {
+        "name": "chaotic_minigames:dino_rano_not_the_one",
+        "stream": false
+      }
+    ]
+  },
+  "aaron_kruk_zenith": {
+    "sounds": [
+      {
+        "name": "chaotic_minigames:aaron_kruk_zenith",
+        "stream": false
+      }
+    ]
+  },
+  "meizong_arctic": {
+    "sounds": [
+      {
+        "name": "chaotic_minigames:meizong_arctic",
+        "stream": false
+      }
+    ]
+  },
+  "noxive_monsters_in_my_head": {
+    "sounds": [
+      {
+        "name": "chaotic_minigames:noxive_monsters_in_my_head",
+        "stream": false
+      }
+    ]
+  },
+  "foxhunt_rapture": {
+    "sounds": [
+      {
+        "name": "chaotic_minigames:foxhunt_rapture",
+        "stream": false
+      }
+    ]
   }
 }
