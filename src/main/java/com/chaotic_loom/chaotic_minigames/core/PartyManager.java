@@ -440,6 +440,7 @@ public class PartyManager {
     public void resetInventory(ServerPlayer serverPlayer) {
         serverPlayer.getInventory().clearContent();
         serverPlayer.removeAllEffects();
+        serverPlayer.setHealth(serverPlayer.getMaxHealth());
     }
 
     public void loadMapWeather() {
