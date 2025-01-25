@@ -61,6 +61,24 @@ public class EpidemicRush extends GenericMinigame {
                                         new MapSpawn(110, 2, 103),
                                         new MapSpawn(79, 3, 41)
                                 )
+                        ).setTime(18000).setRain(false),
+
+                        new MultipleSpawnerMapData(
+                                "mansion",
+                                createSpawns(
+                                        new MapSpawn(7, 18, 28),
+                                        new MapSpawn(129, 25, 88)
+                                ),
+                                createSpawns(
+                                        new MapSpawn(76, 18, 55),
+                                        new MapSpawn(45, 27, 52),
+                                        new MapSpawn(63, 27, 44),
+                                        new MapSpawn(48, 27, 67),
+                                        new MapSpawn(57, 33, 56),
+                                        new MapSpawn(37, 19, 67),
+                                        new MapSpawn(61, 19, 54),
+                                        new MapSpawn(55, 19, 36)
+                                )
                         ).setTime(18000).setRain(false)
                 )
         ));
