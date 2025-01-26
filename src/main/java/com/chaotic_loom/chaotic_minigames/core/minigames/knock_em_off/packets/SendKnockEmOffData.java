@@ -26,18 +26,27 @@ public class SendKnockEmOffData {
         String juggernautName = friendlyByteBuf.readUtf();
         Vector3f pos = friendlyByteBuf.readVector3f();
         Vector3f rot = friendlyByteBuf.readVector3f();
+        Vector3f pointA = friendlyByteBuf.readVector3f();
+        Vector3f pointB = friendlyByteBuf.readVector3f();
 
         KnockEmOff.setCurrentCameraPos(pos);
         KnockEmOff.setCurrentCameraRot(new Vector2f(rot.x, rot.y));
         KnockEmOff.setCurrentJuggernaut(juggernautName.equals(minecraft.player.getName().getString()));
+        KnockEmOff.setLocalPointA(pointA);
+        KnockEmOff.setLocalPointB(pointB);
     }
 
-    public static void sendToAll(MinecraftServer server, ServerPlayer juggernaut, Vector3f pos, Vector2f rot) {
+    public static void sendToAll(MinecraftServer server, ServerPlayer juggernaut, Vector3f pos, Vector2f rot, Vector3f pointA, Vector3f pointB) {
         FriendlyByteBuf friendlyByteBuf = PacketByteBufs.create();
 
         friendlyByteBuf.writeUtf(juggernaut.getName().getString());
         friendlyByteBuf.writeVector3f(pos);
         friendlyByteBuf.writeVector3f(new Vector3f(rot.x, rot.y, 0));
+        friendlyByteBuf.writeVector3f(pointA);
+        friendlyByteBuf.writeVector3f(pointB);
+
+        KnockEmOff.setLocalPointA(pointA);
+        KnockEmOff.setLocalPointB(pointB);
 
         for (ServerPlayer serverPlayer : server.getPlayerList().getPlayers()) {
             ServerPlayNetworking.send(serverPlayer, getId(), friendlyByteBuf);

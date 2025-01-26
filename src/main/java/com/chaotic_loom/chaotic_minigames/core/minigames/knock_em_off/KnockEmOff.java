@@ -33,6 +33,8 @@ public class KnockEmOff extends GenericMinigame {
     private static Vector2f currentCameraRot;
     private static boolean isLocalPlayerJuggernaut = false;
 
+    private static Vector3f localPointA, localPointB;
+
     public KnockEmOff() {
         super(new MinigameSettings(
                 "knock_em_off",
@@ -96,7 +98,7 @@ public class KnockEmOff extends GenericMinigame {
         partyManager.disqualifyPlayer(juggernaut, false);
 
         KnockEmOffMap map = partyManager.getCurrentMapData(KnockEmOffMap.class);
-        SendKnockEmOffData.sendToAll(partyManager.getServerLevel().getServer(), juggernaut, map.getCameraPos(), map.getCameraRot());
+        SendKnockEmOffData.sendToAll(partyManager.getServerLevel().getServer(), juggernaut, map.getCameraPos(), map.getCameraRot(), map.getPointA(), map.getPointB());
 
         CMSharedConstants.LOGGER.info("Juggernaut: {}", juggernaut.getDisplayName());
 
@@ -300,6 +302,10 @@ public class KnockEmOff extends GenericMinigame {
         }
 
         super.serverCleanup();
+
+        localPointA = null;
+        localPointB = null;
+        ball = null;
     }
 
     @Override
@@ -312,6 +318,9 @@ public class KnockEmOff extends GenericMinigame {
 
         CutsceneAPI.stop();
         isLocalPlayerJuggernaut = false;
+        localPointA = null;
+        localPointB = null;
+        ball = null;
     }
 
     public static void setCurrentCameraPos(Vector3f newCurrentCameraPos) {
@@ -328,5 +337,21 @@ public class KnockEmOff extends GenericMinigame {
 
     public static void setBall(Ball newBall) {
         ball = newBall;
+    }
+
+    public static void setLocalPointA(Vector3f localPointA) {
+        KnockEmOff.localPointA = localPointA;
+    }
+
+    public static void setLocalPointB(Vector3f localPointB) {
+        KnockEmOff.localPointB = localPointB;
+    }
+
+    public static Vector3f getLocalPointB() {
+        return localPointB;
+    }
+
+    public static Vector3f getLocalPointA() {
+        return localPointA;
     }
 }

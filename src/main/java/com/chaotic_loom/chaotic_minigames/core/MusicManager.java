@@ -33,6 +33,15 @@ public class MusicManager {
 
     private static float musicStartingSecond = 0;
 
+    private static boolean nextMusicNeedsFadeIn = false;
+    private static long nextMusicFadeInDuration = 0;
+    private static EasingSystem.EasingType nextMusicFadeInEasingType;
+
+    private static boolean isFadingIn = false;
+    private static long fadeInStartTime = -1;
+    private static long fadeInEndTime = -1;
+    private static EasingSystem.EasingType currentFadeInEasingType;
+
     public static void playMusic(SoundEvent newMusic, long fadeDuration, EasingSystem.EasingType fadeType) {
         playMusic(newMusic, fadeDuration, 0, fadeType);
     }
@@ -45,22 +54,36 @@ public class MusicManager {
         musicStartingSecond = startingTime;
 
         if (currentMusic == null && !isFadingOut) {
-            // No music playing, play immediately
             currentMusic = newSoundInstance;
-            currentVolume = 1.0;
             minecraft.getSoundManager().play(currentMusic);
+
+            if (startingTime != 0) {
+                ((SoundManagerExtra) minecraft.getSoundManager()).chaoticMinigames$setVolume(currentMusic, 0.0f);
+                fadeInStartTime = System.currentTimeMillis();
+                fadeInEndTime = fadeInStartTime + fadeDuration;
+                currentFadeInEasingType = fadeType;
+                isFadingIn = true;
+            } else {
+                ((SoundManagerExtra) minecraft.getSoundManager()).chaoticMinigames$setVolume(currentMusic, 1.0f);
+            }
         } else {
-            // Queue the new music and start fading out the current one
             if (currentMusic != null) {
                 fadingOutMusics.add(currentMusic);
             }
             currentMusic = null;
             nextMusic = newSoundInstance;
 
+            if (startingTime != 0) {
+                nextMusicNeedsFadeIn = true;
+                nextMusicFadeInDuration = fadeDuration;
+                nextMusicFadeInEasingType = fadeType;
+            } else {
+                nextMusicNeedsFadeIn = false;
+            }
+
             currentFadeType = fadeType;
             fadeStartTime = System.currentTimeMillis();
             fadeEndTime = fadeStartTime + fadeDuration;
-
             isFadingOut = true;
             isStopping = false;
         }
@@ -111,23 +134,21 @@ public class MusicManager {
     public static void tick() {
         long currentTime = System.currentTimeMillis();
 
-        // Handle fade-out for old musics
+        // Fade-out, old musics
         Iterator<SoundInstance> iterator = fadingOutMusics.iterator();
         while (iterator.hasNext()) {
             SoundInstance oldMusic = iterator.next();
             double volume = EasingSystem.getEasedValue(fadeStartTime, fadeEndTime, 1, 0, currentFadeType);
 
             if (currentTime >= fadeEndTime) {
-                // Fade-out complete, stop and remove old music
                 stop(oldMusic);
                 iterator.remove();
             } else {
-                // Apply volume during fade-out
                 ((SoundManagerExtra) minecraft.getSoundManager()).chaoticMinigames$setVolume(oldMusic, (float) volume);
             }
         }
 
-        // Handle transition after fade-out
+        // Fade-out
         if (isFadingOut && fadingOutMusics.isEmpty()) {
             isFadingOut = false;
             if (isStopping) {
@@ -137,7 +158,28 @@ public class MusicManager {
                 currentMusic = nextMusic;
                 nextMusic = null;
                 minecraft.getSoundManager().play(currentMusic);
+
+                if (nextMusicNeedsFadeIn) {
+                    ((SoundManagerExtra) minecraft.getSoundManager()).chaoticMinigames$setVolume(currentMusic, 0.0f);
+                    fadeInStartTime = System.currentTimeMillis();
+                    fadeInEndTime = fadeInStartTime + nextMusicFadeInDuration;
+                    currentFadeInEasingType = nextMusicFadeInEasingType;
+                    isFadingIn = true;
+                    nextMusicNeedsFadeIn = false;
+                } else {
+                    ((SoundManagerExtra) minecraft.getSoundManager()).chaoticMinigames$setVolume(currentMusic, 1.0f);
+                }
+            }
+        }
+
+        // Fade-in
+        if (isFadingIn) {
+            if (currentTime >= fadeInEndTime) {
                 ((SoundManagerExtra) minecraft.getSoundManager()).chaoticMinigames$setVolume(currentMusic, 1.0f);
+                isFadingIn = false;
+            } else {
+                double volume = EasingSystem.getEasedValue(fadeInStartTime, fadeInEndTime, 0, 1, currentFadeInEasingType);
+                ((SoundManagerExtra) minecraft.getSoundManager()).chaoticMinigames$setVolume(currentMusic, (float) volume);
             }
         }
     }

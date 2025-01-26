@@ -7,6 +7,7 @@
     "common.FoodDataMixin",
     "common.PlaceCommandMixin",
     "common.PlayerListMixin",
+    "common.PlayerMixin",
     "common.SoundSourceMixin",
     "common.StructureBlockEntityMixin"
   ],

@@ -220,7 +220,7 @@ public class EpidemicRush extends GenericMinigame {
         PartyManager partyManager = GameManager.getInstanceOrCreate().getPartyManager();
 
         partyManager.executeForAllInGame((serverPlayer) -> {
-            serverPlayer.addEffect(new MobEffectInstance(MobEffects.GLOWING, 10 * 20, 0, false, false, false));
+            serverPlayer.addEffect(new MobEffectInstance(MobEffects.GLOWING, 15 * 20, 0, false, false, false));
         });
     }
 }
